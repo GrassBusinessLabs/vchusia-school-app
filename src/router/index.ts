@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import StartPage from '../views/StartPage.vue'
 import LoginPage from '../views/LoginPage.vue'
 import SignUp from '../views/SignUpPage.vue'
+import TeacherCabinet from '../views/TeacherCabinet.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -14,16 +15,20 @@ const routes: Array<RouteRecordRaw> = [
     component: StartPage
   },
   {
-    path: '/start/login',
+    path: '/login',
     name: 'Login',
     component: LoginPage
   },
   {
-    path: '/start/signup',
+    path: '/signup',
     name: 'SignUp',
     component: SignUp
   },
-
+  {
+    path: '/teacher-room',
+    name: 'TeacherCabinet',
+    component: TeacherCabinet
+  }
 ]
 
 const router = createRouter({

@@ -9,12 +9,12 @@
 
     <ion-footer>
       <ion-buttons>
-        <IonButton size="large" fill="outline" expand="block" color="success" class="btn-login" router-direction="forward" href="/start/login">Вхід
+        <IonButton size="large" fill="outline" expand="block" color="success" class="btn-login" router-direction="forward" href="/login">Вхід
         </IonButton>
       </ion-buttons>
 
       <ion-buttons>
-        <IonButton size="large" fill="solid" expand="block" color="secondary" href="/start/signup">Реєстрація</IonButton>
+        <IonButton size="large" fill="solid" expand="block" color="secondary" href="/signup">Реєстрація</IonButton>
       </ion-buttons>
 
     </ion-footer>
@@ -66,6 +66,5 @@ ion-thumbnail {
   left: 5%;
   width: 90%;
   height: 90%;
-  --border-radius: 360px;
 }
 </style>
