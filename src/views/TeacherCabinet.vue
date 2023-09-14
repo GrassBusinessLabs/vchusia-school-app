@@ -7,31 +7,31 @@
     </ion-header>
     <ion-content class="ion-padding">
       <ion-list>
-        <ion-item>
+        <ion-item @click.prevent="activePage = 'Обліковий запис'">
           <ion-label>
             Обліковий запис
           </ion-label>
         </ion-item>
 
-        <ion-item>
+        <ion-item @click.prevent="activePage = 'Курси'">
           <ion-label>
             Курси
           </ion-label>
         </ion-item>
 
-        <ion-item>
+        <ion-item @click="activePage = 'Завдання'">
           <ion-label>
             Завдання
           </ion-label>
         </ion-item>
 
-        <ion-item>
+        <ion-item @click="activePage = 'Групи'">
           <ion-label>
             Групи
           </ion-label>
         </ion-item>
 
-        <ion-item>
+        <ion-item @click="activePage = 'Учні'">
           <ion-label>
             Учні
           </ion-label>
@@ -55,11 +55,15 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title></ion-title>
+        <ion-title>{{ this.activePage }}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <AccountTeacher/>
+      <AccountTeacher v-if="activePage === 'Обліковий запис'"/>
+      <CourseTeacher v-else-if="activePage === 'Курси'"/>
+      <TaskTeacher v-else-if="activePage === 'Завдання'"/>
+      <GroupTeacher v-else-if="activePage === 'Групи'"/>
+      <PupilsTeacher v-else-if="activePage === 'Учні'"/>
     </ion-content>
   </ion-page>
 </template>
@@ -68,6 +72,13 @@
 import {defineComponent} from 'vue';
 import AccountTeacher from "@/components/Teacher/AccountTeacher.vue";
 import CourseTeacher from "@/components/Teacher/CourseTeacher.vue"
+import TaskTeacher from "@/components/Teacher/TaskTeacher.vue"
+import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
+import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
+import {ref} from "vue";
+
+
+
 import {
   IonButtons,
   IonContent,
@@ -81,10 +92,13 @@ import {
   IonLabel,
   IonItem,
   IonFooter,
-  IonButton
+  IonButton,
+  IonIcon
 } from "@ionic/vue";
 
+
 export default defineComponent({
+
   components: {
     CourseTeacher,
     AccountTeacher,
@@ -100,11 +114,21 @@ export default defineComponent({
     IonLabel,
     IonItem,
     IonFooter,
-    IonButton
+    IonButton,
+    IonIcon,
+    TaskTeacher,
+    GroupTeacher,
+    PupilsTeacher
   },
 
-  methods: {
+  data() {
+    return {
+      activePage: ref("Обліковий запис"),
+    }
+  },
 
+
+  methods: {
     logoutClick() {
       const axios = require('axios');
 
@@ -117,7 +141,9 @@ export default defineComponent({
           'access-control-request-method': 'GET',
           'origin': 'http://192.168.0.111:8100',
           'Authorization': 'Bearer {{token}}'
-        }
+        },
+
+
       };
 
       axios.request(config)
@@ -127,7 +153,7 @@ export default defineComponent({
           .catch((error) => {
             console.log(error);
           });
-    }
+    },
 
   }
 })
@@ -141,4 +167,19 @@ export default defineComponent({
   justify-content: center;
   margin-bottom: 30px;
 }
+
+ion-item {
+  cursor: pointer;
+}
+
+ion-item:active {
+  color: #3a7be0;
+
+}
+
+ion-item:hover {
+  color: #2dd36f;
+}
+
+
 </style>

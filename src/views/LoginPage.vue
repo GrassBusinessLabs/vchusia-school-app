@@ -1,49 +1,52 @@
 <template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons>
-        <ion-back-button default-href="/" text="Назад"></ion-back-button>
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons>
+          <ion-back-button default-href="/" text="Назад"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Вхід</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-list>
+
+      <ion-input
+          v-model="email"
+          placeholder="admin@gmail.com"
+          type="email"
+          fill="solid"
+          label="Електронна адреса"
+          labelPlacement="floating"
+          helperText="Введіть свою пошту"
+          errorText="Неправильний email"
+          required
+      ></ion-input>
+
+      <ion-input
+          v-model="password"
+          placeholder="********"
+          type="password"
+          fill="solid"
+          label="Пароль"
+          labelPlacement="floating"
+          helperText="Введіть свій пароль"
+          errorText="Неправильний пароль"
+          required
+      ></ion-input>
+
+      <ion-buttons class="btn-log">
+        <ion-button fill="solid" size="large" @click="login" shape="round" >Увійти</ion-button>
       </ion-buttons>
-      <ion-title>Вхід</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-list>
+      <input type="text" v-model="wrongData" class="textForError" disabled>
+    </ion-list>
+  </ion-page>
 
-    <ion-input
-        v-model="email"
-        placeholder="admin@gmail.com"
-        type="email"
-        fill="solid"
-        label="Email"
-        labelPlacement="floating"
-        helperText="Enter a valid email"
-        errorText="Invalid email"
-        required
-    ></ion-input>
-
-    <ion-input
-        v-model="password"
-        placeholder="********"
-        type="password"
-        fill="solid"
-        label="Password"
-        labelPlacement="floating"
-        helperText="Enter a valid password"
-        errorText="Invalid password"
-        required
-    ></ion-input>
-
-    <ion-buttons class="btn-log">
-      <ion-button fill="outline" size="large" @click="login">Увійти</ion-button>
-    </ion-buttons>
-
-    <input type="text" v-model="wrongData" class="textForError" disabled>
-  </ion-list>
 </template>
 
 <script>
 import axios from "axios";
 import {
+  IonPage,
   IonInput,
   IonList,
   IonHeader,
@@ -57,6 +60,7 @@ import {
 export default {
   name: "LoginPage",
   components: {
+    IonPage,
     IonInput,
     IonList,
     IonHeader,
@@ -69,7 +73,8 @@ export default {
     return {
       email: "",
       password: "",
-      wrongData: ""
+      wrongData: "",
+      token: null
     }
   },
   methods: {
@@ -80,6 +85,10 @@ export default {
       else{
         return this.throwErrorFun();
       }
+    },
+
+    successLogin(){
+      window.location.href = '/teacher-room'
     },
 
     throwErrorFun(){
@@ -102,12 +111,18 @@ export default {
         data: data
       };
 
+      const token = '';
       axios.request(config)
           .then((response) => {
             console.log(JSON.stringify(response.data));
+            this.token = JSON.stringify(response.data.token)
             this.email = "";
             this.password = "";
             this.wrongData = "";
+            console.log(this.token);
+            localStorage.setItem('token', JSON.stringify(response.data.token))
+            // this.successLogin();
+
           })
           .catch((error) => {
             console.log(error);
@@ -132,7 +147,7 @@ ion-header {
 
 ion-list {
   width: 90%;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .btn-log {

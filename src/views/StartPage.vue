@@ -3,18 +3,18 @@
     <ion-header>
       <ion-thumbnail>
         <ion-img
-            src="https://img.freepik.com/premium-vector/teacher-school-with-chalkboard-avatar-character_24877-1548.jpg"></ion-img>
+            src="https://www.wi6labs.com/wp-content/uploads/2019/12/Machine-learning-logo-1.png"></ion-img>
       </ion-thumbnail>
     </ion-header>
 
     <ion-footer>
       <ion-buttons>
-        <IonButton size="large" fill="outline" expand="block" color="success" class="btn-login" router-direction="forward" href="/login">Вхід
+        <IonButton size="large" fill="solid" expand="block" color="success" class="btn-login" router-direction="forward" shape="round" @click="$router.push({name: 'Login'})">Вхід
         </IonButton>
       </ion-buttons>
 
       <ion-buttons>
-        <IonButton size="large" fill="solid" expand="block" color="secondary" href="/signup">Реєстрація</IonButton>
+        <IonButton size="large" fill="solid" expand="block" color="secondary" router-link="/signup" shape="round" class="btnReg">Реєстрація</IonButton>
       </ion-buttons>
 
     </ion-footer>
@@ -30,11 +30,9 @@ import {
   IonFooter,
   IonHeader
 } from '@ionic/vue';
-import LoginPage from "@/views/LoginPage.vue";
 
 export default {
   components: {
-    LoginPage,
     IonPage,
     IonButtons,
     IonButton,
@@ -52,7 +50,9 @@ export default {
 ion-button {
   --padding-top: 10px;
   --padding-bottom: 10px;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
+  height: 60px;
 }
 
 .btn-login {
@@ -66,5 +66,13 @@ ion-thumbnail {
   left: 5%;
   width: 90%;
   height: 90%;
+}
+ion-img{
+  margin-top: 15px;
+  width: 99%;
+  height: 100%;
+}
+.btnReg{
+  margin-bottom: 50px;
 }
 </style>
