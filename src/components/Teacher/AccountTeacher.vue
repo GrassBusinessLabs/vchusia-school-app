@@ -1,34 +1,35 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-list>
-        <ion-avatar class="ion-avatar-account">
-          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+    <ion-page>
+      <ion-header>
+        <ion-list>
+          <ion-avatar class="ion-avatar-account">
+            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
 
-        </ion-avatar>
-        <ion-buttons class="changeAvatar">
-          <ion-button>Змінити аватар</ion-button>
-        </ion-buttons>
-        <ion-item>
-          <ion-label>
-            Мої дані
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            Змінити дані
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>
-            Змінити пароль
-          </ion-label>
-        </ion-item>
+          </ion-avatar>
+          <ion-buttons class="changeAvatar">
+            <ion-button>Змінити аватар</ion-button>
+          </ion-buttons>
+          <ion-item>
+            <ion-label>
+              Мої дані
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Змінити дані
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Змінити пароль
+            </ion-label>
+          </ion-item>
 
 
-      </ion-list>
-    </ion-header>
-  </ion-page>
+        </ion-list>
+      </ion-header>
+    </ion-page>
+
 
 </template>
 

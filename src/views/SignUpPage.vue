@@ -59,10 +59,11 @@
       ></ion-input>
 
       <ion-buttons class="btn-log">
-        <ion-button fill="solid" shape="round" size="large" color="success" @click="regSend">Зареєструватися</ion-button>
+        <ion-button fill="solid" shape="round" size="large" color="success" @click="regSend">Зареєструватися
+        </ion-button>
       </ion-buttons>
       <ion-text class="loginText">
-        Вже маєте аккаунт?  <a href="/login" > Увійти</a>
+        Вже маєте аккаунт? <a href="/login"> Увійти</a>
       </ion-text>
     </ion-list>
   </ion-page>
@@ -84,7 +85,8 @@ import {
 
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
-import axios from 'axios'
+import {signup} from "../stores/auth";
+
 
 export default defineComponent({
   components: {
@@ -106,46 +108,32 @@ export default defineComponent({
       password: "",
       name: "",
       date: "",
+      regStore: signup()
     }
   },
   methods: {
-    nullInputs(){
-      this.email = "";
-      this.password = "";
-      this.name = "";
-      this.date = ""
+    isNotNull(){
+      if(this.email || this.password || this.name){
+        return this.$router.push('/teacher-room')
+      }else{
+        return false;
+      }
     },
 
-
-    regSend() {
+    async regSend() {
       let data = JSON.stringify({
         "email": this.email,
         "password": this.password,
         "name": this.name
       });
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://vchusia.grassbusinesslabs.tk/api/v1/auth/register',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: data
-      };
+      await this.regStore.signup({
+        email: this.email,
+        password: this.password,
+        name: this.name
+      });
 
-      axios.request(config)
-          .then((response) => {
-            console.log(JSON.stringify(response.data));
-            this.nullInputs();
-
-          })
-          .catch((error) => {
-            console.log(error);
-            this.nullInputs();
-          });
-
-
+      this.isNotNull();
     }
   }
 
@@ -209,7 +197,8 @@ ion-text {
   justify-content: center;
   margin-top: 25px;
 }
-.btnSignUp{
+
+.btnSignUp {
   height: 100px;
 }
 </style>

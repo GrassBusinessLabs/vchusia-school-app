@@ -27,7 +27,7 @@ const pinia = createPinia();
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
-  .use(createPinia())
+  .use(pinia)
 
 
 // app.use(axios)

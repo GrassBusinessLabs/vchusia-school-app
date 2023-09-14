@@ -44,8 +44,8 @@
 </template>
 
 <script>
+import {auth} from "../stores/auth";
 import axios from "axios";
-import {auth} from "@/stores/auth";
 import {
   IonPage,
   IonInput,
@@ -88,19 +88,11 @@ export default {
         return this.throwErrorFun();
       }
     },
-
-    successLogin() {
-      window.location.href = '/teacher-room'
-    },
-
     throwErrorFun() {
       return this.wrongData = "Неправильні дані!"
     },
-
-
     async login() {
       let data = JSON.stringify({
-
         "email": this.email,
         "password": this.password
       });
@@ -109,47 +101,12 @@ export default {
         email: this.email,
         password: this.password
       });
+      if(localStorage.getItem('token')){
+        this.$router.push('/teacher-room')
+      }
 
-      this.$router.push('/teacher-room')
-      //
-      //   let config = {
-      //     method: 'post',
-      //     maxBodyLength: Infinity,
-      //     url: 'https://vchusia.grassbusinesslabs.tk/api/v1/auth/login',
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-      //     data: data
-      //   };
-      //
-      //   const token = '';
-      //   axios.request(config)
-      //       .then((response) => {
-      //         console.log(JSON.stringify(response.data));
-      //         this.token = JSON.stringify(response.data.token)
-      //         this.email = "";
-      //         this.password = "";
-      //         this.wrongData = "";
-      //         console.log(this.token);
-      //         localStorage.setItem('token', JSON.stringify(response.data.token))
-      //         // this.successLogin();
-      //
-      //       })
-      //       .catch((error) => {
-      //         console.log(error);
-      //         this.isNotNull();
-      //         this.email = "";
-      //         this.password = "";
-      //
-      //       });
-      // },
-
-
-      //
     }
   }
-
-
 }
 </script>
 
