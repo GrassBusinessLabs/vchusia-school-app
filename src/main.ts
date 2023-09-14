@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router';
 import { IonicVue } from '@ionic/vue';
 import {createPinia} from "pinia";
+import axios from "./http/api";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -26,8 +27,10 @@ const pinia = createPinia();
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
-  .use(pinia)
-  
+  .use(createPinia())
+
+
+// app.use(axios)
 router.isReady().then(() => {
   app.mount('#app' );
 });
