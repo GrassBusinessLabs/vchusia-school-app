@@ -45,7 +45,6 @@
 
 <script>
 import {auth} from "../stores/auth";
-import axios from "axios";
 import {
   IonPage,
   IonInput,
@@ -81,6 +80,7 @@ export default {
     }
   },
   methods: {
+
     isNotNull() {
       if (this.email === "" || this.password === "") {
         return this.wrongData = "Заповніть поля!"
@@ -99,10 +99,15 @@ export default {
 
       await this.authStore.login({
         email: this.email,
-        password: this.password
+        password: this.password,
       });
+      this.email = "";
+      this.password = ""
+
       if(localStorage.getItem('token')){
         this.$router.push('/teacher-room')
+      }else{
+        return false
       }
 
     }

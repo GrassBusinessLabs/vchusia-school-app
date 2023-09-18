@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/teacher-room',
     name: 'TeacherCabinet',
     component: TeacherCabinet
-  },
+  }
 
 ]
 

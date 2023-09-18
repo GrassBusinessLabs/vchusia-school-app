@@ -1,54 +1,56 @@
 import {defineStore} from "pinia";
 import {AuthApi} from "../http/index"
 import {Auth, Signup} from "@/models/Auth";
+import router from '../router/index'
+import {body} from "ionicons/icons";
 
-interface State{
+interface State {
     user: any,
     token: string | null
 }
 
-interface Sign{
-    user: any,
-    token: string | null
-}
 
-export const auth = defineStore('auth',{
+export const auth = defineStore('auth', {
     state: (): State => ({
         user: null,
         token: null
     }),
     actions: {
-        async login(body: Auth){
-            try{
-                const response : any = await AuthApi.login(body)
-                this.user = response.user
+        async login(body: Auth) {
+            try {
+                const response: any = await AuthApi.login(body)
                 localStorage.setItem('token', response.token)
+                localStorage.setItem('user', JSON.stringify(response.user))
                 console.log(response)
-            }catch (e){
+            } catch (e) {
                 console.log("Error")
             }
         },
 
+        async logout() {
+            try {
+                const response: any = await AuthApi.logout()
+                this.token = null
+                localStorage.clear()
+                console.log(response)
+                router.replace('/login')
+            } catch (e) {
+                console.log('Error')
+            }
 
-    }
-})
+        },
 
-export const signup = defineStore('signup', {
-    state: (): Sign => ({
-        user: null,
-        token: null,
-    }),
-
-    actions: {
-        async signup(body: Signup){
-            try{
-                const response : any = await AuthApi.signup(body)
+        async signup(body: Signup) {
+            try {
+                const response: any = await AuthApi.signup(body)
                 this.user = response.user
                 localStorage.setItem('token', response.token)
                 console.log(response)
-            }catch (e){
+            } catch (e) {
                 console.log("Error")
             }
         }
+
+
     }
-})
+});

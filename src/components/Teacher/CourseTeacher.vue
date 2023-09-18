@@ -10,7 +10,6 @@
           <ion-icon :icon="add" color="white" id="open-modal"></ion-icon>
         </ion-fab-button>
       </ion-fab>
-{{message}}
     </ion-header>
     <ion-content>
       <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
@@ -28,7 +27,7 @@
         <ion-content class="ion-padding">
           <ion-item>
             <ion-label position="stacked">Назва курсу</ion-label>
-            <ion-input ref="input" type="text" placeholder="121 Конструювання ПЗ (45)" required></ion-input>
+            <ion-input ref="input" type="text" placeholder="121 Конструювання ПЗ (45)" required v-model="nameCourse"></ion-input>
           </ion-item>
 
           <ion-item>

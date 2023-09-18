@@ -1,71 +1,74 @@
 <template>
-  <ion-menu content-id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Меню</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-list>
-        <ion-item @click.prevent="activePage = 'Обліковий запис'">
-          <ion-label>
-            Обліковий запис
-          </ion-label>
-        </ion-item>
+  <ion-page>
+    <ion-menu content-id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Меню</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item @click.prevent="activePage = 'Обліковий запис'">
+            <ion-label>
+              Обліковий запис
+            </ion-label>
+          </ion-item>
 
-        <ion-item @click.prevent="activePage = 'Курси'">
-          <ion-label>
-            Курси
-          </ion-label>
-        </ion-item>
+          <ion-item @click.prevent="activePage = 'Курси'">
+            <ion-label>
+              Курси
+            </ion-label>
+          </ion-item>
 
-        <ion-item @click="activePage = 'Завдання'">
-          <ion-label>
-            Завдання
-          </ion-label>
-        </ion-item>
+          <ion-item @click="activePage = 'Завдання'">
+            <ion-label>
+              Завдання
+            </ion-label>
+          </ion-item>
 
-        <ion-item @click="activePage = 'Групи'">
-          <ion-label>
-            Групи
-          </ion-label>
-        </ion-item>
+          <ion-item @click="activePage = 'Групи'">
+            <ion-label>
+              Групи
+            </ion-label>
+          </ion-item>
 
-        <ion-item @click="activePage = 'Учні'">
-          <ion-label>
-            Учні
-          </ion-label>
-        </ion-item>
-
-
-      </ion-list>
+          <ion-item @click="activePage = 'Учні'">
+            <ion-label>
+              Учні
+            </ion-label>
+          </ion-item>
 
 
-    </ion-content>
+        </ion-list>
 
-    <ion-footer class="footerMenu">
-      <ion-buttons>
-        <ion-button @click="logoutClick">Вийти</ion-button>
-      </ion-buttons>
-    </ion-footer>
-  </ion-menu>
-  <ion-page id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
+
+      </ion-content>
+
+      <ion-footer class="footerMenu">
+        <ion-buttons class="btns-out">
+          <ion-button @click="authStore.logout()" fill="solid" expand="block" class="logout-btn" color="danger">Вийти</ion-button>
         </ion-buttons>
-        <ion-title>{{ this.activePage }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <AccountTeacher v-if="activePage === 'Обліковий запис'"/>
-      <CourseTeacher v-else-if="activePage === 'Курси'"/>
-      <TaskTeacher v-else-if="activePage === 'Завдання'"/>
-      <GroupTeacher v-else-if="activePage === 'Групи'"/>
-      <PupilsTeacher v-else-if="activePage === 'Учні'"/>
-    </ion-content>
+      </ion-footer>
+    </ion-menu>
+    <ion-page id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <ion-title>{{ this.activePage }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <AccountTeacher v-if="activePage === 'Обліковий запис'"/>
+        <CourseTeacher v-else-if="activePage === 'Курси'"/>
+        <TaskTeacher v-else-if="activePage === 'Завдання'"/>
+        <GroupTeacher v-else-if="activePage === 'Групи'"/>
+        <PupilsTeacher v-else-if="activePage === 'Учні'"/>
+      </ion-content>
+    </ion-page>
   </ion-page>
+
 </template>
 
 <script lang="ts">
@@ -76,8 +79,7 @@ import TaskTeacher from "@/components/Teacher/TaskTeacher.vue"
 import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
 import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
 import {ref} from "vue";
-
-
+import {auth} from "@/stores/auth";
 
 import {
   IonButtons,
@@ -124,36 +126,12 @@ export default defineComponent({
   data() {
     return {
       activePage: ref("Обліковий запис"),
+      authStore: auth()
     }
   },
 
-
   methods: {
-    logoutClick() {
-      const axios = require('axios');
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://vchusia.grassbusinesslabs.tk/api/v1/auth/logout',
-        headers: {
-          'access-control-request-headers': 'authorization,content-type',
-          'access-control-request-method': 'GET',
-          'origin': 'http://192.168.0.111:8100',
-          'Authorization': 'Bearer {{token}}'
-        },
-
-
-      };
-
-      axios.request(config)
-          .then((response) => {
-              console.log(JSON.stringify(response.data));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    },
 
   }
 })
@@ -178,7 +156,16 @@ ion-item:active {
 }
 
 ion-item:hover {
-  color: #2dd36f;
+  color: #7d7d7d;
+
+}
+
+.btns-out {
+  width: 90%;
+}
+
+.logout-btn {
+  width: 100%;
 }
 
 

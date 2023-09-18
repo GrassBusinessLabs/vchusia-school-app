@@ -9,7 +9,14 @@ function signup (body: Signup){
     return axios.post('auth/register', body)
 }
 
+function logout (){
+    return axios.post('auth/logout')
+}
+
+
 export default {
     login,
-    signup
+    signup,
+    logout
+
 }

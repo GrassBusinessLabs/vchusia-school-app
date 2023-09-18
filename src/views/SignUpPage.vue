@@ -86,6 +86,7 @@ import {
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
 import {signup} from "../stores/auth";
+// import router from "../router/index.js";
 
 
 export default defineComponent({
@@ -112,14 +113,6 @@ export default defineComponent({
     }
   },
   methods: {
-    isNotNull(){
-      if(this.email || this.password || this.name){
-        return this.$router.push('/teacher-room')
-      }else{
-        return false;
-      }
-    },
-
     async regSend() {
       let data = JSON.stringify({
         "email": this.email,
@@ -130,15 +123,22 @@ export default defineComponent({
       await this.regStore.signup({
         email: this.email,
         password: this.password,
-        name: this.name
+        name: this.name,
       });
 
-      this.isNotNull();
+      if (signup().$state.user != null) {
+        this.$router.push('/teacher-room')
+      } else {
+        return false
+      }
+
     }
+
   }
 
 
-})
+});
+
 </script>
 
 <style scoped>

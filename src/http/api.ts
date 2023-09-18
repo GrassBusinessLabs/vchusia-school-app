@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://vchusia.grassbusinesslabs.tk/api/v1/'
+    baseURL: import.meta.env.VITE_APP_AXIOS_BASE_URL ?? "localhost"
 })
 
 instance.interceptors.request.use((config: any) => {

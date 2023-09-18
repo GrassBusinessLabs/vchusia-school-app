@@ -8,4 +8,3 @@ export interface Signup{
     password: string,
     name: string
 }
-
