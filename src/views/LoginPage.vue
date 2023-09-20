@@ -103,6 +103,7 @@ export default {
       });
       this.email = "";
       this.password = ""
+      this.isNotNull()
 
       if(localStorage.getItem('token')){
         this.$router.push('/teacher-room')

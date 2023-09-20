@@ -85,7 +85,7 @@ import {
 
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
-import {signup} from "../stores/auth";
+import {auth} from "../stores/auth";
 // import router from "../router/index.js";
 
 
@@ -109,7 +109,8 @@ export default defineComponent({
       password: "",
       name: "",
       date: "",
-      regStore: signup()
+      authStore: auth(),
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   methods: {
@@ -120,22 +121,15 @@ export default defineComponent({
         "name": this.name
       });
 
-      await this.regStore.signup({
+      await this.authStore.signup({
         email: this.email,
         password: this.password,
         name: this.name,
       });
-
-      if (signup().$state.user != null) {
-        this.$router.push('/teacher-room')
-      } else {
-        return false
-      }
+      this.$router.push('/teacher-room')
 
     }
-
   }
-
 
 });
 

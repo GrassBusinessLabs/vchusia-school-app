@@ -8,3 +8,8 @@ export interface Signup{
     password: string,
     name: string
 }
+
+export interface changePassword {
+    oldPassword: string,
+    newPassword: string
+}

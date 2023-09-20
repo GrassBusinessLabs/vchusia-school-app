@@ -18,7 +18,31 @@
             <div class="ion-padding" slot="content">Email: {{ user?.email }}</div>
           </ion-accordion>
           <ion-item>
-            <ion-button class="btn-changes">Змінити пароль</ion-button>
+            <ion-button class="btn-changes" id="open-modal">Змінити пароль</ion-button>
+            <ion-modal ref="modal" trigger="open-modal">
+              <ion-header>
+                <ion-toolbar>
+                  <ion-buttons slot="start">
+                    <ion-button @click="cancel()">Відмінити</ion-button>
+                  </ion-buttons>
+                  <ion-title>Змінити пароль</ion-title>
+                  <ion-buttons slot="end">
+                    <ion-button :strong="true" @click="confirm()">Змінити</ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+              <ion-content class="ion-padding">
+                <ion-item>
+                  <ion-label position="stacked">Введіть ваш старий пароль</ion-label>
+                  <ion-input ref="input" type="password" placeholder="********" v-model="oldPassword"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="stacked">Введіть ваш новий пароль</ion-label>
+                  <ion-input ref="input" type="password" placeholder="********" v-model="newPassword"></ion-input>
+                </ion-item>
+              </ion-content>
+            </ion-modal>
             <ion-button class="btn-changes">Редагувати дані</ion-button>
           </ion-item>
         </ion-accordion-group>
@@ -31,7 +55,7 @@
 
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   IonPage,
   IonHeader,
@@ -42,38 +66,48 @@ import {
   IonButtons,
   IonButton,
   IonAccordion,
-  IonAccordionGroup
-
+  IonAccordionGroup,
+  IonModal,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonInput
 } from "@ionic/vue";
-import {defineComponent} from "vue";
-import MyPerson from "@/components/Teacher/details/MyPerson.vue";
 import {auth} from "@/stores/auth";
+import {ref} from 'vue';
+import axios from "axios";
+
+const modal = ref();
+const input = ref();
+
+let oldPassword = "";
+let newPassword = "";
+
+const cancel = () => modal.value.$el.dismiss(null, 'cancel');
+
+const user = JSON.parse(localStorage.getItem('user'))
+const token = localStorage.getItem('token')
+
+const confirm = () => {
+  modal.value.$el.dismiss('confirm');
+  auth().changePassword({
+    "oldPassword" : oldPassword,
+    "newPassword" : newPassword
+  })
+  oldPassword = "";
+  newPassword = "";
+
+}
 
 
-export default defineComponent({
-  name: 'AccountTeacher',
-  components: {
-    IonPage,
-    IonHeader,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonAvatar,
-    IonButtons,
-    IonButton,
-    MyPerson,
-    IonAccordion,
-    IonAccordionGroup
-  },
 
-  data() {
-    return {
-      user: JSON.parse(localStorage.getItem('user'))
-    }
-  },
 
-  methods: {}
-})
+
+
+
+
+
+
 
 
 </script>
