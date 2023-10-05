@@ -31,9 +31,9 @@
           errorText="Неправильний пароль"
       ></ion-input>
 
-      <ion-radio-group value="custom-checked">
-        <ion-radio value="custom" aria-label="Custom checkbox">Студент</ion-radio>
-        <ion-radio value="custom-checked" aria-label="Custom checkbox that is checked">Учитель</ion-radio>
+      <ion-radio-group value="custom-checked" v-model="this.role">
+        <ion-radio value="STUDENT" aria-label="Custom checkbox">Студент</ion-radio>
+        <ion-radio value="TEACHER" aria-label="Custom checkbox that is checked">Учитель</ion-radio>
       </ion-radio-group>
 
       <ion-input
@@ -109,6 +109,7 @@ export default defineComponent({
       password: "",
       name: "",
       date: "",
+      role: "",
       authStore: auth(),
       user: JSON.parse(localStorage.getItem('user'))
     }
@@ -118,16 +119,17 @@ export default defineComponent({
       let data = JSON.stringify({
         "email": this.email,
         "password": this.password,
-        "name": this.name
+        "name": this.name,
+        "role": this.role
       });
 
       await this.authStore.signup({
         email: this.email,
         password: this.password,
         name: this.name,
+        role: this.role
       });
       this.$router.push('/teacher-room')
-
     }
   }
 

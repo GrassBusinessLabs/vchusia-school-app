@@ -6,6 +6,7 @@
         <ion-searchbar animated="animated" placeholder="Пошук по курсах"></ion-searchbar>
       </ion-item>
 
+
       <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
         <ion-header>
           <ion-toolbar>
@@ -23,9 +24,10 @@
             <ion-label position="stacked">Назва курсу</ion-label>
             <ion-input ref="input"
                        type="text"
-                       placeholder="121 Конструювання ПЗ (45)"
+                       placeholder="Програмування Java"
                        required
-                       v-model="defineComponent.nameCourse">
+                       v-model="courses.nameCourse">
+
 
             </ion-input>
           </ion-item>
@@ -34,8 +36,8 @@
             <ion-label position="stacked">Назва дисципліни</ion-label>
             <ion-input ref="input"
                        type="text"
-                       placeholder="Програмування"
-                       v-model="defineComponent.nameDis"
+                       placeholder="Інформатика"
+                       v-model="courses.nameDis"
             >
 
             </ion-input>
@@ -46,7 +48,7 @@
             <ion-input ref="input"
                        type="number"
                        placeholder="10"
-                       v-model="defineComponent.learnClass"
+                       v-model="courses.learnClass"
             >
             </ion-input>
           </ion-item>
@@ -55,8 +57,8 @@
             <ion-label position="stacked">Вік "від"</ion-label>
             <ion-input ref="input"
                        type="number"
-                       placeholder="2020"
-                       v-model="defineComponent.ageFrom"
+                       placeholder="6"
+                       v-model="courses.ageFrom"
             >
             </ion-input>
           </ion-item>
@@ -65,8 +67,8 @@
             <ion-label position="stacked">Вік "до"</ion-label>
             <ion-input ref="input"
                        type="number"
-                       placeholder="2024  "
-                       v-model="defineComponent.ageTo"
+                       placeholder="16  "
+                       v-model="courses.ageTo"
             >
             </ion-input>
           </ion-item>
@@ -76,16 +78,12 @@
 
 
     <ion-content>
-      <div class="courses-content">
-        <div class="course">
-          <h3>Назва: {{ defineComponent.nameCourse }}</h3>
-          <h4>Курс: {{ defineComponent.nameDis }}</h4>
-          <pre>Клас: {{ defineComponent.learnClass }}</pre>
-          <pre>Вік від: {{ defineComponent.ageFrom }}</pre>
-          <pre>Вік до: {{ defineComponent.ageTo }}</pre>
+      <div class="course">
+        <div class="courses-content" v-for="(value, key, index) in courses">
+          {{value}}
         </div>
-
       </div>
+
 
 
     </ion-content>
@@ -108,11 +106,11 @@
 
 
 <script lang="ts" setup>
-import {ref} from 'vue';
+import {reactive, ref} from 'vue';
 import {add} from 'ionicons/icons';
 import {OverlayEventDetail} from '@ionic/core/components';
-import {defineComponent} from "vue";
 import {
+  IonButtons,
   IonHeader,
   IonContent,
   IonInput,
@@ -129,6 +127,7 @@ import {
   IonToolbar,
   IonTitle
 } from "@ionic/vue";
+import {course} from "@/stores/course";
 
 const message = ref('1');
 
@@ -136,23 +135,30 @@ const name = ref();
 const modal = ref();
 const input = ref();
 
-defineComponent({
-  data() {
-    return {
-      nameCourse: "",
-      nameDis: "",
-      learnClass: 0,
-      ageFrom: '',
-      ageTo: ''
-    }
-  }
+
+
+let courses = reactive({
+  nameCourse: "",
+  nameDis: "",
+  learnClass: null,
+  ageFrom: null,
+  ageTo: null,
 })
 
+const userData = JSON.parse(localStorage.getItem('user'))
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
 const confirm = () => {
   modal.value.$el.dismiss('confirm');
+  course().createCourse({
+    "nameCourse": courses.nameCourse,
+    "nameDis": courses.nameDis,
+    "learnClass": courses.learnClass,
+    "ageFrom": courses.ageFrom,
+    "ageTo": courses.ageTo
+  })
+  console.log(courses)
 
 };
 
@@ -165,20 +171,18 @@ const onWillDismiss = (ev: CustomEvent<OverlayEventDetail>) => {
 };
 
 
+
 </script>
 
 <style scoped>
-
 
 .course {
   width: 90%;
   border-radius: 15px;
   margin: 10px auto;
   padding: 10px;
-  background: url(https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y29kaW5nfGVufDB8fDB8fHww&w=1000&q=80) 100% 100%;
-  /*background: rgb(0,77,71);*/
-  /*background: linear-gradient(320deg, rgba(0,77,71,1) 0%, rgba(0,255,154,1) 100%);*/
   color: #fff;
+  background: linear-gradient(seagreen, darkgreen);
 }
 
 ion-fab {

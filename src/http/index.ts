@@ -1,3 +1,4 @@
 export {
-    default as AuthApi
+    default as AuthApi,
 } from "./modules/auth"
+

@@ -105,11 +105,6 @@ export default {
       this.password = ""
       this.isNotNull()
 
-      if(localStorage.getItem('token')){
-        this.$router.push('/teacher-room')
-      }else{
-        return false
-      }
 
     }
   }
