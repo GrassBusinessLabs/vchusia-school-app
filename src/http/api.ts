@@ -19,10 +19,11 @@ instance.interceptors.response.use((v) => {
         localStorage.removeItem('token')
         return v.data
     }
-    if (v.status === 200) {
-        return v.data
+    if (v.data?.code === 402 || v.data?.code === 403 || v.data?.code === 404 || v.data?.code === 422 || v.data?.code === 500) {
+        return Promise.reject(v?.data)
     }
 
-    return Promise.reject(v)
+
+    return v.data
 })
 export default instance

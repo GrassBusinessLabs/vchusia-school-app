@@ -1,7 +1,8 @@
-export interface CourseCreate{
-    nameCourse: string,
-    nameDis: string | null,
-    learnClass: number | null,
-    ageFrom: number | null,
-    ageTo: number | null
+export interface Course{
+    name: string,
+    discipline?: string,
+    grade?: number | null,
+    yearsFrom?: number | null,
+    yearsTo?: number | null,
+    id?: number
 }

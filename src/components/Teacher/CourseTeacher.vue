@@ -7,7 +7,7 @@
       </ion-item>
 
 
-      <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
+      <ion-modal ref="modal" trigger="open-modal">
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="start">
@@ -26,7 +26,7 @@
                        type="text"
                        placeholder="Програмування Java"
                        required
-                       v-model="courses.nameCourse">
+                       v-model="course$.name">
 
 
             </ion-input>
@@ -37,7 +37,7 @@
             <ion-input ref="input"
                        type="text"
                        placeholder="Інформатика"
-                       v-model="courses.nameDis"
+                       v-model="course$.discipline"
             >
 
             </ion-input>
@@ -48,7 +48,7 @@
             <ion-input ref="input"
                        type="number"
                        placeholder="10"
-                       v-model="courses.learnClass"
+                       v-model="course$.grade"
             >
             </ion-input>
           </ion-item>
@@ -58,7 +58,7 @@
             <ion-input ref="input"
                        type="number"
                        placeholder="6"
-                       v-model="courses.ageFrom"
+                       v-model="course$.yearsFrom"
             >
             </ion-input>
           </ion-item>
@@ -68,21 +68,28 @@
             <ion-input ref="input"
                        type="number"
                        placeholder="16  "
-                       v-model="courses.ageTo"
+                       v-model="course$.yearsTo"
             >
             </ion-input>
           </ion-item>
+
         </ion-content>
       </ion-modal>
     </ion-header>
 
 
     <ion-content>
-      <div class="course">
-        <div class="courses-content" v-for="(value, key, index) in courses">
-          {{value}}
+      <div v-for="value in CourseStore.items" class="course">
+        <div v-for="(name, value, index) in value" v-show="value != 'id' && value != 'userid' && value != 'description'" class="titlesCourse">
+          {{ value = nameCourses[index] }}  <span class="valueCourse"> {{ name }}</span>
         </div>
       </div>
+
+      <ion-infinite-scroll @ionInfinite="ionInfinite">
+        <ion-infinite-scroll-content>
+
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
 
 
 
@@ -106,10 +113,12 @@
 
 
 <script lang="ts" setup>
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import {add} from 'ionicons/icons';
-import {OverlayEventDetail} from '@ionic/core/components';
 import {
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  InfiniteScrollCustomEvent,
   IonButtons,
   IonHeader,
   IonContent,
@@ -128,48 +137,61 @@ import {
   IonTitle
 } from "@ionic/vue";
 import {course} from "@/stores/course";
+import {Course} from "@/models/Course";
 
-const message = ref('1');
+
+const CourseStore = course()
+
 
 const name = ref();
 const modal = ref();
 const input = ref();
 
+const store = course()
 
 
-let courses = reactive({
-  nameCourse: "",
-  nameDis: "",
-  learnClass: null,
-  ageFrom: null,
-  ageTo: null,
+
+
+let course$ = reactive({
+  name: "",
+  discipline: "",
+  grade: null,
+  yearsFrom: null,
+  yearsTo: null,
+
 })
 
-const userData = JSON.parse(localStorage.getItem('user'))
+
+
+onMounted(() => {
+  store.getAllCourse()
+})
+
+let nameCourses = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до']
+
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
 const confirm = () => {
   modal.value.$el.dismiss('confirm');
-  course().createCourse({
-    "nameCourse": courses.nameCourse,
-    "nameDis": courses.nameDis,
-    "learnClass": courses.learnClass,
-    "ageFrom": courses.ageFrom,
-    "ageTo": courses.ageTo
-  })
-  console.log(courses)
-
-};
-
-
-const onWillDismiss = (ev: CustomEvent<OverlayEventDetail>) => {
-  if (ev.detail.role === 'confirm') {
-    message.value = ev.detail.data;
-    message.value = 'Hello'
+  const body: Course = {
+    name: course$.name,
+    discipline: course$.discipline,
+    grade: +course$.grade,
+    yearsFrom: +course$.yearsFrom,
+    yearsTo: +course$.yearsTo
   }
-};
 
+  store.createCourse(body)
+  console.log(course$)
+  course$.name = "";
+  course$.discipline = "";
+  course$.grade = null
+  course$.yearsFrom = null;
+  course$.yearsTo = null;
+
+
+};
 
 
 </script>
@@ -177,12 +199,31 @@ const onWillDismiss = (ev: CustomEvent<OverlayEventDetail>) => {
 <style scoped>
 
 .course {
+  padding: 15px;
   width: 90%;
-  border-radius: 15px;
   margin: 10px auto;
-  padding: 10px;
   color: #fff;
-  background: linear-gradient(seagreen, darkgreen);
+  background: rgb(0,75,171);
+  background: url(https://cdn.pixabay.com/photo/2016/11/29/01/13/background-1866485_1280.jpg);
+  border-radius: 15px;
+}
+
+
+.titlesCourse {
+  font-family: Roboto, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.valueCourse {
+  color: #9ae6c4;
+  font-size: 18px;
+  font-family: "Fira Code Medium", monospace;
+
+}
+
+.courses-content {
+  padding: 4px 15px;
 }
 
 ion-fab {

@@ -129,7 +129,6 @@ export default defineComponent({
         name: this.name,
         role: this.role
       });
-      this.$router.push('/teacher-room')
     }
   }
 
