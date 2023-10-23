@@ -27,7 +27,6 @@ export const course = defineStore('course', {
         async createCourse(body: Course) {
             try {
                 const response = await CourseApi.createCourse(body)
-                console.log("!!!")
                 console.log(response)
                 this.items.push(response)
                 console.log(this.items)

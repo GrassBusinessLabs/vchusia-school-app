@@ -13,3 +13,7 @@ export interface changePassword {
     oldPassword: string,
     newPassword: string
 }
+
+export interface changeMe{
+    name: string
+}

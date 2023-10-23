@@ -12,6 +12,11 @@
             <ion-label>
               Обліковий запис
             </ion-label>
+            <p class="nameUser">
+              {{this.user.name}}
+
+            </p>
+
           </ion-item>
 
           <ion-item @click.prevent="activePage = 'Курси'">
@@ -97,6 +102,7 @@ import {
   IonButton,
   IonIcon
 } from "@ionic/vue";
+import {course} from "@/stores/course";
 
 
 export default defineComponent({
@@ -126,7 +132,9 @@ export default defineComponent({
   data() {
     return {
       activePage: ref("Курси"),
-      authStore: auth()
+      authStore: auth(),
+      user: JSON.parse(localStorage.getItem('user'))
+
     }
   },
 
@@ -167,6 +175,9 @@ ion-item:hover {
 .logout-btn {
   width: 100%;
 }
-
+.nameUser{
+  color: #7974ff;
+  font-weight: 700;
+}
 
 </style>

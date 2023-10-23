@@ -56,6 +56,7 @@ import {
   IonBackButton
 
 } from "@ionic/vue";
+import {course} from "../stores/course.ts"
 
 export default {
   name: "LoginPage",
@@ -75,7 +76,8 @@ export default {
       password: "",
       wrongData: "",
       token: null,
-      authStore: auth()
+      authStore: auth(),
+      courseStore: course()
 
     }
   },
@@ -92,6 +94,7 @@ export default {
       return this.wrongData = "Неправильні дані!"
     },
     async login() {
+      this.courseStore.total = 0;
       let data = JSON.stringify({
         "email": this.email,
         "password": this.password

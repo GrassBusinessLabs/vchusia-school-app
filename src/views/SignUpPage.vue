@@ -47,16 +47,6 @@
           errorText="Введіть коректне ім'я"
       ></ion-input>
 
-      <ion-input
-          v-model="this.date"
-          placeholder="1.01.2000"
-          type="date"
-          fill="solid"
-          label="Дата народження"
-          labelPlacement="floating"
-          helperText="Виберіть свою дату народження"
-          errorText="Введіть коректну дату"
-      ></ion-input>
 
       <ion-buttons class="btn-log">
         <ion-button fill="solid" shape="round" size="large" color="success" @click="regSend">Зареєструватися

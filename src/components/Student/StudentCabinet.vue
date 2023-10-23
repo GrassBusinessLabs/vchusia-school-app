@@ -8,31 +8,31 @@
       </ion-header>
       <ion-content class="ion-padding">
         <ion-list>
-          <ion-item>
+          <ion-item @click.prevent="activePage = 'Обліковий запис'">
             <ion-label>
               Обліковий запис
             </ion-label>
           </ion-item>
 
-          <ion-item>
+          <ion-item @click.prevent="activePage = 'Курси'">
             <ion-label>
               Курси
             </ion-label>
           </ion-item>
 
-          <ion-item >
+          <ion-item @click.prevent="activePage = 'Завдання'">
             <ion-label>
               Завдання
             </ion-label>
           </ion-item>
 
-          <ion-item >
+          <ion-item @click.prevent="activePage = 'Групи'">
             <ion-label>
               Групи
             </ion-label>
           </ion-item>
 
-          <ion-item>
+          <ion-item @click.prevent="activePage = 'Учні'">
             <ion-label>
               Учні
             </ion-label>
@@ -59,6 +59,10 @@
           <ion-title>{{ this.activePage }}</ion-title>
         </ion-toolbar>
       </ion-header>
+      <ion-content class="ion-padding">
+        <AccountStudent v-if="activePage === 'Обліковий запис'"/>
+        <CourseStudent v-if="activePage === 'Курси'"/>
+      </ion-content>
     </ion-page>
   </ion-page>
 
@@ -66,11 +70,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import AccountTeacher from "@/components/Teacher/AccountTeacher.vue";
-import CourseTeacher from "@/components/Teacher/CourseTeacher.vue"
-import TaskTeacher from "@/components/Teacher/TaskTeacher.vue"
-import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
-import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
+
 import {ref} from "vue";
 import {auth} from "@/stores/auth";
 
@@ -90,11 +90,15 @@ import {
   IonButton,
   IonIcon
 } from "@ionic/vue";
+import AccountStudent from "@/components/Student/AccountStudent.vue";
+import CourseStudent from "@/components/Student/CourseStudent.vue";
 
 
 export default defineComponent({
 
   components: {
+    CourseStudent,
+    AccountStudent,
     IonButtons,
     IonContent,
     IonHeader,
@@ -109,9 +113,6 @@ export default defineComponent({
     IonFooter,
     IonButton,
     IonIcon,
-    TaskTeacher,
-    GroupTeacher,
-    PupilsTeacher
   },
   data() {
     return {

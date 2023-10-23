@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import AuthApi from "../http/modules/auth"
-import {Auth, changePassword, Signup} from "@/models/Auth";
+import {Auth, changeMe, changePassword, Signup} from "@/models/Auth";
 import router from '../router/index'
 
 interface State {
@@ -68,6 +68,24 @@ export const auth = defineStore('auth', {
                 const response: any = await AuthApi.changePassword(body)
                 console.log(response)
             } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async changeMe(body: changeMe){
+            try {
+                const response = await AuthApi.changeMe(body)
+                console.log(response)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+        async deleteAccount(){
+            try {
+                const response = await AuthApi.deleteAccount()
+                router.replace('/start')
+                console.log(response)
+            }catch (e) {
                 console.log(e)
             }
         }
