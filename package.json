@@ -24,7 +24,8 @@
     "ionicons": "^7.0.0",
     "pinia": "^2.1.6",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vuetify": "^3.3.22"
   },
   "devDependencies": {
     "@capacitor/cli": "5.3.0",

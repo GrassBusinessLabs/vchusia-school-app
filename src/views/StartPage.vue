@@ -1,23 +1,49 @@
 <template>
   <ion-page>
     <ion-header>
-      <ion-thumbnail>
-        <ion-img
-            src="https://www.wi6labs.com/wp-content/uploads/2019/12/Machine-learning-logo-1.png"></ion-img>
-      </ion-thumbnail>
+      <v-img
+          class="mx-auto my-12"
+          max-width="228"
+          src="https://www.twine.net/blog/wordpress/wp-content/uploads/2022/03/tresorit.png"
+      ></v-img>
     </ion-header>
 
-    <ion-footer>
-      <ion-buttons>
-        <IonButton size="large" fill="solid" expand="block" color="success" class="btn-login" router-direction="forward" shape="round" @click="$router.push({name: 'Login'})">Вхід
-        </IonButton>
-      </ion-buttons>
 
-      <ion-buttons>
-        <IonButton size="large" fill="solid" expand="block" color="secondary" router-link="/signup" shape="round" class="btnReg">Реєстрація</IonButton>
-      </ion-buttons>
+    <v-card class="container-btn">
+      <v-btn
+          class="text-none mb-4 btn"
+          color="indigo"
+          size="x-large"
+          rounded
+          @click="$router.push({name: 'SignUp'})"
+      >
+        Зареєструватися
+      </v-btn>
 
-    </ion-footer>
+      <v-btn
+          class="text-none mb-4 btn"
+          color="cyan-lighten-1"
+          size="x-large"
+          rounded
+          @click="$router.push({name: 'Login'})"
+
+      >
+        Увійти
+      </v-btn>
+    </v-card>
+
+
+
+
+    <!--      <ion-buttons>-->
+<!--        <IonButton size="large" fill="solid" expand="block" color="success" class="btn-login" router-direction="forward" shape="round" @click="$router.push({name: 'Login'})">Вхід-->
+<!--        </IonButton>-->
+<!--      </ion-buttons>-->
+
+<!--      <ion-buttons>-->
+<!--        <IonButton size="large" fill="solid" expand="block" color="secondary" router-link="/signup" shape="round" class="btnReg">Реєстрація</IonButton>-->
+<!--      </ion-buttons>-->
+
   </ion-page>
 </template>
 
@@ -58,6 +84,16 @@ ion-button {
 .btn-login {
   margin-bottom: 15px;
 
+}
+.btn{
+  width: 80%;
+  margin: 0 auto;
+}
+
+.container-btn{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 ion-thumbnail {

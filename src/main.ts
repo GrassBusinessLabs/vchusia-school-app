@@ -1,7 +1,7 @@
-import Vue, { createApp } from 'vue'
+import Vue, {createApp} from 'vue'
 import App from './App.vue'
 import router from './router';
-import { IonicVue } from '@ionic/vue';
+import {IonicVue} from '@ionic/vue';
 import {createPinia} from "pinia";
 import axios from "./http/api";
 
@@ -20,17 +20,29 @@ import '@ionic/vue/css/text-alignment.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
+import 'vuetify/styles'
+import {createVuetify} from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 /* Theme variables */
 import './theme/variables.css';
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+
 const pinia = createPinia();
 const app = createApp(App)
-  .use(IonicVue)
-  .use(router)
-  .use(pinia)
+    .use(IonicVue)
+    .use(vuetify)
+    .use(router)
+    .use(pinia)
+
 
 
 // app.use(axios)
 router.isReady().then(() => {
-  app.mount('#app' );
+    app.mount('#app');
 });

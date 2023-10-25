@@ -3,41 +3,68 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons>
-          <ion-back-button default-href="/" text="Назад"></ion-back-button>
+          <ion-back-button default-href="/start" text="Назад"></ion-back-button>
         </ion-buttons>
         <ion-title>Вхід</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-list>
+      <div>
+        <v-img
+            class="mx-auto my-6"
+            max-width="228"
+            src="https://www.twine.net/blog/wordpress/wp-content/uploads/2022/03/tresorit.png"
+        ></v-img>
 
-      <ion-input
-          v-model="email"
-          placeholder="admin@gmail.com"
-          type="email"
-          fill="solid"
-          label="Електронна адреса"
-          labelPlacement="floating"
-          helperText="Введіть свою пошту"
-          errorText="Неправильний email"
-          required
-      ></ion-input>
+        <v-card
+            class="mx-auto pa-12 pb-8"
+            elevation="8"
+            max-width="448"
+            rounded="lg"
+        >
+          <div class="text-subtitle-1 text-medium-emphasis">Почта</div>
 
-      <ion-input
-          v-model="password"
-          placeholder="********"
-          type="password"
-          fill="solid"
-          label="Пароль"
-          labelPlacement="floating"
-          helperText="Введіть свій пароль"
-          errorText="Неправильний пароль"
-          required
-      ></ion-input>
+          <v-text-field
+              density="compact"
+              placeholder="admin@gmail.com"
+              v-model="email"
+              variant="outlined"
+          ></v-text-field>
 
-      <ion-buttons class="btn-log">
-        <ion-button fill="solid" size="large" @click="login" shape="round">Увійти</ion-button>
-      </ion-buttons>
-      <input type="text" v-model="wrongData" class="textForError" disabled>
+          <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+            Пароль
+          </div>
+          <v-text-field
+              type="password"
+              density="compact"
+              placeholder="********"
+              variant="outlined"
+              v-model="password"
+          ></v-text-field>
+
+          <v-card
+              class="mb-12"
+              color="surface-variant"
+              variant="tonal"
+          >
+          </v-card>
+
+          <v-btn
+              class="login mb-8"
+              color="blue"
+              size="large"
+              variant="tonal"
+              @click="login"
+          >
+            Увійти
+          </v-btn>
+
+          <v-card-text class="text-center">
+            <ion-text>Немає аккаунта? <router-link to="/signup">Зареєструватися</router-link></ion-text>
+          </v-card-text>
+        </v-card>
+      </div>
+
     </ion-list>
   </ion-page>
 
@@ -70,6 +97,7 @@ export default {
     IonButtons,
     IonBackButton
   },
+
   data() {
     return {
       email: "",
@@ -77,7 +105,7 @@ export default {
       wrongData: "",
       token: null,
       authStore: auth(),
-      courseStore: course()
+      courseStore: course(),
 
     }
   },
@@ -124,24 +152,15 @@ ion-list {
   margin: auto;
 }
 
-.btn-log {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
-
 .btn-log ion-button {
   width: 100%;
   height: 50px;
 }
 
-.textForError {
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
-  color: red;
+
+.login{
+  display: flex;
+  margin: 0 auto;
+  width: 80%;
 }
 </style>
