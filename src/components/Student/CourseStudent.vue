@@ -10,68 +10,68 @@
       <ion-modal ref="modal" trigger="open-modal">
         <ion-header>
           <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button @click="cancel()">Скасувати</ion-button>
-            </ion-buttons>
             <ion-title>Додати курс</ion-title>
-            <ion-buttons slot="end">
-              <ion-button :strong="true" @click="confirm()">Добавити</ion-button>
-            </ion-buttons>
           </ion-toolbar>
+
+
         </ion-header>
         <ion-content class="ion-padding">
-          <ion-item>
-            <ion-label position="stacked">Назва курсу</ion-label>
-            <ion-input ref="input"
-                       type="text"
-                       placeholder="Програмування Java"
-                       required
-                       v-model="course$.name">
+          <v-card
+              elevation="3"
+          >
+            <v-container class="container-modal">
+              <v-text-field
+                  class="input-course"
+                  color="primary"
+                  label="Назва курсу"
+                  variant="solo"
+                  density="compact"
+                  v-model="course$.name"
+              ></v-text-field>
+
+              <v-text-field
+                  class="input-course"
+                  v-model="course$.discipline"
+                  color="primary"
+                  density="compact"
+                  label="Назва дисципліни"
+                  variant="solo"
+              ></v-text-field>
+
+              <v-text-field
+                  class="input-course"
+                  v-model="course$.grade"
+                  color="primary"
+                  label="Клас"
+                  density="compact"
+                  variant="solo"
+              ></v-text-field>
+
+              <v-text-field
+                  class="input-course"
+                  v-model="course$.yearsFrom"
+                  color="primary"
+                  label="Вік від"
+                  density="compact"
+                  variant="solo"
+              ></v-text-field>
+
+              <v-text-field
+                  class="input-course"
+                  v-model="course$.yearsTo"
+                  color="primary"
+                  density="compact"
+                  label="Вік до"
+                  variant="solo"
+              ></v-text-field>
+
+              <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()" class="confirm-btn">
+                Додати курс
+              </v-btn>
+            </v-container>
 
 
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Назва дисципліни</ion-label>
-            <ion-input ref="input"
-                       type="text"
-                       placeholder="Інформатика"
-                       v-model="course$.discipline"
-            >
-
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Клас</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="10"
-                       v-model="course$.grade"
-            >
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Вік "від"</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="6"
-                       v-model="course$.yearsFrom"
-            >
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Вік "до"</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="16  "
-                       v-model="course$.yearsTo"
-            >
-            </ion-input>
-          </ion-item>
+          </v-card>
 
         </ion-content>
       </ion-modal>
@@ -80,26 +80,23 @@
 
     <ion-content>
       <div v-for="value in CourseStore.items" class="course">
-        <div v-for="(name, value, index) in value" v-show="value != 'id' && value != 'userid' && value != 'description'" class="titlesCourse">
-          {{ value = nameCourses[index] }}  <span class="valueCourse"> {{ name }}</span>
+        <div v-for="(name, value, index) in value" v-show="value != 'id' && value != 'userid' && value != 'description'"
+             class="titlesCourse">
+          {{ value = nameCourses[index] }} <span class="valueCourse"> {{ name }}</span>
         </div>
       </div>
 
 
-
-
-
     </ion-content>
-
-
     <ion-footer>
-      <ion-toolbar class="footer-toolbar">
-        <ion-fab class="fab-footer">
-          <ion-fab-button>
-            <ion-icon :icon="add" color="white" id="open-modal"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
-      </ion-toolbar>
+      <v-layout>
+        <v-footer class="footer-toolbar">
+          <v-btn class="btn-add-course" size="large">
+            <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
+          </v-btn>
+        </v-footer>
+
+      </v-layout>
     </ion-footer>
 
   </ion-page>
@@ -132,6 +129,8 @@ import {
 import {course} from "@/stores/course";
 import {Course} from "@/models/Course";
 
+let sheet = false
+
 
 const CourseStore = course()
 
@@ -141,8 +140,6 @@ const modal = ref();
 const input = ref();
 
 // const store = course()
-
-
 
 
 let course$ = reactive({
@@ -161,7 +158,6 @@ const loadCourses = () => {
   CourseStore.getAllCourse({page: 1, count: totalCourses})
 }
 loadCourses();
-
 
 
 let nameCourses = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до']
@@ -197,14 +193,21 @@ const confirm = () => {
 
 .course {
   padding: 15px;
-  width: 90%;
-  margin: 10px auto;
+  width: 80%;
+  margin: 15px auto;
   color: #fff;
-  background: rgb(0,75,171);
+  background: rgb(0, 75, 171);
   background: url(https://cdn.pixabay.com/photo/2016/11/29/01/13/background-1866485_1280.jpg);
   border-radius: 15px;
 }
 
+.container-modal {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
+}
 
 .titlesCourse {
   font-family: Roboto, sans-serif;
@@ -229,9 +232,29 @@ ion-fab {
 }
 
 .footer-toolbar {
-  padding: 12px;
-  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 5vh;
 }
 
+v-btn {
+  margin: 0 auto;
+}
+
+.btn-add-course {
+  min-width: 30px;
+  border-radius: 50px;
+  margin-top: 10px;
+}
+
+.add-course {
+  margin-right: 15px;
+}
+
+.confirm-btn {
+  border-radius: 20px;
+  padding: 5px 10px;
+}
 
 </style>

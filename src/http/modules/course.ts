@@ -12,7 +12,23 @@ function getAllCourse(page?: {page: number, count: number}) {
     return axios.get('/courses?page=1&count=5')
 }
 
+function findCourseById(){
+    let courseId = localStorage.getItem('courseId')
+    return axios.get(`/courses/${courseId}`)
+}
+
+function deleteCourse(){
+    return axios.delete('/courses')
+}
+
+function updateCourse(){
+    return axios.put('/courses')
+
+}
 export default {
     createCourse,
-    getAllCourse
+    getAllCourse,
+    findCourseById,
+    deleteCourse,
+    updateCourse
 }

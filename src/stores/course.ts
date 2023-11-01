@@ -9,14 +9,16 @@ console.log(token)
 
 interface State {
     items: any,
-    total: number
+    total: number,
+    thisCourse: any
 }
 
 
 export const course = defineStore('course', {
     state: (): State => ({
         items: [],
-        total: 0
+        total: 0,
+        thisCourse: []
     }),
 
     getters: {
@@ -48,6 +50,32 @@ export const course = defineStore('course', {
                 console.log(e)
             }
         },
+
+        async findCourseById(){
+            try {
+                const response = await CourseApi.findCourseById()
+                this.thisCourse.push(response)
+                console.log(response)
+            }catch (e) {
+                console.log(e)
+            }
+        },
+
+        async deleteCourse(){
+            try {
+                const response = await CourseApi.deleteCourse()
+            }catch (e) {
+                console.log(e)
+            }
+        },
+
+        async updateCourse(){
+            try {
+                const response = await CourseApi.updateCourse()
+            }catch (e) {
+                console.log(e)
+            }
+        }
 
     },
 });

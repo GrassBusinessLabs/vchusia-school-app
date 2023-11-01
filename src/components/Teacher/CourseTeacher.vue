@@ -1,110 +1,186 @@
 <template>
   <ion-page>
-
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <ion-header>
       <ion-item>
         <ion-searchbar animated="animated" placeholder="Пошук по курсах"></ion-searchbar>
       </ion-item>
 
 
-      <ion-modal ref="modal" trigger="open-modal">
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button @click="cancel()">Скасувати</ion-button>
-            </ion-buttons>
-            <ion-title>Додати курс</ion-title>
-            <ion-buttons slot="end">
-              <ion-button :strong="true" @click="confirm()">Добавити</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <ion-item>
-            <ion-label position="stacked">Назва курсу</ion-label>
-            <ion-input ref="input"
-                       type="text"
-                       placeholder="Програмування Java"
-                       required
-                       v-model="course$.name">
+      <!--      <ion-modal ref="modal" trigger="open-modal" class="modal-course">-->
+      <!--        <ion-content class="ion-padding">-->
+      <!--          <v-card-->
+      <!--              elevation="1"-->
+      <!--          >-->
+      <!--            <v-container class="container-modal">-->
+      <!--              <v-text-field-->
+      <!--                  class="input-course"-->
+      <!--                  color="primary"-->
+      <!--                  label="Назва курсу"-->
+      <!--                  variant="solo"-->
+      <!--                  density="compact"-->
+      <!--                  v-model="course$.name"-->
+      <!--              ></v-text-field>-->
+
+      <!--              <v-text-field-->
+      <!--                  class="input-course"-->
+      <!--                  v-model="course$.discipline"-->
+      <!--                  color="primary"-->
+      <!--                  density="compact"-->
+      <!--                  label="Назва дисципліни"-->
+      <!--                  variant="solo"-->
+      <!--              ></v-text-field>-->
+
+      <!--              <v-text-field-->
+      <!--                  class="input-course"-->
+      <!--                  v-model="course$.grade"-->
+      <!--                  color="primary"-->
+      <!--                  label="Клас"-->
+      <!--                  density="compact"-->
+      <!--                  variant="solo"-->
+      <!--              ></v-text-field>-->
+
+      <!--              <v-text-field-->
+      <!--                  class="input-course"-->
+      <!--                  v-model="course$.yearsFrom"-->
+      <!--                  color="primary"-->
+      <!--                  label="Вік від"-->
+      <!--                  density="compact"-->
+      <!--                  variant="solo"-->
+      <!--              ></v-text-field>-->
+
+      <!--              <v-text-field-->
+      <!--                  class="input-course"-->
+      <!--                  v-model="course$.yearsTo"-->
+      <!--                  color="primary"-->
+      <!--                  density="compact"-->
+      <!--                  label="Вік до"-->
+      <!--                  variant="solo"-->
+      <!--              ></v-text-field>-->
+
+      <!--              <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()" class="confirm-btn">-->
+      <!--                Додати курс-->
+      <!--              </v-btn>-->
+      <!--            </v-container>-->
 
 
-            </ion-input>
-          </ion-item>
+      <!--          </v-card>-->
 
-          <ion-item>
-            <ion-label position="stacked">Назва дисципліни</ion-label>
-            <ion-input ref="input"
-                       type="text"
-                       placeholder="Інформатика"
-                       v-model="course$.discipline"
-            >
+      <!--        </ion-content>-->
+      <!--      </ion-modal>-->
 
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Клас</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="10"
-                       v-model="course$.grade"
-            >
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Вік "від"</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="6"
-                       v-model="course$.yearsFrom"
-            >
-            </ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Вік "до"</ion-label>
-            <ion-input ref="input"
-                       type="number"
-                       placeholder="16  "
-                       v-model="course$.yearsTo"
-            >
-            </ion-input>
-          </ion-item>
-
-        </ion-content>
-      </ion-modal>
     </ion-header>
 
 
     <ion-content>
-      <div v-for="value in CourseStore.items" class="course">
-        <div v-for="(name, value, index) in value" v-show="value != 'id' && value != 'userid' && value != 'description'" class="titlesCourse">
-          {{ value = nameCourses[index] }}  <span class="valueCourse"> {{ name }}</span>
+      <div v-for="value in CourseStore.items" class="course" @click="redirect(value)">
+
+        <div v-for="(name, value, index) in value"
+             v-show="value != 'id' && value != 'userid' && value != 'Опис курсу' && value != 'Завдання' && value != 'Ідентифікатор'"
+             class="titlesCourse">
+          {{ value = nameCourses[index] }} <span class="valueCourse"> {{ name }} </span>
         </div>
+
       </div>
 
 
-
-
-
     </ion-content>
+    <!--    <ion-footer>-->
 
 
+    <!--      <v-layout>-->
+    <!--        <v-footer class="footer-toolbar">-->
+    <!--          <v-btn class="btn-add-course" size="large">-->
+    <!--            <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
+    <!--          </v-btn>-->
+    <!--        </v-footer>-->
+
+    <!--      </v-layout>-->
+    <!--    </ion-footer>-->
     <ion-footer>
-      <ion-toolbar class="footer-toolbar">
-        <ion-fab class="fab-footer">
-          <ion-fab-button>
-            <ion-icon :icon="add" color="white" id="open-modal"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
-      </ion-toolbar>
+      <div class="text-center">
+        <v-btn class="btn-add-course mb-1" size="large" @click="sheet = !sheet">
+          <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
+        </v-btn>
+
+        <v-bottom-sheet v-model="sheet">
+          <v-card
+              class="text-center"
+              height="700"
+
+          >
+            <v-card-text>
+
+              <br>
+              <br>
+
+              <div>
+
+                <v-text-field
+                    class="input-course"
+                    color="primary"
+                    label="Назва курсу"
+                    variant="outlined"
+                    prepend-icon="mdi-book-outline"
+                    v-model="course$.name">
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="course$.discipline"
+                    color="primary"
+                    label="Назва дисципліни"
+                    prepend-icon="mdi-information-outline"
+
+                    variant="outlined">
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="course$.grade"
+                    color="primary"
+                    label="Клас"
+                    prepend-icon="mdi-google-classroom"
+                    variant="outlined">
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="course$.yearsFrom"
+                    color="primary"
+                    label="Вік від"
+                    prepend-icon="mdi-account-child-outline"
+                    variant="outlined">
+
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="course$.yearsTo"
+                    color="primary"
+                    prepend-icon="mdi-human-child"
+                    label="Вік до"
+                    variant="outlined"
+                >
+                </v-text-field>
+
+
+                <v-btn prepend-icon="mdi-plus-circle" class="btnAddCourse" variant="tonal" color="indigo"
+                       @click="confirm">
+                  Додати завдання
+                </v-btn>
+
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
     </ion-footer>
 
   </ion-page>
-
-
 </template>
 
 
@@ -131,18 +207,31 @@ import {
 } from "@ionic/vue";
 import {course} from "@/stores/course";
 import {Course} from "@/models/Course";
+import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 
+import router from "@/router";
 
 const CourseStore = course()
+let sheet = ref(false);
 
-
+let activePage = ref('');
 const name = ref();
 const modal = ref();
 const input = ref();
 
 // const store = course()
-
-
+const redirect = (value) => {
+  router.replace('/course');
+  let idCourse = value.id;
+  let identifier = value.identifier
+  let posts = value.posts
+  localStorage.setItem('courseId', idCourse)
+  localStorage.setItem('identifier', identifier)
+  localStorage.setItem('posts', posts)
+  console.log(identifier)
+  console.log(idCourse)
+  console.log(posts)
+}
 
 
 let course$ = reactive({
@@ -159,18 +248,17 @@ console.log(totalCourses)
 
 const loadCourses = () => {
   CourseStore.getAllCourse({page: 1, count: totalCourses})
+  CourseStore.thisCourse = [];
 }
 loadCourses();
 
 
-
-let nameCourses = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до']
+let nameCourses = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор']
 
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 
 const confirm = () => {
-  modal.value.$el.dismiss('confirm');
   const body: Course = {
     name: course$.name,
     discipline: course$.discipline,
@@ -194,17 +282,23 @@ const confirm = () => {
 </script>
 
 <style scoped>
-
 .course {
   padding: 15px;
-  width: 90%;
-  margin: 10px auto;
+  width: 80%;
+  margin: 15px auto;
   color: #fff;
-  background: rgb(0,75,171);
-  background: url(https://cdn.pixabay.com/photo/2016/11/29/01/13/background-1866485_1280.jpg);
+  background: rgb(0, 75, 171);
+  background: url(https://www.eastsidefunding.com/wp-content/uploads/2016/08/counters-bg-image.jpg);
   border-radius: 15px;
 }
 
+.container-modal {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
+}
 
 .titlesCourse {
   font-family: Roboto, sans-serif;
@@ -229,9 +323,38 @@ ion-fab {
 }
 
 .footer-toolbar {
-  padding: 12px;
-  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 5vh;
 }
 
+v-btn {
+  margin: 0 auto;
+}
+
+.btn-add-course {
+  min-width: 30px;
+  border-radius: 50px;
+  margin-top: 10px;
+}
+
+.add-course {
+  margin-right: 15px;
+}
+
+.confirm-btn {
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.modal-course {
+  --height: 600px
+}
+
+.btnAddCourse{
+  border-radius: 15px;
+  padding: 5px 15px;
+}
 
 </style>

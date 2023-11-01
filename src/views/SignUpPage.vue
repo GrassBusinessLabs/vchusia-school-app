@@ -1,5 +1,8 @@
 <template>
+
   <ion-page>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -9,53 +12,6 @@
       </ion-toolbar>
     </ion-header>
     <ion-list>
-      <!--      <ion-input-->
-      <!--          v-model="email"-->
-      <!--          placeholder="admin@gmail.com"-->
-      <!--          type="email"-->
-      <!--          fill="solid"-->
-      <!--          label="Електронна адреса"-->
-      <!--          labelPlacement="floating"-->
-      <!--          helperText="Введіть свою електронну адресу"-->
-      <!--          errorText="Invalid email"-->
-      <!--      ></ion-input>-->
-
-      <!--      <ion-input-->
-      <!--          placeholder="********"-->
-      <!--          v-model="password"-->
-      <!--          type="password"-->
-      <!--          fill="solid"-->
-      <!--          label="Пароль"-->
-      <!--          labelPlacement="floating"-->
-      <!--          helperText="Введіть пароль"-->
-      <!--          errorText="Неправильний пароль"-->
-      <!--      ></ion-input>-->
-
-      <!--      <ion-radio-group value="custom-checked" v-model="this.role">-->
-      <!--        <ion-radio value="STUDENT" aria-label="Custom checkbox">Студент</ion-radio>-->
-      <!--        <ion-radio value="TEACHER" aria-label="Custom checkbox that is checked">Учитель</ion-radio>-->
-      <!--      </ion-radio-group>-->
-
-      <!--      <ion-input-->
-      <!--          v-model="name"-->
-      <!--          placeholder="Іван"-->
-      <!--          type="text"-->
-      <!--          fill="solid"-->
-      <!--          label="Ім'я"-->
-      <!--          labelPlacement="floating"-->
-      <!--          helperText="Введіть своє ім'я"-->
-      <!--          errorText="Введіть коректне ім'я"-->
-      <!--      ></ion-input>-->
-
-
-      <!--      <ion-buttons class="btn-log">-->
-      <!--        <ion-button fill="solid" shape="round" size="large" color="success" @click="regSend">Зареєструватися-->
-      <!--        </ion-button>-->
-      <!--      </ion-buttons>-->
-      <!--      <ion-text class="loginText">-->
-      <!--        Вже маєте аккаунт? <a href="/login"> Увійти</a>-->
-      <!--      </ion-text>-->
-
       <div>
         <v-img
             class="mx-auto my-6"
@@ -70,8 +26,8 @@
             rounded="lg"
         >
           <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-
           <v-text-field
+              prepend-inner-icon="mdi-email-outline"
               v-model="email"
               density="compact"
               type="email"
@@ -84,6 +40,7 @@
           </div>
 
           <v-text-field
+              prepend-inner-icon="mdi-lock"
               v-model="password"
               density="compact"
               placeholder="********"
@@ -102,6 +59,7 @@
           <div class="text-subtitle-1 text-medium-emphasis">Ім'я</div>
 
           <v-text-field
+              prepend-inner-icon="mdi-account"
               v-model="name"
               density="compact"
               placeholder="Іван"
@@ -255,5 +213,6 @@ ion-text {
   display: flex;
   margin: 0 auto;
   width: 85%;
+  border-radius: 15px;
 }
 </style>

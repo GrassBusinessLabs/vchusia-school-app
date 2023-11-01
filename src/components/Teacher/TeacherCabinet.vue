@@ -1,79 +1,99 @@
 <template>
   <ion-page>
-    <ion-menu content-id="main-content">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <ion-menu content-id="main-content" class="menu" side="end">
       <ion-header>
-        <ion-toolbar>
-          <ion-title>Меню</ion-title>
-        </ion-toolbar>
+        <v-toolbar
+            dark
+            prominent
+            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
+        >
+
+          <v-toolbar-title>Меню</v-toolbar-title>
+
+        </v-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list>
-          <ion-item @click.prevent="activePage = 'Обліковий запис'">
-            <ion-label>
-              Обліковий запис
-            </ion-label>
-            <p class="nameUser">
-              {{this.user.name}}
+      <v-card>
+        <v-layout>
+          <v-navigation-drawer
+              class="nav-menu"
+              permanent
+          >
+            <v-divider></v-divider>
 
-            </p>
+            <v-list nav class="list-menu">
+              <v-list-item title="Обліковий запис" value="account"
+                           @click.prevent="activePage = 'Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
+              <v-list-item title="Курси" value="course" @click.prevent="activePage = 'Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
+              <v-list-item title="Завдання" value="task" @click.prevent="activePage = 'Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
+              <v-list-item title="Групи" value="groups" @click.prevent="activePage = 'Групи'" prepend-icon="mdi-account-group-outline"></v-list-item>
+              <v-list-item title="Учні" value="pupils" @click.prevent="activePage = 'Учні'" prepend-icon="mdi-school-outline"></v-list-item>
 
-          </ion-item>
+            </v-list>
+            <v-footer class="footerMenu">
+              <v-btn variant="outlined" color="light-blue-lighten-1" @click="authStore.logout()" class="logout-btn">
+                Вийти
+              </v-btn>
+            </v-footer>
 
-          <ion-item @click.prevent="activePage = 'Курси'">
-            <ion-label>
-              Курси
-            </ion-label>
-          </ion-item>
+          </v-navigation-drawer>
 
-          <ion-item @click="activePage = 'Завдання'">
-            <ion-label>
-              Завдання
-            </ion-label>
-          </ion-item>
-
-          <ion-item @click="activePage = 'Групи'">
-            <ion-label>
-              Групи
-            </ion-label>
-          </ion-item>
-
-          <ion-item @click="activePage = 'Учні'">
-            <ion-label>
-              Учні
-            </ion-label>
-          </ion-item>
-
-
-        </ion-list>
-
-
-      </ion-content>
-
-      <ion-footer class="footerMenu">
-        <ion-buttons class="btns-out">
-          <ion-button @click="authStore.logout()" fill="solid" expand="block" class="logout-btn" color="danger">Вийти</ion-button>
-        </ion-buttons>
-      </ion-footer>
+        </v-layout>
+      </v-card>
     </ion-menu>
+
     <ion-page id="main-content">
       <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-title>{{ this.activePage }}</ion-title>
-        </ion-toolbar>
+        <div>
+          <v-toolbar
+              dark
+              prominent
+              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
+          >
+
+
+            <v-toolbar-title>{{ this.activePage }}</v-toolbar-title>
+
+          </v-toolbar>
+        </div>
       </ion-header>
       <ion-content class="ion-padding">
         <AccountTeacher v-if="activePage === 'Обліковий запис'"/>
-        <CourseTeacher v-else-if="activePage === 'Курси'"/>
-        <TaskTeacher v-else-if="activePage === 'Завдання'"/>
-        <GroupTeacher v-else-if="activePage === 'Групи'"/>
-        <PupilsTeacher v-else-if="activePage === 'Учні'"/>
+        <CourseTeacher v-if="activePage === 'Курси'"/>
+        <TaskTeacher v-if="activePage === 'Завдання'"/>
+
       </ion-content>
+      <v-layout class="overflow-visible layout-footer">
+        <v-bottom-navigation class="bottom-nav"
+                             mode="shift"
+                             v-model="value"
+                             :bg-color="color">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click.prevent="activePage = 'Курси'">
+            <v-icon icon="mdi-book-outline" class="icon-course"/>
+            <span>Курси</span>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav" @click.prevent="activePage = 'Завдання'">
+            <v-icon icon="mdi-clipboard-edit-outline"></v-icon>
+
+            <span>Завдання</span>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav" @click.prevent="activePage = 'Групи'">
+            <v-icon icon="mdi-account-group-outline"></v-icon>
+
+            <span>Групи</span>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content">
+            <ion-menu-button color="dark" ></ion-menu-button>
+            <span>Меню</span>
+          </v-btn>
+        </v-bottom-navigation>
+      </v-layout>
+
     </ion-page>
   </ion-page>
-
 </template>
 
 <script lang="ts">
@@ -103,11 +123,13 @@ import {
   IonIcon
 } from "@ionic/vue";
 import {course} from "@/stores/course";
+import CoursePage from "@/components/Teacher/Course/CoursePage.vue";
 
 
 export default defineComponent({
 
   components: {
+    CoursePage,
     CourseTeacher,
     AccountTeacher,
     IonButtons,
@@ -133,10 +155,21 @@ export default defineComponent({
     return {
       activePage: ref("Курси"),
       authStore: auth(),
-      user: JSON.parse(localStorage.getItem('user'))
-
+      value: 0
     }
   },
+  computed: {
+    color () {
+      switch (this.value) {
+        case 0: return '#ffedba'
+        case 1: return '#efffba'
+        case 2: return '#d3ffba'
+        case 3: return '#bafff4'
+        default: return '#d4baff'
+      }
+    },
+  },
+
 
   methods: {
 
@@ -151,6 +184,7 @@ export default defineComponent({
 .footerMenu {
   display: flex;
   justify-content: center;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 
@@ -173,11 +207,38 @@ ion-item:hover {
 }
 
 .logout-btn {
+  width: 90%;
+  border-radius: 15px;
+}
+
+.list-menu {
+  margin-top: 30%;
+}
+
+.layout-footer {
+  max-height: 10vh;
   width: 100%;
+
 }
-.nameUser{
-  color: #7974ff;
-  font-weight: 700;
+
+.bottom-nav {
+  display: flex;
+  justify-content: center;
 }
+
+.btn-bottom-nav {
+  color: #000;
+}
+.btn-bottom-nav span{
+  padding-top: 10px;
+  font-weight: 900;
+}
+.btn-course-bottom span{
+  margin-left: 20px;
+}
+.icon-course{
+  margin-left: 20px;
+}
+
 
 </style>

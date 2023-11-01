@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import StartPage from '../views/StartPage.vue'
 import TeacherCabinet from "@/components/Teacher/TeacherCabinet.vue";
 import StudentCabinet from "@/components/Student/StudentCabinet.vue";
+import CoursePage from "@/components/Teacher/Course/CoursePage.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -32,6 +33,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/student-room',
     name: 'StudentCabinet',
     component: StudentCabinet
+  },
+  {
+    path: '/course',
+
+    name: 'Course',
+    component: CoursePage
   }
 
 ]

@@ -2,6 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-list>
+
         <ion-avatar class="ion-avatar-account">
           <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
         </ion-avatar>
@@ -17,50 +18,75 @@
             <div class="ion-padding" slot="content">Ім'я: {{ user?.name }}</div>
             <div class="ion-padding" slot="content">Email: {{ user?.email }}</div>
           </ion-accordion>
+
           <ion-item>
-            <ion-button class="btn-changes" id="open-modal">Змінити пароль</ion-button>
+            <ion-button class="btn-changes mr-1" id="open-modal">Змінити пароль</ion-button>
             <ion-modal ref="modal" trigger="open-modal">
               <ion-header>
                 <ion-toolbar>
                   <ion-buttons slot="start">
-                    <ion-button @click="cancel()">Відмінити</ion-button>
+                    <ion-button @click="cancel()">Назад</ion-button>
                   </ion-buttons>
                   <ion-title>Змінити пароль</ion-title>
-                  <ion-buttons slot="end">
-                    <ion-button :strong="true" @click="confirm()">Змінити</ion-button>
-                  </ion-buttons>
                 </ion-toolbar>
               </ion-header>
               <ion-content class="ion-padding">
-                <ion-item>
-                  <ion-label position="stacked">Введіть ваш старий пароль</ion-label>
-                  <ion-input ref="input" type="password" placeholder="********" v-model="oldPassword"></ion-input>
-                </ion-item>
+                <v-text-field
+                    v-model="oldPassword"
+                    ref="input"
+                    type="password"
+                    color="primary"
+                    label="Введіть старий пароль"
+                    placeholder="********"
+                    variant="solo"
+                    density="compact"
+                    class="input-password"
+                ></v-text-field>
 
-                <ion-item>
-                  <ion-label position="stacked">Введіть ваш новий пароль</ion-label>
-                  <ion-input ref="input" type="password" placeholder="********" v-model="newPassword"></ion-input>
-                </ion-item>
+
+                <v-text-field
+                    v-model="newPassword"
+                    type="password"
+                    density="compact"
+                    ref="input"
+                    color="primary"
+                    label="Новий пароль"
+                    placeholder="********"
+                    variant="solo"
+                    class="input-password"
+                ></v-text-field>
+
+                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()" class="d-flex mx-auto btn-confirm" width="85%">
+                  Змінити пароль
+                </v-btn>
               </ion-content>
             </ion-modal>
             <ion-button class="btn-changes" id="open-modal-me">Редагувати дані</ion-button>
             <ion-modal ref="modalMe" trigger="open-modal-me">
               <ion-header>
+
                 <ion-toolbar>
                   <ion-buttons slot="start">
                     <ion-button @click="cancelMe()">Відмінити</ion-button>
                   </ion-buttons>
                   <ion-title>Змінити дані</ion-title>
-                  <ion-buttons slot="end">
-                    <ion-button :strong="true" @click="confirmMe()">Змінити</ion-button>
-                  </ion-buttons>
                 </ion-toolbar>
               </ion-header>
               <ion-content class="ion-padding">
-                <ion-item>
-                  <ion-label position="stacked">Введіть нове ім'я</ion-label>
-                  <ion-input ref="inputMe" type="text" placeholder="Михайло" v-model="nameMe"></ion-input>
-                </ion-item>
+
+                <v-text-field
+                    ref="inputMe"
+                    v-model="nameMe"
+                    color="primary"
+                    label="Ваше ім'я"
+                    placeholder="Михайло"
+                    variant="solo"
+                    density="compact"
+                    class="input-password"
+                ></v-text-field>
+                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirmMe()" class="d-flex mx-auto btn-confirm" width="85%">
+                  Редагувати
+                </v-btn>
               </ion-content>
             </ion-modal>
 
@@ -68,15 +94,14 @@
           <ion-item>
             <ion-button class="btn-changes" color="warning" @click="deleteAccount()">Видалити аккаунт</ion-button>
 
+
           </ion-item>
         </ion-accordion-group>
 
       </ion-list>
-
     </ion-header>
 
   </ion-page>
-
 
 </template>
 
@@ -142,7 +167,7 @@ const deleteAccount = () => {
 
 <style scoped>
 ion-header {
-  padding: 50px 5px;
+  padding: 50px 10px 0 0;
 }
 
 .ion-avatar-account {
@@ -160,6 +185,16 @@ ion-header {
 .btn-changes {
   width: 100%;
   height: 30px;
+}
+.btn-change{
+  margin-right: 10px;
+}
+.input-password{
+  margin: 10px;
+}
+.btn-confirm{
+  border-radius: 20px;
+  padding: 5px 10px;
 }
 
 </style>

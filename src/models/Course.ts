@@ -4,5 +4,5 @@ export interface Course{
     grade?: number | null,
     yearsFrom?: number | null,
     yearsTo?: number | null,
-    id?: number
+    id?: number,
 }

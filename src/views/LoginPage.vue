@@ -1,5 +1,7 @@
 <template>
   <ion-page>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
     <ion-header>
       <ion-toolbar>
         <ion-buttons>
@@ -25,6 +27,7 @@
           <div class="text-subtitle-1 text-medium-emphasis">Почта</div>
 
           <v-text-field
+              prepend-inner-icon="mdi-email-outline"
               density="compact"
               placeholder="admin@gmail.com"
               v-model="email"
@@ -39,6 +42,7 @@
               density="compact"
               placeholder="********"
               variant="outlined"
+              prepend-inner-icon="mdi-lock"
               v-model="password"
           ></v-text-field>
 
@@ -162,5 +166,6 @@ ion-list {
   display: flex;
   margin: 0 auto;
   width: 80%;
+  border-radius: 15px;
 }
 </style>
