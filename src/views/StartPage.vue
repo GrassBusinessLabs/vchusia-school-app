@@ -25,24 +25,12 @@
           color="cyan-lighten-1"
           size="x-large"
           rounded
-          @click="$router.push({name: 'Login'})"
+          @click="$router.replace('login')"
 
       >
         Увійти
       </v-btn>
     </v-card>
-
-
-
-
-    <!--      <ion-buttons>-->
-<!--        <IonButton size="large" fill="solid" expand="block" color="success" class="btn-login" router-direction="forward" shape="round" @click="$router.push({name: 'Login'})">Вхід-->
-<!--        </IonButton>-->
-<!--      </ion-buttons>-->
-
-<!--      <ion-buttons>-->
-<!--        <IonButton size="large" fill="solid" expand="block" color="secondary" router-link="/signup" shape="round" class="btnReg">Реєстрація</IonButton>-->
-<!--      </ion-buttons>-->
 
   </ion-page>
 </template>

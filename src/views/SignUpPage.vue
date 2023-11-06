@@ -77,7 +77,7 @@
           </v-btn>
 
           <ion-text class="loginText">
-            Вже маєте аккаунт? <a href="/login"> Увійти</a>
+            Вже маєте аккаунт? <a href="/auth/login"> Увійти</a>
           </ion-text>
         </v-card>
       </div>
@@ -97,7 +97,8 @@ import {
   IonBackButton,
   IonRadio,
   IonRadioGroup,
-  IonText
+  IonText,
+    IonTitle,
 
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
@@ -117,7 +118,8 @@ export default defineComponent({
     IonButton,
     IonButtons,
     IonBackButton,
-    IonText
+    IonText,
+    IonTitle
   },
   data() {
     return {

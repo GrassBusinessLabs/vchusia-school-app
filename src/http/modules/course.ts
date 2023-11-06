@@ -1,6 +1,7 @@
 import {Course} from "@/models/Course";
 import axios from "../api";
 
+
 function createCourse(body: Course) {
     return axios.post('/courses', body)
 }
@@ -18,11 +19,13 @@ function findCourseById(){
 }
 
 function deleteCourse(){
-    return axios.delete('/courses')
+    let courseId = localStorage.getItem('courseId')
+    return axios.delete(`/courses/${courseId}`)
 }
 
-function updateCourse(){
-    return axios.put('/courses')
+function updateCourse(body: Course){
+    let courseId = localStorage.getItem('courseId')
+    return axios.put(`/courses/${courseId}`, body)
 
 }
 export default {

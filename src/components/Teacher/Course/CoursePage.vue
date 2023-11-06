@@ -1,15 +1,7 @@
 <template>
   <ion-page>
-    <ion-header>
-      <v-toolbar
-          title="Курс"
-          dark
-          prominent
-          image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
-      >
-        <v-btn @click="redirect()" variant="outlined" color="indigo">Назад</v-btn>
-      </v-toolbar>
-    </ion-header>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
 
     <ion-content>
 
@@ -28,7 +20,7 @@
       </v-layout>
 
       <v-card class="pa-5 w-75 mx-auto d-flex flex-column align-center" elevation="1">
-        <v-btn class="btn" color="indigo" @click="updateCourse">
+        <v-btn class="btn" color="indigo" @click="sheet = !sheet">
           Редагувати курс
         </v-btn>
 
@@ -36,17 +28,120 @@
           Видалити курс
         </v-btn>
 
+
       </v-card>
 
 
+
       <v-layout class="mt-4">
-        <v-card elevation="3" class="pa-5 w-75 mx-auto" v-if="posts">
-          {{ posts }}
+        <v-card elevation="3" class="pa-5 w-75 mx-auto">
+          <div>
+            <ion-grid class="d-flex justify-center">
+              <ion-row>
+                <ion-col>Title</ion-col>
+                <ion-col>Description</ion-col>
+                <ion-col>Points</ion-col>
+                <ion-col>Answer</ion-col>
+                <ion-col>Deadline</ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <ion-grid>
+              <ion-row>
+                <ion-col>1</ion-col>
+                <ion-col>1</ion-col>
+                <ion-col>1</ion-col>
+                <ion-col>1</ion-col>
+                <ion-col>1</ion-col>
+              </ion-row>
+            </ion-grid>
+
+
+
+          </div>
 
         </v-card>
       </v-layout>
 
     </ion-content>
+
+    <ion-footer>
+      <div class="text-center">
+        <v-bottom-sheet v-model="sheet">
+          <v-card
+              class="text-center"
+              height="700"
+          >
+            <v-card-text>
+              <br>
+              <br>
+              <div>
+                <v-text-field
+                    class="input-course"
+                    color="primary"
+                    label="Назва курсу"
+                    variant="outlined"
+                    prepend-icon="mdi-book-outline"
+                    v-model="courseUpdate.name">
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="courseUpdate.discipline"
+                    color="primary"
+                    label="Назва дисципліни"
+                    prepend-icon="mdi-information-outline"
+
+                    variant="outlined">
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="courseUpdate.grade"
+                    color="primary"
+                    label="Клас"
+                    prepend-icon="mdi-google-classroom"
+                    variant="outlined">
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="courseUpdate.yearsFrom"
+                    color="primary"
+                    label="Вік від"
+                    prepend-icon="mdi-account-child-outline"
+                    variant="outlined">
+
+
+                </v-text-field>
+
+                <v-text-field
+                    class="input-course"
+                    v-model="courseUpdate.yearsTo"
+                    color="primary"
+                    prepend-icon="mdi-human-child"
+                    label="Вік до"
+                    variant="outlined"
+                >
+                </v-text-field>
+
+
+                <v-btn class="btnAddCourse" variant="tonal" color="indigo"
+                       @click="updateCourse">
+                  Змінити курс
+                </v-btn>
+
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
+
+    </ion-footer>
+
 
   </ion-page>
 </template>
@@ -54,15 +149,29 @@
 <script lang="ts" setup>
 import {
   IonPage,
+  IonHeader,
+  IonContent,
+  IonFooter,
+  IonCol,
+  IonGrid,
+  IonMenuButton,
+  IonRow
+
 } from "@ionic/vue";
+import AccountTeacher from "@/components/Teacher/AccountTeacher.vue";
+import CourseTeacher from "@/components/Teacher/CourseTeacher.vue"
+import TaskTeacher from "@/components/Teacher/TaskTeacher.vue"
+import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
+import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
 
-
+import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import router from "@/router";
 import {course} from "@/stores/course";
+import {reactive, ref} from "vue";
+import {Course} from "@/models/Course";
 
 const CourseStore = course()
 const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор']
-
 const identifier = localStorage.getItem('identifier')
 const posts = localStorage.getItem('posts')
 
@@ -72,9 +181,41 @@ const redirect = () => {
   localStorage.removeItem('posts')
   router.replace('/teacher-room')
 }
+let sheet = ref(false)
+
+let courseUpdate = reactive({
+  name: "",
+  discipline: "",
+  grade: null,
+  yearsFrom: null,
+  yearsTo: null,
+
+})
+
+
 const updateCourse = () => {
-  CourseStore.updateCourse()
+  const changedCourse: Course = {
+    name: courseUpdate.name,
+    discipline: courseUpdate.discipline,
+    grade: +courseUpdate.grade,
+    yearsFrom: +courseUpdate.yearsFrom,
+    yearsTo: +courseUpdate.yearsTo
+  }
+
+  CourseStore.updateCourse(changedCourse)
+
+  courseUpdate.name = "";
+  courseUpdate.discipline = "";
+  courseUpdate.grade = null;
+  courseUpdate.yearsFrom = null;
+  courseUpdate.yearsTo = null;
+  location.reload();
 }
+const locationCourse = () => {
+  router.replace('/main/courses')
+
+}
+
 const deleteCourse = () => {
   CourseStore.deleteCourse()
 }
@@ -84,7 +225,6 @@ const loadCourse = () => {
 }
 
 loadCourse();
-
 
 </script>
 
@@ -116,6 +256,17 @@ loadCourse();
   color: #9ae6c4;
   font-size: 18px;
   font-family: "Fira Code Medium", monospace;
+}
 
+.layout-footer{
+  max-height: 10vh;
+}
+
+ion-col {
+  background-color: #135d54;
+  border: solid 1px #fff;
+  color: #fff;
+  text-align: center;
+  border-radius: 360px;
 }
 </style>

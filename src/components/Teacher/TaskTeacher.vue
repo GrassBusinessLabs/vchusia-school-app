@@ -100,7 +100,7 @@
 <script lang="ts" setup>
 import {add} from 'ionicons/icons';
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
-import {IonPage, IonIcon, IonDatetime, IonDatetimeButton, IonModal} from "@ionic/vue";
+import {IonPage, IonIcon, IonHeader, IonFooter} from "@ionic/vue";
 import {Post} from "@/models/Post";
 import {post} from "@/stores/post"
 import {reactive, ref} from "vue";
@@ -111,7 +111,7 @@ let sheet = ref(false);
 const PostStore = post();
 
 let task$ = reactive({
-  courseId: 124,
+  courseId: 126,
   title: "",
   description: "",
   answer: "",

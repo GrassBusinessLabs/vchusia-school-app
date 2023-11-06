@@ -5,70 +5,6 @@
       <ion-item>
         <ion-searchbar animated="animated" placeholder="Пошук по курсах"></ion-searchbar>
       </ion-item>
-
-
-      <!--      <ion-modal ref="modal" trigger="open-modal" class="modal-course">-->
-      <!--        <ion-content class="ion-padding">-->
-      <!--          <v-card-->
-      <!--              elevation="1"-->
-      <!--          >-->
-      <!--            <v-container class="container-modal">-->
-      <!--              <v-text-field-->
-      <!--                  class="input-course"-->
-      <!--                  color="primary"-->
-      <!--                  label="Назва курсу"-->
-      <!--                  variant="solo"-->
-      <!--                  density="compact"-->
-      <!--                  v-model="course$.name"-->
-      <!--              ></v-text-field>-->
-
-      <!--              <v-text-field-->
-      <!--                  class="input-course"-->
-      <!--                  v-model="course$.discipline"-->
-      <!--                  color="primary"-->
-      <!--                  density="compact"-->
-      <!--                  label="Назва дисципліни"-->
-      <!--                  variant="solo"-->
-      <!--              ></v-text-field>-->
-
-      <!--              <v-text-field-->
-      <!--                  class="input-course"-->
-      <!--                  v-model="course$.grade"-->
-      <!--                  color="primary"-->
-      <!--                  label="Клас"-->
-      <!--                  density="compact"-->
-      <!--                  variant="solo"-->
-      <!--              ></v-text-field>-->
-
-      <!--              <v-text-field-->
-      <!--                  class="input-course"-->
-      <!--                  v-model="course$.yearsFrom"-->
-      <!--                  color="primary"-->
-      <!--                  label="Вік від"-->
-      <!--                  density="compact"-->
-      <!--                  variant="solo"-->
-      <!--              ></v-text-field>-->
-
-      <!--              <v-text-field-->
-      <!--                  class="input-course"-->
-      <!--                  v-model="course$.yearsTo"-->
-      <!--                  color="primary"-->
-      <!--                  density="compact"-->
-      <!--                  label="Вік до"-->
-      <!--                  variant="solo"-->
-      <!--              ></v-text-field>-->
-
-      <!--              <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()" class="confirm-btn">-->
-      <!--                Додати курс-->
-      <!--              </v-btn>-->
-      <!--            </v-container>-->
-
-
-      <!--          </v-card>-->
-
-      <!--        </ion-content>-->
-      <!--      </ion-modal>-->
-
     </ion-header>
 
 
@@ -85,18 +21,6 @@
 
 
     </ion-content>
-    <!--    <ion-footer>-->
-
-
-    <!--      <v-layout>-->
-    <!--        <v-footer class="footer-toolbar">-->
-    <!--          <v-btn class="btn-add-course" size="large">-->
-    <!--            <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
-    <!--          </v-btn>-->
-    <!--        </v-footer>-->
-
-    <!--      </v-layout>-->
-    <!--    </ion-footer>-->
     <ion-footer>
       <div class="text-center">
         <v-btn class="btn-add-course mb-1" size="large" @click="sheet = !sheet">
@@ -200,6 +124,7 @@ import {
   IonButton,
   IonIcon,
   IonLabel,
+  IonMenu,
   IonPage,
   IonModal,
   IonToolbar,
@@ -221,7 +146,7 @@ const input = ref();
 
 // const store = course()
 const redirect = (value) => {
-  router.replace('/course');
+  router.replace('/main/course');
   let idCourse = value.id;
   let identifier = value.identifier
   let posts = value.posts
@@ -242,13 +167,13 @@ let course$ = reactive({
   yearsTo: null,
 
 })
-let totalCourses = CourseStore.total
+let totalCourses = CourseStore["total"]
 console.log(totalCourses)
 
 
 const loadCourses = () => {
   CourseStore.getAllCourse({page: 1, count: totalCourses})
-  CourseStore.thisCourse = [];
+  CourseStore["thisCourse"] = [];
 }
 loadCourses();
 
@@ -352,7 +277,7 @@ v-btn {
   --height: 600px
 }
 
-.btnAddCourse{
+.btnAddCourse {
   border-radius: 15px;
   padding: 5px 15px;
 }

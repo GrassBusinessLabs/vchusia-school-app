@@ -64,7 +64,9 @@
           </v-btn>
 
           <v-card-text class="text-center">
-            <ion-text>Немає аккаунта? <router-link to="/signup">Зареєструватися</router-link></ion-text>
+            <ion-text>Немає аккаунта?
+              <router-link to="/auth/signup">Зареєструватися</router-link>
+            </ion-text>
           </v-card-text>
         </v-card>
       </div>
@@ -84,7 +86,9 @@ import {
   IonToolbar,
   IonButton,
   IonButtons,
-  IonBackButton
+  IonBackButton,
+  IonTitle,
+  IonText
 
 } from "@ionic/vue";
 import {course} from "../stores/course.ts"
@@ -99,7 +103,9 @@ export default {
     IonToolbar,
     IonButton,
     IonButtons,
-    IonBackButton
+    IonBackButton,
+    IonTitle,
+    IonText
   },
 
   data() {
@@ -162,7 +168,7 @@ ion-list {
 }
 
 
-.login{
+.login {
   display: flex;
   margin: 0 auto;
   width: 80%;

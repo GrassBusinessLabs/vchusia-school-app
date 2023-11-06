@@ -64,14 +64,16 @@ export const course = defineStore('course', {
         async deleteCourse(){
             try {
                 const response = await CourseApi.deleteCourse()
+                console.log(response)
             }catch (e) {
                 console.log(e)
             }
         },
 
-        async updateCourse(){
+        async updateCourse(body: Course){
             try {
-                const response = await CourseApi.updateCourse()
+                const response = await CourseApi.updateCourse(body)
+                console.log(response)
             }catch (e) {
                 console.log(e)
             }

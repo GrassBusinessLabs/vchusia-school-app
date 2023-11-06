@@ -22,7 +22,7 @@ export const auth = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(response.user))
                 const userData = JSON.parse(localStorage.getItem('user'));
                 if (userData.role === "TEACHER") {
-                    router.replace('/teacher-room')
+                    router.replace('/main/courses')
                 } else {
                     router.replace('/student-room')
                 }
@@ -37,10 +37,10 @@ export const auth = defineStore('auth', {
                 const response = await AuthApi.logout()
                 console.log(response)
                 localStorage.clear()
-                router.replace('/start')
+                router.replace('/auth/start')
             } catch (e) {
                 localStorage.clear()
-                router.replace('/start')
+                router.replace('/auth/start')
             }
 
         },
@@ -53,9 +53,9 @@ export const auth = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(response.user))
                 console.log(response)
                 if (response.user.role === "TEACHER") {
-                    router.replace('/teacher-room')
+                    router.replace('/main/courses')
                 } else {
-                    router.replace('/student-room')
+                    router.replace('/main/courses')
 
                 }
             } catch (e) {
