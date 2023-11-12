@@ -2,7 +2,8 @@ import {Post} from "@/models/Post";
 import axios from "../api";
 
 function createPost(body: Post) {
-    return axios.post('/post', body)
+    let courseId = localStorage.getItem('courseId')
+    return axios.post(`/courses/${courseId}/post`, body)
 }
 
 export default {

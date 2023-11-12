@@ -149,13 +149,10 @@ const redirect = (value) => {
   router.replace('/main/course');
   let idCourse = value.id;
   let identifier = value.identifier
-  let posts = value.posts
   localStorage.setItem('courseId', idCourse)
   localStorage.setItem('identifier', identifier)
-  localStorage.setItem('posts', posts)
   console.log(identifier)
   console.log(idCourse)
-  console.log(posts)
 }
 
 

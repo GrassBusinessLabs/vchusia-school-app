@@ -5,13 +5,15 @@
 
     <ion-content>
 
+
       <div v-for="value in CourseStore.thisCourse" class="course">
         <div v-for="(name, value, index) in value"
-             v-show="value != 'id' && value != 'userid' && value != 'Опис курсу' && value != 'Завдання' && value != 'Ідентифікатор' "
+             v-show="value != 'id' && value != 'userid' && value != 'Завдання' && value != 'Опис курсу'  && value != 'Ідентифікатор' "
              class="titlesCourse">
           {{ value = nameCourse[index] }} <span class="valueCourse"> {{ name }} </span>
         </div>
       </div>
+
 
       <v-layout class="mt-4 mb-4">
         <v-card elevation="3" class="pa-5 w-75 mx-auto bg-indigo-lighten-2">
@@ -20,7 +22,7 @@
       </v-layout>
 
       <v-card class="pa-5 w-75 mx-auto d-flex flex-column align-center" elevation="1">
-        <v-btn class="btn" color="indigo" @click="sheet = !sheet">
+        <v-btn class="btn" color="indigo" @click="sheet_change = !sheet_change">
           Редагувати курс
         </v-btn>
 
@@ -31,43 +33,34 @@
 
       </v-card>
 
+      <!--      <div v-for="value in CourseStore.thisCourse">-->
+      <!--        <div v-for="(name, value, index) in value" v-show="value === 'Завдання'" class="titlesCourse">-->
+      <!--          {{value = nameCourse[index]}} <br> {{name}}-->
+      <!--        </div>-->
+      <!--      </div>-->
 
 
       <v-layout class="mt-4">
-        <v-card elevation="3" class="pa-5 w-75 mx-auto">
-          <div>
-            <ion-grid class="d-flex justify-center">
-              <ion-row>
-                <ion-col>Title</ion-col>
-                <ion-col>Description</ion-col>
-                <ion-col>Points</ion-col>
-                <ion-col>Answer</ion-col>
-                <ion-col>Deadline</ion-col>
-              </ion-row>
-            </ion-grid>
+        <v-card elevation="3" class="pa-5 w-75 mx-auto parentGrid" >
 
-            <ion-grid>
-              <ion-row>
-                <ion-col>1</ion-col>
-                <ion-col>1</ion-col>
-                <ion-col>1</ion-col>
-                <ion-col>1</ion-col>
-                <ion-col>1</ion-col>
-              </ion-row>
-            </ion-grid>
+          <ion-grid class="grid_post d-flex" id="startGrid">
+            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index)" v-for="(ion, index) in 5"></ion-col>
+          </ion-grid>
 
 
 
-          </div>
+
 
         </v-card>
       </v-layout>
 
+
     </ion-content>
+
 
     <ion-footer>
       <div class="text-center">
-        <v-bottom-sheet v-model="sheet">
+        <v-bottom-sheet v-model="sheet_change">
           <v-card
               class="text-center"
               height="700"
@@ -139,7 +132,88 @@
         </v-bottom-sheet>
       </div>
 
+      <div class="text-center">
 
+
+        <v-bottom-sheet v-model="sheet">
+          <v-card
+              class="text-center"
+              height="700"
+
+          >
+            <v-card-text>
+
+              <br>
+              <br>
+
+              <div>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Заголовок"
+                    prepend-icon="mdi-bookmark-outline"
+                    color="primary"
+                    v-model="task$.title"
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Опис завдання"
+                    color="primary"
+                    prepend-icon="mdi-information-outline"
+                    v-model="task$.description"
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Відповідь"
+                    color="primary"
+                    prepend-icon="mdi-forum"
+
+                    v-model="task$.answer"
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    type="number"
+                    variant="outlined"
+                    label="Кількість балів"
+                    color="primary"
+                    prepend-icon="mdi-star"
+                    v-model="task$.points"
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    type="datetime-local"
+                    variant="outlined"
+                    label="Дата здачі"
+                    color="primary"
+                    prepend-icon="mdi-calendar-range"
+                    v-model="task$.deadline"
+                >
+                </v-text-field>
+
+
+                <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
+                       @click="createPost">
+                  Додати завдання
+                </v-btn>
+
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
     </ion-footer>
 
 
@@ -158,30 +232,28 @@ import {
   IonRow
 
 } from "@ionic/vue";
-import AccountTeacher from "@/components/Teacher/AccountTeacher.vue";
-import CourseTeacher from "@/components/Teacher/CourseTeacher.vue"
-import TaskTeacher from "@/components/Teacher/TaskTeacher.vue"
-import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
-import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
+
 
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import router from "@/router";
 import {course} from "@/stores/course";
 import {reactive, ref} from "vue";
 import {Course} from "@/models/Course";
+import {Post} from "@/models/Post";
+import {post} from "@/stores/post";
+
 
 const CourseStore = course()
 const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор']
 const identifier = localStorage.getItem('identifier')
-const posts = localStorage.getItem('posts')
+const parentGrid = document.querySelector('.parentGrid')
 
-const redirect = () => {
-  localStorage.removeItem('courseId')
-  localStorage.removeItem('identifier')
-  localStorage.removeItem('posts')
-  router.replace('/teacher-room')
-}
-let sheet = ref(false)
+
+let sheet = ref(false);
+let sheet_change = ref(false);
+const PostStore = post();
+let arrCols = [];
+
 
 let courseUpdate = reactive({
   name: "",
@@ -192,6 +264,57 @@ let courseUpdate = reactive({
 
 })
 
+
+
+
+let task$ = reactive({
+  courseId: 126,
+  title: "",
+  description: "",
+  answer: "",
+  points: 10,
+  deadline: "",
+  parentId: 0,
+  requiredPoints: 0
+})
+
+const outPost = (index) => {
+  const col = document.querySelectorAll('ion-col')
+  for(let cols of col){
+    arrCols.push(cols)
+  }
+  arrCols[index].innerText = index;
+  console.log(arrCols[index])
+  console.log(index)
+
+}
+
+const createPost = () => {
+  const body: Post = {
+    courseId: task$.courseId,
+    title: task$.title,
+    description: task$.description,
+    answer: task$.answer,
+    points: +task$.points,
+    deadline: new Date(task$.deadline).toISOString(),
+    parentId: task$.parentId,
+    requiredPoints: task$.requiredPoints
+  }
+
+
+  PostStore.createPost(body)
+
+
+
+
+
+
+  task$.answer = "";
+  task$.title = "";
+  task$.description = "";
+  task$.deadline = "";
+
+}
 
 const updateCourse = () => {
   const changedCourse: Course = {
@@ -211,10 +334,7 @@ const updateCourse = () => {
   courseUpdate.yearsTo = null;
   location.reload();
 }
-const locationCourse = () => {
-  router.replace('/main/courses')
 
-}
 
 const deleteCourse = () => {
   CourseStore.deleteCourse()
@@ -258,15 +378,31 @@ loadCourse();
   font-family: "Fira Code Medium", monospace;
 }
 
-.layout-footer{
+.layout-footer {
   max-height: 10vh;
 }
 
-ion-col {
-  background-color: #135d54;
-  border: solid 1px #fff;
-  color: #fff;
-  text-align: center;
-  border-radius: 360px;
+.grid_post {
+  width: 100%;
 }
+
+ion-col {
+  background-color: grey;
+  color: #fff;
+  height: 48.5px;
+  border-radius: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48.5px;
+  margin: 5px;
+  overflow: hidden;
+}
+
+.grid_post1{
+  display: none;
+}
+
+
 </style>

@@ -3,12 +3,12 @@ import {Post} from "@/models/Post";
 import PostApi from "@/http/modules/post"
 
 interface State {
-    posts: any
+    posts: any,
 }
 
 export const post = defineStore('post', {
     state: (): State => ({
-        posts: []
+        posts: [],
     }),
 
     getters: {

@@ -28,6 +28,7 @@ function updateCourse(body: Course){
     return axios.put(`/courses/${courseId}`, body)
 
 }
+
 export default {
     createCourse,
     getAllCourse,
