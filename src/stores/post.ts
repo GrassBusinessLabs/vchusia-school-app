@@ -18,10 +18,12 @@ export const post = defineStore('post', {
     actions:{
         async createPost(body: Post){
             try {
-                const response = await PostApi.createPost(body)
+                const response: any = await PostApi.createPost(body)
+                localStorage.setItem('post', JSON.stringify(response))
                 console.log(response)
                 this.posts.push(response)
                 console.log(this.posts)
+
             }catch (e) {
                 console.log(e)
             }

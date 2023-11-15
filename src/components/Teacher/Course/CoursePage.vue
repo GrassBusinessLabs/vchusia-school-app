@@ -8,7 +8,7 @@
 
       <div v-for="value in CourseStore.thisCourse" class="course">
         <div v-for="(name, value, index) in value"
-             v-show="value != 'id' && value != 'userid' && value != 'Завдання' && value != 'Опис курсу'  && value != 'Ідентифікатор' "
+             v-show="value !== 'id' && value !== 'userid' && value !== 'Завдання' && value !== 'Опис курсу'  && value !== 'Ідентифікатор' "
              class="titlesCourse">
           {{ value = nameCourse[index] }} <span class="valueCourse"> {{ name }} </span>
         </div>
@@ -33,22 +33,15 @@
 
       </v-card>
 
-      <!--      <div v-for="value in CourseStore.thisCourse">-->
-      <!--        <div v-for="(name, value, index) in value" v-show="value === 'Завдання'" class="titlesCourse">-->
-      <!--          {{value = nameCourse[index]}} <br> {{name}}-->
-      <!--        </div>-->
-      <!--      </div>-->
-
 
       <v-layout class="mt-4">
-        <v-card elevation="3" class="pa-5 w-75 mx-auto parentGrid" >
+        <v-card elevation="3"
+                class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
+                id="parentGrid">
 
           <ion-grid class="grid_post d-flex" id="startGrid">
             <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index)" v-for="(ion, index) in 5"></ion-col>
           </ion-grid>
-
-
-
 
 
         </v-card>
@@ -205,7 +198,7 @@
 
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
-                       @click="createPost">
+                       @click="createPost(), sheet = !sheet">
                   Додати завдання
                 </v-btn>
 
@@ -252,7 +245,7 @@ const parentGrid = document.querySelector('.parentGrid')
 let sheet = ref(false);
 let sheet_change = ref(false);
 const PostStore = post();
-let arrCols = [];
+let arrCols: any = [];
 
 
 let courseUpdate = reactive({
@@ -263,8 +256,6 @@ let courseUpdate = reactive({
   yearsTo: null,
 
 })
-
-
 
 
 let task$ = reactive({
@@ -278,16 +269,37 @@ let task$ = reactive({
   requiredPoints: 0
 })
 
-const outPost = (index) => {
-  const col = document.querySelectorAll('ion-col')
-  for(let cols of col){
+
+let indexId: any = [];
+
+
+function outPost(index: any) {
+  indexId = [];
+  const col: any = document.querySelectorAll('ion-col')
+  for (let cols of col) {
     arrCols.push(cols)
   }
-  arrCols[index].innerText = index;
-  console.log(arrCols[index])
-  console.log(index)
+  indexId.push(index)
+  console.log(indexId)
 
 }
+
+
+function addInput() {
+  let ion_grid = `
+<ion-grid class="grid_post d-flex" >
+    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
+    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
+    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
+    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
+    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
+</ion-grid>`;
+  const parentGrid: any = document.getElementById('parentGrid');
+  parentGrid.innerHTML += ion_grid
+
+
+}
+
 
 const createPost = () => {
   const body: Post = {
@@ -305,14 +317,20 @@ const createPost = () => {
   PostStore.createPost(body)
 
 
-
-
-
+  const post: any = JSON.parse(localStorage.getItem('post'));
+  arrCols[0].innerText = post.id
+  console.log(post)
+  console.log(arrCols[0]);
 
   task$.answer = "";
   task$.title = "";
   task$.description = "";
   task$.deadline = "";
+
+  let indexElementCLicked = indexId[0];
+  outPost(indexElementCLicked);
+  addInput();
+
 
 }
 
@@ -400,7 +418,7 @@ ion-col {
   overflow: hidden;
 }
 
-.grid_post1{
+.grid_post1 {
   display: none;
 }
 

@@ -94,7 +94,7 @@
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddCourse" variant="tonal" color="indigo"
                        @click="confirm">
-                  Додати завдання
+                  Додати курс
                 </v-btn>
 
               </div>
