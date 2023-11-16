@@ -4,7 +4,8 @@ export interface Post {
     description: string,
     title:string,
     deadline: string,
-    courseId: number,
-    parentId: number,
+    parentId: number | null,
     points: number,
+    row: number,
+    column: number,
 }

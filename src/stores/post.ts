@@ -9,6 +9,7 @@ interface State {
 export const post = defineStore('post', {
     state: (): State => ({
         posts: [],
+
     }),
 
     getters: {

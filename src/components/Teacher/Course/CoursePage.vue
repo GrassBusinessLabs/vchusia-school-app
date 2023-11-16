@@ -34,14 +34,20 @@
       </v-card>
 
 
+
+
       <v-layout class="mt-4">
         <v-card elevation="3"
                 class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
                 id="parentGrid">
 
+
+
           <ion-grid class="grid_post d-flex" id="startGrid">
-            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index)" v-for="(ion, index) in 5"></ion-col>
+            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index)" v-model= "col" v-for="(ion, index) in 5"></ion-col>
           </ion-grid>
+
+          <PostGrid v-if="showPostGrid" />
 
 
         </v-card>
@@ -198,7 +204,7 @@
 
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
-                       @click="createPost(), sheet = !sheet">
+                       @click="createPost(), sheet = !sheet, showPostGrid = !showPostGrid">
                   Додати завдання
                 </v-btn>
 
@@ -234,19 +240,21 @@ import {reactive, ref} from "vue";
 import {Course} from "@/models/Course";
 import {Post} from "@/models/Post";
 import {post} from "@/stores/post";
+import PostGrid from '/src/components/Teacher/Course/PostGrid.vue';
 
 
-const CourseStore = course()
-const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор']
-const identifier = localStorage.getItem('identifier')
-const parentGrid = document.querySelector('.parentGrid')
-
+const CourseStore = course();
+const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор'];
+const identifier = localStorage.getItem('identifier');
+const parentGrid = document.querySelector('.parentGrid');
+const courseId = localStorage.getItem('courseId');
+const col = 1;
 
 let sheet = ref(false);
 let sheet_change = ref(false);
 const PostStore = post();
 let arrCols: any = [];
-
+let showPostGrid = ref(false)
 
 let courseUpdate = reactive({
   name: "",
@@ -259,7 +267,7 @@ let courseUpdate = reactive({
 
 
 let task$ = reactive({
-  courseId: 126,
+  courseId: Number(courseId),
   title: "",
   description: "",
   answer: "",
@@ -285,51 +293,35 @@ function outPost(index: any) {
 }
 
 
-function addInput() {
-  let ion_grid = `
-<ion-grid class="grid_post d-flex" >
-    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
-    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
-    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
-    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
-    <ion-col class="ion-col-post d-flex justify-center align-center" style="background: grey; height: 48.5px; width: 48.5px; margin: 5px; border-radius: 30px;" ></ion-col>
-</ion-grid>`;
-  const parentGrid: any = document.getElementById('parentGrid');
-  parentGrid.innerHTML += ion_grid
 
 
-}
-
-
-const createPost = () => {
+async function createPost () {
   const body: Post = {
-    courseId: task$.courseId,
     title: task$.title,
     description: task$.description,
     answer: task$.answer,
     points: +task$.points,
     deadline: new Date(task$.deadline).toISOString(),
     parentId: task$.parentId,
-    requiredPoints: task$.requiredPoints
+    requiredPoints: task$.requiredPoints,
+    row: indexId[0] + 1,
+    column: col
   }
 
+  await PostStore.createPost(body)
 
-  PostStore.createPost(body)
-
+  let indexElementCLicked = indexId[0];
+  outPost(indexElementCLicked);
 
   const post: any = JSON.parse(localStorage.getItem('post'));
-  arrCols[0].innerText = post.id
-  console.log(post)
-  console.log(arrCols[0]);
+  arrCols[indexElementCLicked].innerText = post.id;
+
 
   task$.answer = "";
   task$.title = "";
   task$.description = "";
   task$.deadline = "";
 
-  let indexElementCLicked = indexId[0];
-  outPost(indexElementCLicked);
-  addInput();
 
 
 }
@@ -356,11 +348,13 @@ const updateCourse = () => {
 
 const deleteCourse = () => {
   CourseStore.deleteCourse()
+  router.replace('/main/courses')
 }
 
 const loadCourse = () => {
   CourseStore.findCourseById()
 }
+
 
 loadCourse();
 

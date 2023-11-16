@@ -93,7 +93,7 @@
 
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddCourse" variant="tonal" color="indigo"
-                       @click="confirm">
+                       @click="confirm(), sheet = !sheet">
                   Додати курс
                 </v-btn>
 
