@@ -133,12 +133,14 @@ import {
 import {course} from "@/stores/course";
 import {Course} from "@/models/Course";
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
+import {post} from "@/stores/post";
+
 
 import router from "@/router";
 
 const CourseStore = course()
 let sheet = ref(false);
-
+const PostStore = post();
 let activePage = ref('');
 const name = ref();
 const modal = ref();

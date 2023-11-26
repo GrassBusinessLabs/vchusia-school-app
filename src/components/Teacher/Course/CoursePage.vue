@@ -30,10 +30,14 @@
           Видалити курс
         </v-btn>
 
+  <v-btn @click="locatedPost()">
+    H
+  </v-btn>
+        <div class="outputPost"  v-for="(value, index) in PostStore.PostInfo">
+          <div v-for="(i, index) in value">{{index}}:{{i.id}} </div>
+        </div>
 
       </v-card>
-
-
 
 
       <v-layout class="mt-4">
@@ -42,12 +46,38 @@
                 id="parentGrid">
 
 
+<!--          <ion-grid class="grid_post d-flex" id="startGrid" v-model="col">-->
+<!--            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index), row = ion" v-model="row"-->
+<!--                     v-for="(ion, index) in 5"></ion-col>-->
+<!--          </ion-grid>-->
 
-          <ion-grid class="grid_post d-flex" id="startGrid">
-            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index)" v-model= "col" v-for="(ion, index) in 5"></ion-col>
+
+
+<!--          <ion-grid class="grid_post d-flex" id="startGrid" v-if="displayPost === true" v-for="(i , index) of PostStore.total" @click="col = i + 1">-->
+<!--            <ion-col class="ion-col-post" @click="sheet_parent = !sheet_parent, outPost(index), row = ion" v-model="row"-->
+<!--                     v-for="(ion, index) in 5"></ion-col>-->
+<!--          </ion-grid>-->
+
+<!--        <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">-->
+<!--          <ion-row v-model="col">-->
+<!--            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index), row = ion" v-model="row" v-for="(ion, index) in 5"></ion-col>-->
+<!--          </ion-row>-->
+
+<!--          <ion-row  v-model="col" v-if="displayPost === true" @click="col + 1" v-for="(ion) in col">-->
+<!--            <ion-col class="ion-col-post" @click="sheet_parent = !sheet_parent, outPost(index + 10), row = ion" v-model="row" v-for="(ion, index) in 5"></ion-col>-->
+<!--          </ion-row>-->
+
+<!--        </ion-grid>-->
+
+          <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">
+            <ion-row v-model="col" >
+              <ion-col class="ion-col-post" @click="sheet = !sheet, row = ion" v-for="(ion, index) in 5"></ion-col>
+            </ion-row>
+
+            <ion-row @click="col = ion + 1" v-model="col" v-for="ion in 3">
+              <ion-col @click="sheet_parent = !sheet_parent, row = ion" v-for="(ion, index) in 5"></ion-col>
+            </ion-row>
           </ion-grid>
-
-          <PostGrid v-if="showPostGrid" />
 
 
         </v-card>
@@ -204,12 +234,115 @@
 
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
-                       @click="createPost(), sheet = !sheet, showPostGrid = !showPostGrid">
+                       @click="createPost(), sheet = !sheet, displayPost = true">
                   Додати завдання
                 </v-btn>
 
               </div>
             </v-card-text>
+          </v-card>
+
+        </v-bottom-sheet>
+      </div>
+
+      <div>
+        <v-bottom-sheet v-model="sheet_parent">
+          <v-card height="700">
+            <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+            <div class="selectPost">
+              <v-select
+                  variant="outlined"
+                  prepend-icon="mdi-identifier"
+                  label="Id"
+                  :items=idPostsNow
+                  v-model="task$.parentId"
+              ></v-select>
+            </div>
+
+
+
+            <v-card-text>
+
+
+              <div>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Заголовок"
+                    prepend-icon="mdi-bookmark-outline"
+                    color="primary"
+                    v-model="task$.title"
+
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Опис завдання"
+                    color="primary"
+                    prepend-icon="mdi-information-outline"
+                    v-model="task$.description"
+
+
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    variant="outlined"
+                    label="Відповідь"
+                    color="primary"
+                    prepend-icon="mdi-forum"
+                    v-model="task$.answer"
+
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    type="number"
+                    variant="outlined"
+                    label="Кількість балів"
+                    color="primary"
+                    prepend-icon="mdi-star"
+                    v-model="task$.points"
+
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    class="inputTaskStyled"
+                    type="datetime-local"
+                    variant="outlined"
+                    label="Дата здачі"
+                    color="primary"
+                    prepend-icon="mdi-calendar-range"
+                    v-model="task$.deadline"
+
+
+                >
+                </v-text-field>
+
+                <div class="btnAddPost">
+                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
+                         @click="sheet_parent = !sheet_parent, createPost()">
+                    Додати завдання
+                  </v-btn>
+                </div>
+
+
+              </div>
+
+            </v-card-text>
+
+
           </v-card>
         </v-bottom-sheet>
       </div>
@@ -228,7 +361,7 @@ import {
   IonCol,
   IonGrid,
   IonMenuButton,
-  IonRow
+  IonRow,
 
 } from "@ionic/vue";
 
@@ -241,6 +374,7 @@ import {Course} from "@/models/Course";
 import {Post} from "@/models/Post";
 import {post} from "@/stores/post";
 import PostGrid from '/src/components/Teacher/Course/PostGrid.vue';
+import {reload} from "ionicons/icons";
 
 
 const CourseStore = course();
@@ -248,13 +382,20 @@ const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Кла
 const identifier = localStorage.getItem('identifier');
 const parentGrid = document.querySelector('.parentGrid');
 const courseId = localStorage.getItem('courseId');
-const col = 1;
+let row = 1;
+let col = 1;
+const displayPost = ref(false)
 
 let sheet = ref(false);
 let sheet_change = ref(false);
+let sheet_parent = ref(false);
 const PostStore = post();
-let arrCols: any = [];
-let showPostGrid = ref(false)
+// let arrRows: any = [];
+// let arrCols: any = [];
+let allPost = JSON.parse(localStorage.getItem('allPost'));
+const idPostsNow = PostStore.idPostsNow
+// let idPostsNow = PostStore.idPostNow
+// findPost();
 
 let courseUpdate = reactive({
   name: "",
@@ -264,6 +405,7 @@ let courseUpdate = reactive({
   yearsTo: null,
 
 })
+// PostStore.PostInfo = [];
 
 
 let task$ = reactive({
@@ -278,52 +420,137 @@ let task$ = reactive({
 })
 
 
-let indexId: any = [];
+
+// function locationClick(ion, col){
+//   console.log(col, row)
+// }
+// let indexId: any = [];
+// let indexColsId: any = [];
+//
+// async function findPost() {
+//   await PostStore.findPostWithRow();
+// }
+//
+// let columnMax = []
+// let columnOut = 0
+// function outPost(index: any) {
+//   indexId = [];
+//   const row: any = document.querySelectorAll('ion-col')
+//   for (let rows of row) {
+//     arrRows.push(rows)
+//     console.log(arrRows)
+//
+//   }
+//   indexId.push(index)
+//   console.log(indexId)
+//
+//   const col: any = document.querySelectorAll('ion-grid');
+//   for (let cols of col){
+//     arrCols.push(cols)
+//   }
+//
+//
+//
+// }
+
+// let clickedCol = []
 
 
-function outPost(index: any) {
-  indexId = [];
-  const col: any = document.querySelectorAll('ion-col')
-  for (let cols of col) {
-    arrCols.push(cols)
-  }
-  indexId.push(index)
-  console.log(indexId)
-
-}
+//
 
 
 
+// async function createPost() {
+//
+//
+//
+//   const body: Post = {
+//     title: task$.title,
+//     description: task$.description,
+//     answer: task$.answer,
+//     points: +task$.points,
+//     deadline: new Date(task$.deadline).toISOString(),
+//     parentId: Number(task$.parentId),
+//     requiredPoints: task$.requiredPoints,
+//     row: row,
+//     column: col
+//   }
+//
+//
+//   await PostStore.createPost(body);
+//   let indexElementCLicked = indexId[0];
+//   outPost(indexElementCLicked);
+//
+//   const post: any = JSON.parse(localStorage.getItem('post'));
+//   arrRows[indexElementCLicked].innerText = post.id;
+//
+//
+//
+//
+//   task$.answer = "";
+//   task$.title = "";
+//   task$.description = "";
+//   task$.deadline = "";
+//
+//   //gg
+//   const t = document.querySelectorAll('ion-row');
+//   console.log(t[col - 1])
+//   const y = document.querySelectorAll('ion-col');
+//   console.log(y[row - 1])
+//
+//   for (let maxColumn of PostStore.PostInfo) {
+//     console.log(maxColumn)
+//     for (let j of maxColumn) {
+//       columnMax.push(j.column)
+//       console.log(j.column)
+//     }
+//   }
+//   console.log(columnMax)
+//   columnOut = (Math.max(...columnMax));
+//   console.log(columnOut)
+//
+//
+//   //2gg
+//   console.log(col, row)
+// }
 
-async function createPost () {
+async function createPost() {
   const body: Post = {
     title: task$.title,
     description: task$.description,
     answer: task$.answer,
     points: +task$.points,
     deadline: new Date(task$.deadline).toISOString(),
-    parentId: task$.parentId,
+    parentId: Number(task$.parentId),
     requiredPoints: task$.requiredPoints,
-    row: indexId[0] + 1,
+    row: row,
     column: col
   }
 
-  await PostStore.createPost(body)
 
-  let indexElementCLicked = indexId[0];
-  outPost(indexElementCLicked);
-
-  const post: any = JSON.parse(localStorage.getItem('post'));
-  arrCols[indexElementCLicked].innerText = post.id;
+  await PostStore.createPost(body);
 
 
-  task$.answer = "";
-  task$.title = "";
-  task$.description = "";
-  task$.deadline = "";
+  async function locationRow() {
+    let rows = document.querySelectorAll('ion-row')
+    let cols = document.querySelectorAll('ion-col')
 
 
+    const x = (cols, rows) => {
+      const post: any = JSON.parse(localStorage.getItem('post'));
+      let clickedRow = rows[col - 1]
+      let y = clickedRow.querySelectorAll('ion-col')
+      let neededCol = y[row - 1]
+      neededCol.innerText = post.id
+      console.log(neededCol)
+      //   for (let i of clickedRow){
+      //     console.log(i.querySelectorAll('ion-col'))
+      // }
 
+    }
+    x(cols, rows)
+  }
+  locationRow()
 }
 
 const updateCourse = () => {
@@ -345,6 +572,49 @@ const updateCourse = () => {
   location.reload();
 }
 
+// const locatedPost = () => {
+//   for (let i of PostStore.PostInfo){
+//     console.log(i)
+//     for (let v of i){
+//       console.log(v.column, v.row)
+//       if(v.column || v.row in i){
+//         console.log(v)
+//         const t = document.querySelectorAll('ion-row');
+//         console.log(t[v.column])
+//         const y = document.querySelectorAll('ion-col');
+//         console.log(y[v.row])
+//       }
+//     }
+//   }
+//   console.log(col)
+// }
+const locatedPost = () => {
+  PostStore.findPostWithRow()
+  for (let i of PostStore.PostInfo){
+    console.log(i)
+    for (let v of i){
+      console.log(v)
+    }
+  }
+
+
+  let m = allPost.items
+  for (let g of m){
+    console.log(g.column, g.row)
+    if (g.column || g.row in g){
+      console.log(g.id)
+      let rows = document.querySelectorAll('ion-row')
+      let cols = document.querySelectorAll('ion-col')
+      let y = rows[g.column - 1]
+      let h = y.querySelectorAll('ion-col')
+      let needCord = h[g.row - 1]
+      needCord.innerText = g.id
+      console.log(needCord)
+    }
+  }
+
+
+}
 
 const deleteCourse = () => {
   CourseStore.deleteCourse()
@@ -354,7 +624,6 @@ const deleteCourse = () => {
 const loadCourse = () => {
   CourseStore.findCourseById()
 }
-
 
 loadCourse();
 
@@ -412,9 +681,6 @@ ion-col {
   overflow: hidden;
 }
 
-.grid_post1 {
-  display: none;
-}
 
 
 </style>

@@ -42,7 +42,7 @@ export const course = defineStore('course', {
 
         async getAllCourse(page?:{page: number, count: number}){
             try {
-                const response = await CourseApi.getAllCourse(page)
+                const response: any = await CourseApi.getAllCourse(page)
                 this.items = response.items
                 this.total = response.total
                 console.log(response)

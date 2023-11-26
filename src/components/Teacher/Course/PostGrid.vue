@@ -6,11 +6,10 @@ import {reactive, ref} from "vue";
 import {Post} from "@/models/Post";
 import {post} from "@/stores/post";
 
-const postInfo = JSON.parse(localStorage.getItem('post'));
 const sheet = ref(false);
 const PostStore = post()
 const courseId = localStorage.getItem('courseId')
-
+const col = 2;
 const $task = reactive({
   courseId: Number(courseId),
   title: "",
@@ -22,6 +21,8 @@ const $task = reactive({
   requiredPoints: 0
 })
 
+
+const idPostsNow = PostStore.idPostsNow
 let indexId: any = [];
 
 function outPost(index: any) {
@@ -31,6 +32,7 @@ function outPost(index: any) {
 
 }
 
+
 async function createPost() {
   const body: Post = {
     title: $task.title,
@@ -38,15 +40,21 @@ async function createPost() {
     answer: $task.answer,
     points: +$task.points,
     deadline: new Date($task.deadline).toISOString(),
-    parentId: $task.parentId,
+    parentId: Number($task.parentId),
     requiredPoints: $task.requiredPoints,
     row: indexId[0],
-    column: 2
+    column: col
   }
 
 
   await PostStore.createPost(body)
+
+
 }
+
+
+
+
 
 </script>
 
@@ -57,12 +65,19 @@ async function createPost() {
 
   <v-bottom-sheet v-model="sheet">
     <v-card height="700">
-      <v-select
-          class="selectPost"
-          label="Select"
-          :items="[postInfo.id]"
-          v-model="$task.parentId"
-      ></v-select>
+      <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+      <div class="selectPost">
+        <v-select
+            variant="outlined"
+            prepend-icon="mdi-identifier"
+            label="Id"
+            :items=idPostsNow
+            v-model="$task.parentId"
+        ></v-select>
+      </div>
+
+
 
       <v-card-text>
 
@@ -132,16 +147,22 @@ async function createPost() {
           >
           </v-text-field>
 
-
+        <div class="btnAddPost">
           <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
                  @click="sheet = !sheet, createPost()">
             Додати завдання
           </v-btn>
+        </div>
+
 
         </div>
+
       </v-card-text>
+
+
     </v-card>
   </v-bottom-sheet>
+
 </template>
 
 <style scoped>
@@ -156,5 +177,19 @@ ion-col{
 v-card{
   display: flex;
   width: 80%;
+}
+
+.selectPost{
+  margin: 15px 25px 0 25px;
+}
+.btnAddTask{
+  display: flex;
+  justify-content: center;
+
+}
+.btnAddPost{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
