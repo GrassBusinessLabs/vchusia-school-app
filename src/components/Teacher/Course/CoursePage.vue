@@ -30,12 +30,7 @@
           Видалити курс
         </v-btn>
 
-  <v-btn @click="locatedPost()">
-    H
-  </v-btn>
-        <div class="outputPost"  v-for="(value, index) in PostStore.PostInfo">
-          <div v-for="(i, index) in value">{{index}}:{{i.id}} </div>
-        </div>
+
 
       </v-card>
 
@@ -75,7 +70,7 @@
             </ion-row>
 
             <ion-row @click="col = ion + 1" v-model="col" v-for="ion in 3">
-              <ion-col @click="sheet_parent = !sheet_parent, row = ion" v-for="(ion, index) in 5"></ion-col>
+              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
           </ion-grid>
 
@@ -246,8 +241,8 @@
       </div>
 
       <div>
-        <v-bottom-sheet v-model="sheet_parent">
-          <v-card height="700">
+        <v-bottom-sheet v-model="sheet_parent" >
+          <v-card height="700" class="drawSheetParent">
             <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
             <div class="selectPost">
@@ -255,7 +250,7 @@
                   variant="outlined"
                   prepend-icon="mdi-identifier"
                   label="Id"
-                  :items=idPostsNow
+                  :items=items
                   v-model="task$.parentId"
               ></v-select>
             </div>
@@ -330,8 +325,8 @@
                 >
                 </v-text-field>
 
-                <div class="btnAddPost">
-                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
+                <div class="btnAddPostParent">
+                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" variant="tonal" color="indigo"
                          @click="sheet_parent = !sheet_parent, createPost()">
                     Додати завдання
                   </v-btn>
@@ -369,7 +364,7 @@ import {
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import router from "@/router";
 import {course} from "@/stores/course";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {Course} from "@/models/Course";
 import {Post} from "@/models/Post";
 import {post} from "@/stores/post";
@@ -393,10 +388,23 @@ const PostStore = post();
 // let arrRows: any = [];
 // let arrCols: any = [];
 let allPost = JSON.parse(localStorage.getItem('allPost'));
-const idPostsNow = PostStore.idPostsNow
+// const idPostsNow = PostStore.idPostsNow
 // let idPostsNow = PostStore.idPostNow
 // findPost();
 
+let items = []
+const idPostSelect = () => {
+  PostStore.findPostWithRow()
+  for (let i of PostStore.PostInfo){
+    items = []
+
+    for (let j of i){
+      items.push(j.id)
+    }
+
+  }
+  console.log(items)
+}
 let courseUpdate = reactive({
   name: "",
   discipline: "",
@@ -405,7 +413,7 @@ let courseUpdate = reactive({
   yearsTo: null,
 
 })
-// PostStore.PostInfo = [];
+PostStore.PostInfo = [];
 
 
 let task$ = reactive({
@@ -515,21 +523,6 @@ let task$ = reactive({
 // }
 
 async function createPost() {
-  const body: Post = {
-    title: task$.title,
-    description: task$.description,
-    answer: task$.answer,
-    points: +task$.points,
-    deadline: new Date(task$.deadline).toISOString(),
-    parentId: Number(task$.parentId),
-    requiredPoints: task$.requiredPoints,
-    row: row,
-    column: col
-  }
-
-
-  await PostStore.createPost(body);
-
 
   async function locationRow() {
     let rows = document.querySelectorAll('ion-row')
@@ -543,14 +536,32 @@ async function createPost() {
       let neededCol = y[row - 1]
       neededCol.innerText = post.id
       console.log(neededCol)
-      //   for (let i of clickedRow){
-      //     console.log(i.querySelectorAll('ion-col'))
-      // }
-
     }
     x(cols, rows)
   }
+
+  const body: Post = {
+    title: task$.title,
+    description: task$.description,
+    answer: task$.answer,
+    points: +task$.points,
+    deadline: new Date(task$.deadline).toISOString(),
+    parentId: Number(task$.parentId),
+    requiredPoints: task$.requiredPoints,
+    row: row,
+    column: col
+  }
+
+    task$.answer = "";
+    task$.title = "";
+    task$.description = "";
+    task$.deadline = "";
+
+  PostStore.createPost(body);
   locationRow()
+
+
+
 }
 
 const updateCourse = () => {
@@ -626,7 +637,8 @@ const loadCourse = () => {
 }
 
 loadCourse();
-
+// onMounted(() => document.location.reload())
+onMounted(() => locatedPost())
 </script>
 
 <style scoped>
@@ -681,6 +693,18 @@ ion-col {
   overflow: hidden;
 }
 
+.selectPost{
+  margin: 15px 25px 0 25px;
+}
 
+.btnAddTaskParent{
+  display: flex;
+  justify-content: center;
 
+}
+.btnAddPostParent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

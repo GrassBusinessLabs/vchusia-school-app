@@ -155,6 +155,7 @@ const redirect = (value) => {
   localStorage.setItem('identifier', identifier)
   console.log(identifier)
   console.log(idCourse)
+
 }
 
 
