@@ -9,3 +9,12 @@ export interface Post {
     row: number,
     column: number,
 }
+
+export interface UpdatePost{
+    title : string,
+    description : string,
+    answer : number,
+    points : number,
+    requiredPoints : number,
+    deadline : string,
+}

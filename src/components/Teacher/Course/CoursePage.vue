@@ -40,37 +40,13 @@
                 class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
                 id="parentGrid">
 
-
-<!--          <ion-grid class="grid_post d-flex" id="startGrid" v-model="col">-->
-<!--            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index), row = ion" v-model="row"-->
-<!--                     v-for="(ion, index) in 5"></ion-col>-->
-<!--          </ion-grid>-->
-
-
-
-<!--          <ion-grid class="grid_post d-flex" id="startGrid" v-if="displayPost === true" v-for="(i , index) of PostStore.total" @click="col = i + 1">-->
-<!--            <ion-col class="ion-col-post" @click="sheet_parent = !sheet_parent, outPost(index), row = ion" v-model="row"-->
-<!--                     v-for="(ion, index) in 5"></ion-col>-->
-<!--          </ion-grid>-->
-
-<!--        <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">-->
-<!--          <ion-row v-model="col">-->
-<!--            <ion-col class="ion-col-post" @click="sheet = !sheet, outPost(index), row = ion" v-model="row" v-for="(ion, index) in 5"></ion-col>-->
-<!--          </ion-row>-->
-
-<!--          <ion-row  v-model="col" v-if="displayPost === true" @click="col + 1" v-for="(ion) in col">-->
-<!--            <ion-col class="ion-col-post" @click="sheet_parent = !sheet_parent, outPost(index + 10), row = ion" v-model="row" v-for="(ion, index) in 5"></ion-col>-->
-<!--          </ion-row>-->
-
-<!--        </ion-grid>-->
-
           <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">
             <ion-row v-model="col" >
               <ion-col class="ion-col-post" @click="sheet = !sheet, row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
 
             <ion-row @click="col = ion + 1" v-model="col" v-for="ion in 3">
-              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), row = ion" v-for="(ion, index) in 5"></ion-col>
+              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
           </ion-grid>
 
@@ -232,6 +208,16 @@
                        @click="createPost(), sheet = !sheet, displayPost = true">
                   Додати завдання
                 </v-btn>
+                <v-card-text class="text-medium-emphasis text-caption text-center">
+                  Для редагуваня завдання заповність форму та натисніть на олівець
+                </v-card-text>
+
+                <div class="d-flex justify-center align-center w-100">
+                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2"></v-btn>
+
+                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2"></v-btn>
+                </div>
+
 
               </div>
             </v-card-text>
@@ -332,6 +318,15 @@
                   </v-btn>
                 </div>
 
+                <v-card-text class="text-medium-emphasis text-caption text-center">
+                  Для редагуваня завдання заповність форму та натисніть на олівець
+                </v-card-text>
+
+                <div class="d-flex justify-center align-center w-100">
+                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2"></v-btn>
+
+                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2"></v-btn>
+                </div>
 
               </div>
 
@@ -380,31 +375,24 @@ const courseId = localStorage.getItem('courseId');
 let row = 1;
 let col = 1;
 const displayPost = ref(false)
-
 let sheet = ref(false);
 let sheet_change = ref(false);
 let sheet_parent = ref(false);
 const PostStore = post();
-// let arrRows: any = [];
-// let arrCols: any = [];
 let allPost = JSON.parse(localStorage.getItem('allPost'));
-// const idPostsNow = PostStore.idPostsNow
-// let idPostsNow = PostStore.idPostNow
-// findPost();
-
 let items = []
 const idPostSelect = () => {
   PostStore.findPostWithRow()
   for (let i of PostStore.PostInfo){
     items = []
-
     for (let j of i){
+      if (j.column === col - 1)
       items.push(j.id)
     }
-
   }
   console.log(items)
 }
+
 let courseUpdate = reactive({
   name: "",
   discipline: "",
@@ -427,100 +415,26 @@ let task$ = reactive({
   requiredPoints: 0
 })
 
+let arrCol = []
+let idPost;
+
+const x = (index, col) => {
+  let cols = document.querySelectorAll('ion-row')
+  let rows = document.querySelectorAll('ion-col')
+
+  for (let i of cols){
+    arrCol.push(i)
+  }
+
+  let g = arrCol[col - 1]
+  let t = g.querySelectorAll('ion-col')
+  idPost = t[index].textContent
+  console.log(idPost)
+  localStorage.setItem('idPost', idPost)
+
+}
 
 
-// function locationClick(ion, col){
-//   console.log(col, row)
-// }
-// let indexId: any = [];
-// let indexColsId: any = [];
-//
-// async function findPost() {
-//   await PostStore.findPostWithRow();
-// }
-//
-// let columnMax = []
-// let columnOut = 0
-// function outPost(index: any) {
-//   indexId = [];
-//   const row: any = document.querySelectorAll('ion-col')
-//   for (let rows of row) {
-//     arrRows.push(rows)
-//     console.log(arrRows)
-//
-//   }
-//   indexId.push(index)
-//   console.log(indexId)
-//
-//   const col: any = document.querySelectorAll('ion-grid');
-//   for (let cols of col){
-//     arrCols.push(cols)
-//   }
-//
-//
-//
-// }
-
-// let clickedCol = []
-
-
-//
-
-
-
-// async function createPost() {
-//
-//
-//
-//   const body: Post = {
-//     title: task$.title,
-//     description: task$.description,
-//     answer: task$.answer,
-//     points: +task$.points,
-//     deadline: new Date(task$.deadline).toISOString(),
-//     parentId: Number(task$.parentId),
-//     requiredPoints: task$.requiredPoints,
-//     row: row,
-//     column: col
-//   }
-//
-//
-//   await PostStore.createPost(body);
-//   let indexElementCLicked = indexId[0];
-//   outPost(indexElementCLicked);
-//
-//   const post: any = JSON.parse(localStorage.getItem('post'));
-//   arrRows[indexElementCLicked].innerText = post.id;
-//
-//
-//
-//
-//   task$.answer = "";
-//   task$.title = "";
-//   task$.description = "";
-//   task$.deadline = "";
-//
-//   //gg
-//   const t = document.querySelectorAll('ion-row');
-//   console.log(t[col - 1])
-//   const y = document.querySelectorAll('ion-col');
-//   console.log(y[row - 1])
-//
-//   for (let maxColumn of PostStore.PostInfo) {
-//     console.log(maxColumn)
-//     for (let j of maxColumn) {
-//       columnMax.push(j.column)
-//       console.log(j.column)
-//     }
-//   }
-//   console.log(columnMax)
-//   columnOut = (Math.max(...columnMax));
-//   console.log(columnOut)
-//
-//
-//   //2gg
-//   console.log(col, row)
-// }
 
 async function createPost() {
 
@@ -583,22 +497,24 @@ const updateCourse = () => {
   location.reload();
 }
 
-// const locatedPost = () => {
-//   for (let i of PostStore.PostInfo){
-//     console.log(i)
-//     for (let v of i){
-//       console.log(v.column, v.row)
-//       if(v.column || v.row in i){
-//         console.log(v)
-//         const t = document.querySelectorAll('ion-row');
-//         console.log(t[v.column])
-//         const y = document.querySelectorAll('ion-col');
-//         console.log(y[v.row])
-//       }
-//     }
-//   }
-//   console.log(col)
-// }
+const deletePost = () => {
+  PostStore.deletePost()
+}
+
+const updatePost = () => {
+  const body: UpdatePost = {
+    title: task$.title,
+    description: task$.description,
+    answer: task$.answer,
+    points: +task$.points,
+    deadline: new Date(task$.deadline).toISOString(),
+    requiredPoints: task$.requiredPoints,
+  }
+
+  PostStore.updatePost(body)
+}
+
+
 const locatedPost = () => {
   PostStore.findPostWithRow()
   for (let i of PostStore.PostInfo){
@@ -637,7 +553,6 @@ const loadCourse = () => {
 }
 
 loadCourse();
-// onMounted(() => document.location.reload())
 onMounted(() => locatedPost())
 </script>
 
@@ -680,8 +595,8 @@ onMounted(() => locatedPost())
 }
 
 ion-col {
-  background-color: grey;
-  color: #fff;
+  background-color: #fff;
+  outline: 1px solid grey;
   height: 48.5px;
   border-radius: 30px;
   text-align: center;

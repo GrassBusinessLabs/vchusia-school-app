@@ -1,4 +1,4 @@
-import {Post} from "@/models/Post";
+import {Post, UpdatePost} from "@/models/Post";
 import axios from "../api";
 
 function createPost(body: Post) {
@@ -12,7 +12,19 @@ function findPostWithRow() {
 
 }
 
+function updatePost(body: UpdatePost) {
+    let postId: string | null = localStorage.getItem('idPost')
+    return axios.put(`/post/${postId}`, body)
+}
+
+function deletePost() {
+    let postId: string | null = localStorage.getItem('idPost')
+    return axios.delete(`/post/${postId}`)
+}
 export default {
     createPost,
-    findPostWithRow
+    findPostWithRow,
+    updatePost,
+    deletePost
+
 }

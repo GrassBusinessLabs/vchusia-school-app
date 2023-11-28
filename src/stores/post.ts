@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {Post} from "@/models/Post";
+import {Post, UpdatePost} from "@/models/Post";
 import PostApi from "@/http/modules/post"
 
 interface State {
@@ -47,6 +47,27 @@ export const post = defineStore('post', {
                 this.total = response.total
                 localStorage.setItem('allPost', JSON.stringify(response))
                 this.PostInfo.push(response.items)
+            }
+            catch (e) {
+                console.log(e)
+            }
+        },
+
+        async deletePost(){
+            try {
+                const response: any = await PostApi.deletePost()
+                console.log(response)
+                location.reload()
+            }
+            catch (e) {
+                console.log(e)
+            }
+        },
+
+        async updatePost(body: UpdatePost){
+            try {
+                const response: any = await PostApi.updatePost(body)
+                console.log(response)
             }
             catch (e) {
                 console.log(e)
