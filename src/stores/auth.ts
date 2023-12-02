@@ -24,7 +24,7 @@ export const auth = defineStore('auth', {
                 if (userData.role === "TEACHER") {
                     router.replace('/main/courses')
                 } else {
-                    router.replace('/student-room')
+                    router.replace('/main/student')
                 }
                 console.log(response)
             } catch (e) {

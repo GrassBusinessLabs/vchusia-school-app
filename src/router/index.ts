@@ -11,6 +11,9 @@ import CourseTeacher from "@/components/Teacher/CourseTeacher.vue";
 import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
 import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue";
 import TaskTeacher from "@/components/Teacher/TaskTeacher.vue";
+import AccountStudent from "@/components/Student/AccountStudent.vue";
+import CourseStudent from "@/components/Student/CourseStudent.vue";
+import GroupStudent from "@/components/Student/GroupStudent.vue";
 const routes: Array<RouteRecordRaw> = [
   // {
   //   path: '/',
@@ -103,11 +106,25 @@ const routes: Array<RouteRecordRaw> = [
         component: CoursePage,
 
       },
+      {
+        path: 'student',
+        name: 'Student',
+        component: AccountStudent
+      },
+      {
+        path: 'course-student',
+        name: 'CourseStudent',
+        component: CourseStudent
+      },
+      {
+        path: 'groups-student',
+        name: 'GroupStudent',
+        component: GroupStudent
+      }
 
 
-    ]
+    ],
   },
-
 
 
 ]

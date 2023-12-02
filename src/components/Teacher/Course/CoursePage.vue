@@ -41,12 +41,12 @@
                 id="parentGrid">
 
           <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">
-            <ion-row v-model="col" >
-              <ion-col class="ion-col-post" @click="sheet = !sheet, row = ion" v-for="(ion, index) in 5"></ion-col>
+            <ion-row v-model="col" @click="col > 1 ? col = 1 : false">
+              <ion-col class="ion-col-post" @click="sheet = !sheet, x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
 
-            <ion-row @click="col = ion + 1" v-model="col" v-for="ion in 3">
-              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col), row = ion" v-for="(ion, index) in 5"></ion-col>
+            <ion-row @click="col = 1 + ion" v-model="col" v-for="ion in 3">
+              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
           </ion-grid>
 
@@ -205,17 +205,17 @@
 
 
                 <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
-                       @click="createPost(), sheet = !sheet, displayPost = true">
+                       @click="createPost(), sheet = !sheet ,displayPost = true" v-show="ynShow === true">
                   Додати завдання
                 </v-btn>
-                <v-card-text class="text-medium-emphasis text-caption text-center">
+                <v-card-text class="text-medium-emphasis text-caption text-center" v-show="false">
                   Для редагуваня завдання заповність форму та натисніть на олівець
                 </v-card-text>
 
                 <div class="d-flex justify-center align-center w-100">
-                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2"></v-btn>
+                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2" v-show="changeDelBtn === true"></v-btn>
 
-                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2"></v-btn>
+                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2" v-show="changeDelBtn === true"></v-btn>
                 </div>
 
 
@@ -226,9 +226,9 @@
         </v-bottom-sheet>
       </div>
 
-      <div>
+      <div class="sheet_parent">
         <v-bottom-sheet v-model="sheet_parent" >
-          <v-card height="700" class="drawSheetParent">
+          <v-card height="750" class="drawSheetParent">
             <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
             <div class="selectPost">
@@ -311,21 +311,31 @@
                 >
                 </v-text-field>
 
+                <v-select
+                    :items="['blue', 'red', 'yellow', 'green']"
+                  variant="outlined"
+                  label="Колір завдання"
+                  density="compact"
+                  prepend-icon="mdi-palette"
+                  v-model="task$.color"
+                ></v-select>
+
+
                 <div class="btnAddPostParent">
-                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" variant="tonal" color="indigo"
-                         @click="sheet_parent = !sheet_parent, createPost()">
+                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" id="btnAddTask" variant="tonal" color="indigo"
+                         @click="sheet_parent = !sheet_parent, createPost()" v-show="ynShow === true">
                     Додати завдання
                   </v-btn>
                 </div>
 
-                <v-card-text class="text-medium-emphasis text-caption text-center">
+                <v-card-text class="text-medium-emphasis text-caption text-center" v-show="ynShow === false">
                   Для редагуваня завдання заповність форму та натисніть на олівець
                 </v-card-text>
 
-                <div class="d-flex justify-center align-center w-100">
-                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2"></v-btn>
+                <div class="d-flex justify-center align-center w-100" >
+                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2" v-show="changeDelBtn === true"></v-btn>
 
-                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2"></v-btn>
+                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2" v-show="changeDelBtn === true"></v-btn>
                 </div>
 
               </div>
@@ -365,6 +375,7 @@ import {Post} from "@/models/Post";
 import {post} from "@/stores/post";
 import PostGrid from '/src/components/Teacher/Course/PostGrid.vue';
 import {reload} from "ionicons/icons";
+import logger from "api/dist/cli/logger";
 
 
 const CourseStore = course();
@@ -381,6 +392,7 @@ let sheet_parent = ref(false);
 const PostStore = post();
 let allPost = JSON.parse(localStorage.getItem('allPost'));
 let items = []
+
 const idPostSelect = () => {
   PostStore.findPostWithRow()
   for (let i of PostStore.PostInfo){
@@ -392,6 +404,9 @@ const idPostSelect = () => {
   }
   console.log(items)
 }
+let ynShow = true
+let changeDelBtn = true
+
 
 let courseUpdate = reactive({
   name: "",
@@ -412,13 +427,15 @@ let task$ = reactive({
   points: 10,
   deadline: "",
   parentId: 0,
-  requiredPoints: 0
+  requiredPoints: 0,
+  color: ""
 })
 
 let arrCol = []
 let idPost;
+const x = (index, col, ion) => {
+  // col = ion + 1;
 
-const x = (index, col) => {
   let cols = document.querySelectorAll('ion-row')
   let rows = document.querySelectorAll('ion-col')
 
@@ -429,10 +446,23 @@ const x = (index, col) => {
   let g = arrCol[col - 1]
   let t = g.querySelectorAll('ion-col')
   idPost = t[index].textContent
-  console.log(idPost)
+  console.log(t[index].textContent)
+  console.log(t[index].textContent.length)
+  console.log(t[index])
   localStorage.setItem('idPost', idPost)
 
+  if(t[index].textContent.length > 0){
+    console.log(true)
+    ynShow = false
+    changeDelBtn = true
+
+  } else{
+    ynShow = true
+    changeDelBtn = false
+    console.log(false)
+  }
 }
+
 
 
 
@@ -449,7 +479,12 @@ async function createPost() {
       let y = clickedRow.querySelectorAll('ion-col')
       let neededCol = y[row - 1]
       neededCol.innerText = post.id
+      console.log(task$.color)
+      neededCol.style.background = task$.color
+      neededCol.style.outline = 'none';
       console.log(neededCol)
+
+      //InnerHTML for ion-grid, ion-row, ion-col
     }
     x(cols, rows)
   }
@@ -463,7 +498,9 @@ async function createPost() {
     parentId: Number(task$.parentId),
     requiredPoints: task$.requiredPoints,
     row: row,
-    column: col
+    column: col,
+    color: task$.color,
+    type: "string"
   }
 
     task$.answer = "";
@@ -473,7 +510,6 @@ async function createPost() {
 
   PostStore.createPost(body);
   locationRow()
-
 
 
 }
@@ -536,7 +572,9 @@ const locatedPost = () => {
       let h = y.querySelectorAll('ion-col')
       let needCord = h[g.row - 1]
       needCord.innerText = g.id
+
       console.log(needCord)
+      needCord.style.background = g.color
     }
   }
 

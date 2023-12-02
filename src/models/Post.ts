@@ -8,12 +8,14 @@ export interface Post {
     points: number,
     row: number,
     column: number,
+    color: string,
+    type: string,
 }
 
 export interface UpdatePost{
     title : string,
     description : string,
-    answer : number,
+    answer : string,
     points : number,
     requiredPoints : number,
     deadline : string,

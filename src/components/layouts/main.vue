@@ -22,10 +22,10 @@
             <v-divider></v-divider>
 
             <v-list nav class="list-menu">
-              <v-list-item title="Обліковий запис" value="account" @click="$router.replace('/main/account'), activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
-              <v-list-item title="Курси" value="course" @click="$router.replace('/main/courses'), activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
+              <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
+              <v-list-item title="Курси" value="course" @click="replaceCourse(), activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
               <v-list-item title="Завдання" value="task" @click="$router.replace('/main/tasks'), activePage='Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
-              <v-list-item title="Групи" value="groups" @click="$router.replace('/main/groups'), activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
+              <v-list-item title="Групи" value="groups" @click="replaceGroup(), activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
               <v-list-item title="Учні" value="pupils" @click="$router.replace('/main/tasks'), activePage='Учні'" prepend-icon="mdi-school-outline"></v-list-item>
 
             </v-list>
@@ -66,13 +66,13 @@
                              mode="shift"
                              v-model="value"
                              :bg-color="color">
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/main/courses'), activePage='Курси'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Курси</span>
           </v-btn>
 
 
-          <v-btn class="btn-bottom-nav" @click="$router.replace('/main/groups'), activePage='Групи'">
+          <v-btn class="btn-bottom-nav" @click="replaceGroup(), activePage='Групи'">
             <v-icon icon="mdi-account-group-outline"></v-icon>
 
             <span>Групи</span>
@@ -119,6 +119,8 @@ import {
 } from "@ionic/vue";
 import {course} from "@/stores/course";
 import CoursePage from "@/components/Teacher/Course/CoursePage.vue";
+import router from "@/router";
+
 
 
 export default defineComponent({
@@ -153,6 +155,7 @@ export default defineComponent({
       authStore: auth(),
       value: 0,
       numCount: 0,
+      role: ""
     }
   },
   computed: {
@@ -169,8 +172,34 @@ export default defineComponent({
 
 
   methods: {
-
-
+    checkRole(){
+      let user = JSON.parse(localStorage.getItem('user'))
+      this.role = user.role
+    },
+    replaceCourse(){
+      this.checkRole()
+      if(this.role === 'TEACHER'){
+        router.replace('/main/courses')
+      } else{
+        router.replace('/main/course-student')
+      }
+    },
+    replaceGroup(){
+      this.checkRole()
+      if(this.role === 'TEACHER'){
+        router.replace('/main/groups')
+      } else{
+        router.replace('/main/groups-student')
+      }
+    },
+    replaceAccount(){
+      this.checkRole()
+      if(this.role === 'TEACHER'){
+        router.replace('/main/account')
+      } else{
+        router.replace('/main/student')
+      }
+    }
   }
 })
 </script>
