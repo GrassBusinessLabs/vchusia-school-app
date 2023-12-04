@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {IonPage, IonFooter, IonIcon} from "@ionic/vue";
+import {IonPage, IonFooter, IonIcon, IonContent} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {add} from "ionicons/icons";
 import {JoinGroup} from "@/models/Group";
 import {group} from "@/stores/group";
@@ -18,6 +18,16 @@ const joinGroup = () => {
   GroupStore.joinGroup(body)
 }
 
+const myGroupsList = () => {
+  GroupStore.myGroups = []
+  GroupStore.myGroupsList()
+  console.log(GroupStore.myGroups)
+}
+
+const leaveGroup = (id) => {
+  GroupStore.leaveGroup(id)
+}
+onMounted(() => {myGroupsList()})
 </script>
 
 <template>
@@ -26,9 +36,27 @@ const joinGroup = () => {
 
 </header>
 
-  <main>
+  <ion-content>
+    <div v-for="i of GroupStore.myGroups">
+        <v-list>
+          <v-list-item
+            v-for="j in i"
+            :title="j.name"
+            class="listGroupItem"
+          >
+            <template v-slot:append>
+              <v-btn
+                  color="grey-lighten-1"
+                  icon="mdi-export"
+                  variant="text"
+                  @click="leaveGroup(j.id)"
+              ></v-btn>
+            </template>
 
-  </main>
+          </v-list-item>
+        </v-list>
+    </div>
+  </ion-content>
 
   <ion-footer>
     <div class="text-center">
@@ -70,5 +98,14 @@ const joinGroup = () => {
   min-width: 30px;
   border-radius: 50px;
   margin-top: 10px;
+}
+
+.listGroupItem {
+  font-family: "Leelawadee UI", sans-serif;
+  margin: 12px;
+  color: grey;
+  border-radius: 15px;
+  background: rgb(223,226,216);
+  background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
 }
 </style>

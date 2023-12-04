@@ -40,7 +40,7 @@
                 class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
                 id="parentGrid">
 
-          <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse">
+          <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse" id="ionGrid" >
             <ion-row v-model="col" @click="col > 1 ? col = 1 : false">
               <ion-col class="ion-col-post" @click="sheet = !sheet, x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
@@ -48,6 +48,8 @@
             <ion-row @click="col = 1 + ion" v-model="col" v-for="ion in 3">
               <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
             </ion-row>
+
+
           </ion-grid>
 
 
@@ -248,6 +250,17 @@
 
               <div>
 
+                <v-select
+                    label="Тип завдання"
+                    :items="['Пост', 'Завдання']"
+                    variant="outlined"
+                    color="primary"
+                    v-model="task$.type"
+                    prepend-icon="mdi-file-tree"
+                >
+
+                </v-select>
+
                 <v-text-field
                     class="inputTaskStyled"
                     variant="outlined"
@@ -280,6 +293,7 @@
                     color="primary"
                     prepend-icon="mdi-forum"
                     v-model="task$.answer"
+                    v-show="task$.type === 'Завдання'"
 
 
                 >
@@ -293,6 +307,7 @@
                     color="primary"
                     prepend-icon="mdi-star"
                     v-model="task$.points"
+                    v-show="task$.type === 'Завдання'"
 
 
                 >
@@ -428,7 +443,8 @@ let task$ = reactive({
   deadline: "",
   parentId: 0,
   requiredPoints: 0,
-  color: ""
+  color: "",
+  type: ""
 })
 
 let arrCol = []
@@ -451,18 +467,22 @@ const x = (index, col, ion) => {
   console.log(t[index])
   localStorage.setItem('idPost', idPost)
 
+
+
   if(t[index].textContent.length > 0){
     console.log(true)
     ynShow = false
     changeDelBtn = true
 
+
   } else{
     ynShow = true
     changeDelBtn = false
     console.log(false)
-  }
-}
 
+  }
+
+}
 
 
 
@@ -471,7 +491,6 @@ async function createPost() {
   async function locationRow() {
     let rows = document.querySelectorAll('ion-row')
     let cols = document.querySelectorAll('ion-col')
-
 
     const x = (cols, rows) => {
       const post: any = JSON.parse(localStorage.getItem('post'));
@@ -485,6 +504,7 @@ async function createPost() {
       console.log(neededCol)
 
       //InnerHTML for ion-grid, ion-row, ion-col
+
     }
     x(cols, rows)
   }
@@ -500,13 +520,14 @@ async function createPost() {
     row: row,
     column: col,
     color: task$.color,
-    type: "string"
+    type: task$.type
   }
 
     task$.answer = "";
     task$.title = "";
     task$.description = "";
     task$.deadline = "";
+
 
   PostStore.createPost(body);
   locationRow()
@@ -572,9 +593,8 @@ const locatedPost = () => {
       let h = y.querySelectorAll('ion-col')
       let needCord = h[g.row - 1]
       needCord.innerText = g.id
-
-      console.log(needCord)
       needCord.style.background = g.color
+
     }
   }
 
