@@ -14,6 +14,7 @@ import TaskTeacher from "@/components/Teacher/TaskTeacher.vue";
 import AccountStudent from "@/components/Student/AccountStudent.vue";
 import CourseStudent from "@/components/Student/CourseStudent.vue";
 import GroupStudent from "@/components/Student/GroupStudent.vue";
+import GroupPage from "@/components/Teacher/GroupPage/GroupPage.vue";
 const routes: Array<RouteRecordRaw> = [
   // {
   //   path: '/',
@@ -120,6 +121,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'groups-student',
         name: 'GroupStudent',
         component: GroupStudent
+      },
+      {
+        path: 'groupPage',
+        name: 'GroupPage',
+        component: GroupPage
       }
 
 

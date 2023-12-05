@@ -1,12 +1,15 @@
 import {defineStore} from "pinia";
 import {Group, JoinGroup} from "@/models/Group";
 import GroupApi from "@/http/modules/group"
+import router from "@/router";
 
 interface State {
     items: any,
     createdGroup: any,
     allGroups: any,
-    myGroups: any
+    myGroups: any,
+    idGroup: number,
+    usersInGroup: any
 }
 
 export const group = defineStore('group', {
@@ -14,7 +17,9 @@ export const group = defineStore('group', {
         items: [],
         createdGroup: [],
         allGroups: [],
-        myGroups: []
+        myGroups: [],
+        idGroup: 0,
+        usersInGroup: []
     }),
 
     actions: {
@@ -51,10 +56,11 @@ export const group = defineStore('group', {
             }
         },
 
-        async updateGroup(body: Group){
+        async updateGroup(id, body: Group){
             try {
-                const response: any = await GroupApi.updateGroup(body)
+                const response: any = await GroupApi.updateGroup(id, body)
                 console.log(response)
+                router.replace('/main/groups')
             } catch (e) {
                 console.log(e)
             }
@@ -85,6 +91,16 @@ export const group = defineStore('group', {
                 const response: any = await GroupApi.deleteGroup(id)
                 console.log(response)
                 location.reload()
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async getUsersInGroup(id){
+            try {
+                const response: any = await GroupApi.getUsersInGroup(id)
+                this.usersInGroup.push(response.items)
+                console.log(response)
             } catch (e) {
                 console.log(e)
             }

@@ -12,8 +12,8 @@ function leaveGroup(id) {
     return axios.delete(`/groups/${id}/leaveGroup`)
 }
 
-function updateGroup(body: Group) {
-    return axios.put('/group/:groupid', body)
+function updateGroup(id, body: Group) {
+    return axios.put(`/group/${id}`, body)
 }
 
 function getCreatedGroupsList() {
@@ -27,6 +27,10 @@ function myGroupsList() {
 function deleteGroup(id) {
     return axios.delete(`/group/${id}`)
 }
+
+function getUsersInGroup(id) {
+    return axios.get(`/groups/${id}/users?page=1&count=10`)
+}
 export default {
     createGroup,
     joinGroup,
@@ -34,5 +38,6 @@ export default {
     updateGroup,
     getCreatedGroupsList,
     myGroupsList,
-    deleteGroup
+    deleteGroup,
+    getUsersInGroup
 }

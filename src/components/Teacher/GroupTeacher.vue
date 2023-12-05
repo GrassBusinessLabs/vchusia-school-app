@@ -5,19 +5,13 @@
     <ion-content>
       <v-list lines="one">
         <div v-for="i of GroupStore.allGroups">
-          <v-list-item v-for="j of i" :title="j.name" class="listGroupItem">
+          <v-list-item v-for="j of i" :title="j.name" class="listGroupItem" @click="replaceToPageGroup(j.id)">
             <template v-slot:append>
               <v-btn
                   color="grey-lighten-1"
                   icon="mdi-content-copy"
                   variant="text"
                   @click="copyIdentifier(j.identifier)"
-              ></v-btn>
-
-              <v-btn
-                  color="grey-lighten-1"
-                  icon="mdi-pencil-outline"
-                  variant="text"
               ></v-btn>
 
               <v-btn
@@ -86,6 +80,7 @@ import {onMounted, reactive, ref} from "vue";
 import {add} from "ionicons/icons";
 import {Group} from "@/models/Group";
 import {group} from "@/stores/group"
+import router from "@/router";
 
 let sheet = ref(false)
 const GroupStore = group()
@@ -118,6 +113,12 @@ onMounted(() => {getAllGroups()})
 const deleteGroup = (id) => {
   console.log(id)
   GroupStore.deleteGroup(id)
+}
+
+const replaceToPageGroup = (id) => {
+  console.log(id)
+  GroupStore.idGroup = id
+  router.replace('/main/GroupPage')
 }
 
 
