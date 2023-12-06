@@ -41,13 +41,20 @@
                 id="parentGrid">
 
           <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse" id="ionGrid" >
-            <ion-row v-model="col" @click="col > 1 ? col = 1 : false">
-              <ion-col class="ion-col-post" @click="sheet = !sheet, x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
+<!--            <ion-row v-model="col" @click="col > 1 ? col = 1 : false" style="background: grey">-->
+<!--              <ion-col class="ion-col-post" @click="sheet = !sheet, x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>-->
+<!--            </ion-row>-->
+
+            <ion-row v-for="(post, indexRow) in mapPosts()">
+              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color }">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
             </ion-row>
 
-            <ion-row @click="col = 1 + ion" v-model="col" v-for="ion in 3">
-              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>
+            <ion-row>
+              <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent" v-for="(indexCol, index) in 5" ></ion-col>
             </ion-row>
+<!--            <ion-row @click="col = 1 + ion" v-model="col" v-for="ion in 3" v-if="PostStore.PostInfo !== null">-->
+<!--              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>-->
+<!--            </ion-row>-->
 
 
           </ion-grid>
@@ -134,102 +141,113 @@
         </v-bottom-sheet>
       </div>
 
-      <div class="text-center">
 
+      <div class="text-center d-flex">
+        <v-bottom-sheet v-model="sheet_change_post">
+          <v-card height="750" >
 
-        <v-bottom-sheet v-model="sheet">
-          <v-card
-              class="text-center"
-              height="700"
-
-          >
             <v-card-text>
+              <v-select
+                  label="Тип завдання"
+                  :items="['Пост', 'Завдання']"
+                  variant="outlined"
+                  color="primary"
+                  v-model="task$.type"
+                  prepend-icon="mdi-file-tree"
+              >
 
-              <br>
-              <br>
+              </v-select>
 
-              <div>
+              <v-text-field
+                  class="inputTaskStyled"
+                  variant="outlined"
+                  label="Заголовок"
+                  prepend-icon="mdi-bookmark-outline"
+                  color="primary"
+                  v-model="PostStore.info.title"
+              >
+              </v-text-field>
 
-                <v-text-field
-                    class="inputTaskStyled"
-                    variant="outlined"
-                    label="Заголовок"
-                    prepend-icon="mdi-bookmark-outline"
-                    color="primary"
-                    v-model="task$.title"
-                >
-                </v-text-field>
-
-                <v-text-field
-                    class="inputTaskStyled"
-                    variant="outlined"
-                    label="Опис завдання"
-                    color="primary"
-                    prepend-icon="mdi-information-outline"
-                    v-model="task$.description"
-
-                >
-                </v-text-field>
-
-                <v-text-field
-                    class="inputTaskStyled"
-                    variant="outlined"
-                    label="Відповідь"
-                    color="primary"
-                    prepend-icon="mdi-forum"
-
-                    v-model="task$.answer"
-                >
-                </v-text-field>
-
-                <v-text-field
-                    class="inputTaskStyled"
-                    type="number"
-                    variant="outlined"
-                    label="Кількість балів"
-                    color="primary"
-                    prepend-icon="mdi-star"
-                    v-model="task$.points"
-
-                >
-                </v-text-field>
-
-                <v-text-field
-                    class="inputTaskStyled"
-                    type="datetime-local"
-                    variant="outlined"
-                    label="Дата здачі"
-                    color="primary"
-                    prepend-icon="mdi-calendar-range"
-                    v-model="task$.deadline"
-                >
-                </v-text-field>
+              <v-text-field
+                  class="inputTaskStyled"
+                  variant="outlined"
+                  label="Опис завдання"
+                  color="primary"
+                  prepend-icon="mdi-information-outline"
+                  v-model="PostStore.info.description"
 
 
-                <v-btn prepend-icon="mdi-plus-circle" class="btnAddTask" variant="tonal" color="indigo"
-                       @click="createPost(), sheet = !sheet ,displayPost = true" v-show="ynShow === true">
-                  Додати завдання
+
+              >
+              </v-text-field>
+
+              <v-text-field
+                  class="inputTaskStyled"
+                  variant="outlined"
+                  label="Відповідь"
+                  color="primary"
+                  prepend-icon="mdi-forum"
+                  v-model="PostStore.info.answer"
+
+
+              >
+              </v-text-field>
+
+              <v-text-field
+                  class="inputTaskStyled"
+                  type="number"
+                  variant="outlined"
+                  label="Кількість балів"
+                  color="primary"
+                  prepend-icon="mdi-star"
+                  v-model="PostStore.info.points"
+
+
+              >
+              </v-text-field>
+
+              <v-text-field
+                  class="inputTaskStyled"
+                  type="datetime-local"
+                  variant="outlined"
+                  label="Дата здачі"
+                  color="primary"
+                  prepend-icon="mdi-calendar-range"
+                  v-model="task$.deadline"
+
+
+              >
+              </v-text-field>
+
+              <v-select
+                  :items="['blue', 'red', 'yellow', 'green']"
+                  variant="outlined"
+                  label="Колір завдання"
+                  density="compact"
+                  prepend-icon="mdi-palette"
+                  v-model="PostStore.info.color"
+              ></v-select>
+
+              <div class="btn_changes_post">
+                <v-btn class="btn_change_post" color="#9C27B0" @click="updatePost()">
+                  Редагувати
                 </v-btn>
-                <v-card-text class="text-medium-emphasis text-caption text-center" v-show="false">
-                  Для редагуваня завдання заповність форму та натисніть на олівець
-                </v-card-text>
 
-                <div class="d-flex justify-center align-center w-100">
-                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2" v-show="changeDelBtn === true"></v-btn>
-
-                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2" v-show="changeDelBtn === true"></v-btn>
-                </div>
-
-
+                <v-btn class="btn_del_post" color="#F44336" @click="deletePost()">
+                  Видалити
+                </v-btn>
               </div>
-            </v-card-text>
-          </v-card>
 
+            </v-card-text>
+
+
+
+          </v-card>
         </v-bottom-sheet>
       </div>
 
       <div class="sheet_parent">
-        <v-bottom-sheet v-model="sheet_parent" >
+        <v-bottom-sheet v-model="sheet_parent">
           <v-card height="750" class="drawSheetParent">
             <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
@@ -335,23 +353,13 @@
                   v-model="task$.color"
                 ></v-select>
 
-
                 <div class="btnAddPostParent">
                   <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" id="btnAddTask" variant="tonal" color="indigo"
-                         @click="sheet_parent = !sheet_parent, createPost()" v-show="ynShow === true">
+                         @click="sheet_parent = !sheet_parent, createPost()">
                     Додати завдання
                   </v-btn>
                 </div>
 
-                <v-card-text class="text-medium-emphasis text-caption text-center" v-show="ynShow === false">
-                  Для редагуваня завдання заповність форму та натисніть на олівець
-                </v-card-text>
-
-                <div class="d-flex justify-center align-center w-100" >
-                  <v-btn @click="deletePost()" icon="mdi-trash-can-outline" class="ma-2" v-show="changeDelBtn === true"></v-btn>
-
-                  <v-btn @click="updatePost()" density="default" icon="mdi-pencil" class="ma-2" v-show="changeDelBtn === true"></v-btn>
-                </div>
 
               </div>
 
@@ -401,26 +409,13 @@ const courseId = localStorage.getItem('courseId');
 let row = 1;
 let col = 1;
 const displayPost = ref(false)
+let sheet_change_post = ref(false)
 let sheet = ref(false);
 let sheet_change = ref(false);
 let sheet_parent = ref(false);
 const PostStore = post();
 let allPost = JSON.parse(localStorage.getItem('allPost'));
 let items = []
-
-const idPostSelect = () => {
-  PostStore.findPostWithRow()
-  for (let i of PostStore.PostInfo){
-    items = []
-    for (let j of i){
-      if (j.column === col - 1)
-      items.push(j.id)
-    }
-  }
-  console.log(items)
-}
-let ynShow = true
-let changeDelBtn = true
 
 
 let courseUpdate = reactive({
@@ -447,68 +442,7 @@ let task$ = reactive({
   type: ""
 })
 
-let arrCol = []
-let idPost;
-const x = (index, col, ion) => {
-  // col = ion + 1;
-
-  let cols = document.querySelectorAll('ion-row')
-  let rows = document.querySelectorAll('ion-col')
-
-  for (let i of cols){
-    arrCol.push(i)
-  }
-
-  let g = arrCol[col - 1]
-  let t = g.querySelectorAll('ion-col')
-  idPost = t[index].textContent
-  console.log(t[index].textContent)
-  console.log(t[index].textContent.length)
-  console.log(t[index])
-  localStorage.setItem('idPost', idPost)
-
-
-
-  if(t[index].textContent.length > 0){
-    console.log(true)
-    ynShow = false
-    changeDelBtn = true
-
-
-  } else{
-    ynShow = true
-    changeDelBtn = false
-    console.log(false)
-
-  }
-
-}
-
-
-
 async function createPost() {
-
-  async function locationRow() {
-    let rows = document.querySelectorAll('ion-row')
-    let cols = document.querySelectorAll('ion-col')
-
-    const x = (cols, rows) => {
-      const post: any = JSON.parse(localStorage.getItem('post'));
-      let clickedRow = rows[col - 1]
-      let y = clickedRow.querySelectorAll('ion-col')
-      let neededCol = y[row - 1]
-      neededCol.innerText = post.id
-      console.log(task$.color)
-      neededCol.style.background = task$.color
-      neededCol.style.outline = 'none';
-      console.log(neededCol)
-
-      //InnerHTML for ion-grid, ion-row, ion-col
-
-    }
-    x(cols, rows)
-  }
-
   const body: Post = {
     title: task$.title,
     description: task$.description,
@@ -530,8 +464,6 @@ async function createPost() {
 
 
   PostStore.createPost(body);
-  locationRow()
-
 
 }
 
@@ -560,46 +492,20 @@ const deletePost = () => {
 
 const updatePost = () => {
   const body: UpdatePost = {
-    title: task$.title,
-    description: task$.description,
-    answer: task$.answer,
-    points: +task$.points,
+    title: PostStore.info.title,
+    description: PostStore.info.description,
+    answer: PostStore.info.answer,
+    points: +PostStore.info.points,
     deadline: new Date(task$.deadline).toISOString(),
-    requiredPoints: task$.requiredPoints,
+    requiredPoints: PostStore.info.requiredPoints,
+    type: task$.type,
+    color: PostStore.info.color
   }
 
   PostStore.updatePost(body)
 }
 
 
-const locatedPost = () => {
-  PostStore.findPostWithRow()
-  for (let i of PostStore.PostInfo){
-    console.log(i)
-    for (let v of i){
-      console.log(v)
-    }
-  }
-
-
-  let m = allPost.items
-  for (let g of m){
-    console.log(g.column, g.row)
-    if (g.column || g.row in g){
-      console.log(g.id)
-      let rows = document.querySelectorAll('ion-row')
-      let cols = document.querySelectorAll('ion-col')
-      let y = rows[g.column - 1]
-      let h = y.querySelectorAll('ion-col')
-      let needCord = h[g.row - 1]
-      needCord.innerText = g.id
-      needCord.style.background = g.color
-
-    }
-  }
-
-
-}
 
 const deleteCourse = () => {
   CourseStore.deleteCourse()
@@ -607,11 +513,60 @@ const deleteCourse = () => {
 }
 
 const loadCourse = () => {
-  CourseStore.findCourseById()
+  console.log(CourseStore.findCourseById())
+}
+
+const getPostByCords = (row, column) => {
+  return PostStore.PostInfo.find(post => post.row === row && post.column === column)
+}
+
+const mapPosts = () => {
+  const rows = PostStore.PostInfo.map(post => post.row)
+  const uniqueSet = Array.from(new Set(rows))
+  const mappedUniqueSet = uniqueSet.map(row => {
+    return {
+      row: row,
+      groups: PostStore.PostInfo.filter(item => item.row === row)
+    }
+  })
+
+  return mappedUniqueSet
+}
+
+const handlePost = (row, column) => {
+  let idPost
+
+  if(getPostByCords(row + 1, column)){
+    //sheet open
+    sheet_change_post.value = true
+    console.log('edit create')
+    for (let i of PostStore.PostInfo){
+      if(row + 1 === i.row && column === i.column){
+        console.log(i.id)
+        idPost = i.id
+        PostStore.idPostsNow = i.id
+        PostStore.info = i
+
+      }
+    }
+
+
+  } else{
+    sheet_parent.value = true
+    console.log('create')
+  }
+  return idPost
+}
+
+const createNewPost = (column) => {
+  const rows = PostStore.PostInfo.map(post => post.row)
+  const uniqueSet = Array.from(new Set(rows))
+  console.log(Math.max(...uniqueSet) + 1)
 }
 
 loadCourse();
-onMounted(() => locatedPost())
+PostStore.findPostWithRow()
+// onMounted(() => locatedPost())
 </script>
 
 <style scoped>
@@ -679,5 +634,18 @@ ion-col {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.btn_changes_post{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.btn_change_post, .btn_del_post{
+  width: 80%;
+  margin: 10px;
+  color: #fff;
 }
 </style>

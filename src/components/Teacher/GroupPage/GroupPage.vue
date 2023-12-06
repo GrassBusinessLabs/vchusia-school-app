@@ -6,7 +6,6 @@ import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import {group} from "@/stores/group";
 import {reactive, ref} from "vue";
 import {Group, JoinGroup} from "@/models/Group";
-let sheet_add = ref(false);
 let sheet_change = ref(false);
 let sheet_del = ref(false);
 const GroupStore = group();
@@ -35,12 +34,7 @@ loadGroup()
 let groupInfo = reactive({
   name: groupName
 });
-const joinToGroup = (groupIdentifier) => {
-  const body: JoinGroup = {
-    identifier: groupIdentifier
-  }
-  GroupStore.joinGroup(body)
-}
+
 async function copyIdentifier(identifier) {
   try {
     await navigator.clipboard.writeText(identifier);
@@ -94,7 +88,7 @@ const copyEmail = (email) => {
       </div>
 
       <div class="set_group">
-        <v-btn icon="mdi-plus" size="large" @click="sheet_add = !sheet_add" color="teal-accent-2"></v-btn>
+        <v-btn icon="mdi-plus" size="large" @click="copyIdentifier(groupIdentifier)" color="teal-accent-2"></v-btn>
         <v-btn icon="mdi-pencil-outline" size="large" @click="sheet_change = !sheet_change" color="purple-lighten-2"></v-btn>
         <v-btn icon="mdi-delete-outline" size="large" @click="sheet_del = !sheet_del" color="red-accent-2"></v-btn>
       </div>
@@ -117,26 +111,7 @@ const copyEmail = (email) => {
   </ion-content>
 
   <ion-footer>
-    <div class="text-center">
-      <v-bottom-sheet v-model="sheet_add" >
-        <v-card class="text-center" height="300">
 
-          <br>
-          <br>
-        <div class="sheet_add" >
-          <v-btn prepend-icon="mdi-plus" class="btn_join" color="indigo" @click="joinToGroup(groupIdentifier)">
-            Приєднатися
-          </v-btn>
-
-          <v-btn prepend-icon="mdi-content-copy" class="btn_share_code" @click="copyIdentifier(groupIdentifier), sheet_add = !sheet_add">
-            Поширити код групи
-          </v-btn>
-
-        </div>
-
-        </v-card>
-      </v-bottom-sheet>
-    </div>
 
     <div class="text-center">
       <v-bottom-sheet v-model="sheet_change" >

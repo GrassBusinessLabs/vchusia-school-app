@@ -6,7 +6,8 @@ interface State {
     posts: any,
     idPostsNow: any,
     PostInfo: any,
-    total: number
+    total: number,
+    info: any
 }
 
 export const post = defineStore('post', {
@@ -14,7 +15,8 @@ export const post = defineStore('post', {
         posts: [],
         idPostsNow: [],
         PostInfo: [],
-        total: 0
+        total: 0,
+        info: []
     }),
 
     getters: {
@@ -46,7 +48,7 @@ export const post = defineStore('post', {
                 console.log(response)
                 this.total = response.total
                 localStorage.setItem('allPost', JSON.stringify(response))
-                this.PostInfo.push(response.items)
+                this.PostInfo = [...response.items]
             }
             catch (e) {
                 console.log(e)
