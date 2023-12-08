@@ -30,10 +30,12 @@
           Видалити курс
         </v-btn>
 
-
-
       </v-card>
 
+
+      <div class="d-flex justify-center align-center">
+        <v-switch inset label="Mode read" class="d-flex justify-center" color="primary" v-model="switchMode"></v-switch>
+      </div>
 
       <v-layout class="mt-4">
         <v-card elevation="3"
@@ -41,21 +43,13 @@
                 id="parentGrid">
 
           <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse" id="ionGrid" >
-<!--            <ion-row v-model="col" @click="col > 1 ? col = 1 : false" style="background: grey">-->
-<!--              <ion-col class="ion-col-post" @click="sheet = !sheet, x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>-->
-<!--            </ion-row>-->
-
             <ion-row v-for="(post, indexRow) in mapPosts()">
-              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color}">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
+              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row v-show="switchMode === false">
               <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent" v-for="(indexCol, index) in 5" ></ion-col>
             </ion-row>
-<!--            <ion-row @click="col = 1 + ion" v-model="col" v-for="ion in 3" v-if="PostStore.PostInfo !== null">-->
-<!--              <ion-col @click="sheet_parent = !sheet_parent, idPostSelect(), x(index, col, ion), row = ion" v-for="(ion, index) in 5"></ion-col>-->
-<!--            </ion-row>-->
-
 
           </ion-grid>
 
@@ -253,7 +247,7 @@
 
             <div class="selectPost">
               <v-select
-                  v-show="r % 2 == 0"
+                  v-show="r > 1"
                   variant="outlined"
                   prepend-icon="mdi-identifier"
                   label="Id"
@@ -370,6 +364,35 @@
           </v-card>
         </v-bottom-sheet>
       </div>
+
+      <div class="text-center">
+        <v-bottom-sheet v-model="sheet_read" >
+          <v-card height="500" :subtitle="PostStore.info.type" class="text-center" :style="{background: PostStore.info.color}">
+            <v-card-subtitle>
+              {{PostStore.info.id}}
+            </v-card-subtitle>
+            <v-card-title class="font-weight-bold" >
+              {{PostStore.info.title}}
+            </v-card-title>
+
+            <v-card-text class="d-flex justify-center flex-column align-center">
+              <small>Опис завдання</small>
+              {{PostStore.info.description}}
+            </v-card-text>
+
+            <v-card-text>
+            </v-card-text>
+
+            <v-card-text>
+              Оцінка за завдання <i>{{PostStore.info.points}}</i> <br>
+
+              Виконати до <b>{{PostStore.info.deadline}}</b>
+            </v-card-text>
+
+
+          </v-card>
+        </v-bottom-sheet>
+      </div>
     </ion-footer>
 
 
@@ -395,7 +418,7 @@ import router from "@/router";
 import {course} from "@/stores/course";
 import {onMounted, reactive, ref} from "vue";
 import {Course} from "@/models/Course";
-import {Post} from "@/models/Post";
+import {Post, UpdatePost} from "@/models/Post";
 import {post} from "@/stores/post";
 import PostGrid from '/src/components/Teacher/Course/PostGrid.vue';
 import {reload} from "ionicons/icons";
@@ -416,8 +439,10 @@ let sheet_parent = ref(false);
 const PostStore = post();
 let allPost = JSON.parse(localStorage.getItem('allPost'));
 let items = []
-
-
+const outlineNone = ref('none')
+const outlinePost = ref('1px solid grey')
+let switchMode = ref(false)
+let sheet_read = ref(false)
 let courseUpdate = reactive({
   name: "",
   discipline: "",
@@ -518,7 +543,7 @@ const loadCourse = () => {
   console.log(CourseStore.findCourseById())
 }
 
-const getPostByCords = (row, column) => {
+const getPostByCords = (row : any, column : any) => {
   return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
 
@@ -534,28 +559,49 @@ const mapPosts = () => {
   return mappedUniqueSet
 }
 
-const handlePost = (row, column) => {
+const handlePost = (row : any, column : any) => {
   let idPost
   if(getPostByCords(row + 1, column)){
-    //sheet open
-    sheet_change_post.value = true
-    console.log('edit create')
-    for (let i of PostStore.PostInfo){
-      if(row + 1 === i.row && column === i.column){
-        console.log(i.id)
-        idPost = i.id
-        PostStore.idPostsNow = i.id
-        PostStore.info = i
+
+    if(switchMode.value === true){
+      sheet_read.value = true
+      for (let i of PostStore.PostInfo){
+        if(row + 1 === i.row && column === i.column){
+          console.log(i.id)
+          idPost = i.id
+          PostStore.idPostsNow = i.id
+          PostStore.info = i
+        }
+      }
+    } else{
+      sheet_change_post.value = true
+      console.log('edit create')
+      for (let i of PostStore.PostInfo){
+        if(row + 1 === i.row && column === i.column){
+          console.log(i.id)
+          idPost = i.id
+          PostStore.idPostsNow = i.id
+          PostStore.info = i
+        }
       }
     }
 
 
+
+
   } else{
+    items = []
+    for (let i of PostStore.PostInfo){
+      if(i.row === row){
+        items.push(i.id)
+      }
+    }
     sheet_parent.value = true
     r = row + 1;
     c = column
     console.log(row + 1, column)
     console.log('create')
+
   }
   return idPost, r, c
 
@@ -569,7 +615,13 @@ const createNewPost = (column) => {
   if (rows.length === 0){
     r = 1
   } else{
+    items = []
     r = Math.max(...uniqueSet) + 1;
+    for (let i of PostStore.PostInfo){
+      if(i.row === r - 1){
+        items.push(i.id)
+      }
+    }
   }
   c = column
   return r, c

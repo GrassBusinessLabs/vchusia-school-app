@@ -32,7 +32,6 @@ export const post = defineStore('post', {
                 this.posts.push(response)
                 console.log(this.posts)
                 console.log(this.idPostsNow)
-                this.idPostsNow.push(JSON.stringify(response.id))
                 this.findPostWithRow()
 
 
