@@ -38,6 +38,7 @@ let groupInfo = reactive({
 async function copyIdentifier(identifier) {
   try {
     await navigator.clipboard.writeText(identifier);
+    alert("Acces")
   } catch ($e) {
     console.log($e)
   }

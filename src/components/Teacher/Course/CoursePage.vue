@@ -46,7 +46,7 @@
 <!--            </ion-row>-->
 
             <ion-row v-for="(post, indexRow) in mapPosts()">
-              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color }">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
+              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color}">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
             </ion-row>
 
             <ion-row>
@@ -152,7 +152,7 @@
                   :items="['Пост', 'Завдання']"
                   variant="outlined"
                   color="primary"
-                  v-model="task$.type"
+                  v-model="PostStore.info.type"
                   prepend-icon="mdi-file-tree"
               >
 
@@ -253,6 +253,7 @@
 
             <div class="selectPost">
               <v-select
+                  v-show="r % 2 == 0"
                   variant="outlined"
                   prepend-icon="mdi-identifier"
                   label="Id"
@@ -406,11 +407,10 @@ const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Кла
 const identifier = localStorage.getItem('identifier');
 const parentGrid = document.querySelector('.parentGrid');
 const courseId = localStorage.getItem('courseId');
-let row = 1;
-let col = 1;
 const displayPost = ref(false)
 let sheet_change_post = ref(false)
 let sheet = ref(false);
+let r, c;
 let sheet_change = ref(false);
 let sheet_parent = ref(false);
 const PostStore = post();
@@ -451,8 +451,8 @@ async function createPost() {
     deadline: new Date(task$.deadline).toISOString(),
     parentId: Number(task$.parentId),
     requiredPoints: task$.requiredPoints,
-    row: row,
-    column: col,
+    row: r,
+    column: c,
     color: task$.color,
     type: task$.type
   }
@@ -483,11 +483,12 @@ const updateCourse = () => {
   courseUpdate.grade = null;
   courseUpdate.yearsFrom = null;
   courseUpdate.yearsTo = null;
-  location.reload();
+
 }
 
 const deletePost = () => {
   PostStore.deletePost()
+  sheet_change_post.value = false
 }
 
 const updatePost = () => {
@@ -498,11 +499,12 @@ const updatePost = () => {
     points: +PostStore.info.points,
     deadline: new Date(task$.deadline).toISOString(),
     requiredPoints: PostStore.info.requiredPoints,
-    type: task$.type,
+    type: PostStore.info.type,
     color: PostStore.info.color
   }
 
   PostStore.updatePost(body)
+  sheet_change_post.value = false
 }
 
 
@@ -529,13 +531,11 @@ const mapPosts = () => {
       groups: PostStore.PostInfo.filter(item => item.row === row)
     }
   })
-
   return mappedUniqueSet
 }
 
 const handlePost = (row, column) => {
   let idPost
-
   if(getPostByCords(row + 1, column)){
     //sheet open
     sheet_change_post.value = true
@@ -546,27 +546,37 @@ const handlePost = (row, column) => {
         idPost = i.id
         PostStore.idPostsNow = i.id
         PostStore.info = i
-
       }
     }
 
 
   } else{
     sheet_parent.value = true
+    r = row + 1;
+    c = column
+    console.log(row + 1, column)
     console.log('create')
   }
-  return idPost
+  return idPost, r, c
+
 }
 
 const createNewPost = (column) => {
   const rows = PostStore.PostInfo.map(post => post.row)
   const uniqueSet = Array.from(new Set(rows))
   console.log(Math.max(...uniqueSet) + 1)
+  console.log(rows)
+  if (rows.length === 0){
+    r = 1
+  } else{
+    r = Math.max(...uniqueSet) + 1;
+  }
+  c = column
+  return r, c
 }
 
 loadCourse();
 PostStore.findPostWithRow()
-// onMounted(() => locatedPost())
 </script>
 
 <style scoped>
