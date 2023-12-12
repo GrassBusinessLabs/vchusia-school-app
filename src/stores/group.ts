@@ -8,8 +8,8 @@ interface State {
     createdGroup: any,
     allGroups: any,
     myGroups: any,
-    idGroup: number,
-    usersInGroup: any
+    idGroup: null,
+    usersInGroup: any,
 }
 
 export const group = defineStore('group', {
@@ -18,16 +18,17 @@ export const group = defineStore('group', {
         createdGroup: [],
         allGroups: [],
         myGroups: [],
-        idGroup: 0,
+        idGroup: null,
         usersInGroup: []
     }),
 
     actions: {
         async createGroup(body: Group){
             try {
+                this.allGroups = []
                 const response = await GroupApi.createGroup(body)
                 this.createdGroup.push(response)
-                location.reload()
+                this.getCreatedGroupsList()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -68,6 +69,7 @@ export const group = defineStore('group', {
 
         async getCreatedGroupsList(){
             try {
+
                 const response: any = await GroupApi.getCreatedGroupsList()
                 this.allGroups.push(response.items)
                 console.log(response)
@@ -90,7 +92,7 @@ export const group = defineStore('group', {
             try {
                 const response: any = await GroupApi.deleteGroup(id)
                 console.log(response)
-                location.reload()
+                router.replace('/main/groups')
             } catch (e) {
                 console.log(e)
             }

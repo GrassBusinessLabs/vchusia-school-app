@@ -81,6 +81,8 @@ import {add} from "ionicons/icons";
 import {Group} from "@/models/Group";
 import {group} from "@/stores/group"
 import router from "@/router";
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 
 let sheet = ref(false)
 const GroupStore = group()
@@ -94,6 +96,7 @@ const createGroup = () => {
     name: nameGroup.name
   }
   GroupStore.createGroup(body)
+  nameGroup.name = ""
 }
 
 async function copyIdentifier(identifier) {
@@ -112,9 +115,26 @@ onMounted(() => {getAllGroups()})
 
 const deleteGroup = (id) => {
   console.log(id)
+  triggerToast()
   GroupStore.deleteGroup(id)
 }
 
+function triggerToast() {
+  toast.error("Групу видалено", {
+    position: "top-right",
+    timeout: 1533,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.32,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: false,
+    rtl: false
+  });
+}
 const replaceToPageGroup = (id) => {
   console.log(id)
   GroupStore.idGroup = id

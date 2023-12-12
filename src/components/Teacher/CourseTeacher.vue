@@ -211,10 +211,11 @@ const confirm = () => {
   padding: 15px;
   width: 80%;
   margin: 15px auto;
-  color: #fff;
-  background: rgb(0, 75, 171);
-  background: url(https://www.eastsidefunding.com/wp-content/uploads/2016/08/counters-bg-image.jpg);
+  color: grey;
+  background: rgb(223,226,216);
+  background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
   border-radius: 15px;
+  outline: cyan 1px ridge;
 }
 
 .container-modal {
@@ -232,7 +233,7 @@ const confirm = () => {
 }
 
 .valueCourse {
-  color: #9ae6c4;
+  color: darkmagenta;
   font-size: 18px;
   font-family: "Fira Code Medium", monospace;
 

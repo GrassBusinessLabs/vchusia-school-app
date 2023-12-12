@@ -264,14 +264,13 @@
               <div>
 
                 <v-select
-                    label="Тип завдання"
+                    label="Тип"
                     :items="['Пост', 'Завдання']"
                     variant="outlined"
                     color="primary"
                     v-model="task$.type"
                     prepend-icon="mdi-file-tree"
                 >
-
                 </v-select>
 
                 <v-text-field
@@ -367,13 +366,15 @@
 
       <div class="text-center">
         <v-bottom-sheet v-model="sheet_read" >
-          <v-card height="500" :subtitle="PostStore.info.type" class="text-center" :style="{background: PostStore.info.color}">
+          <v-card height="500" :subtitle="PostStore.info.type" class="text-center" >
             <v-card-subtitle>
               {{PostStore.info.id}}
+              <div class="color_post_read" :style="{backgroundColor: PostStore.info.color}"></div>
             </v-card-subtitle>
             <v-card-title class="font-weight-bold" >
               {{PostStore.info.title}}
             </v-card-title>
+
 
             <v-card-text class="d-flex justify-center flex-column align-center">
               <small>Опис завдання</small>
@@ -464,7 +465,7 @@ let task$ = reactive({
   parentId: 0,
   requiredPoints: 0,
   color: "",
-  type: ""
+  type: "Пост"
 })
 
 async function createPost() {
@@ -560,6 +561,7 @@ const mapPosts = () => {
 }
 
 const handlePost = (row : any, column : any) => {
+
   let idPost
   if(getPostByCords(row + 1, column)){
 
@@ -591,6 +593,7 @@ const handlePost = (row : any, column : any) => {
 
   } else{
     items = []
+    task$.parentId = null;
     for (let i of PostStore.PostInfo){
       if(i.row === row){
         items.push(i.id)
@@ -603,7 +606,7 @@ const handlePost = (row : any, column : any) => {
     console.log('create')
 
   }
-  return idPost, r, c
+  return idPost, r, c, items
 
 }
 
@@ -637,10 +640,12 @@ PostStore.findPostWithRow()
   padding: 15px;
   width: 80%;
   margin: 15px auto;
-  color: #fff;
-  background: rgb(0, 75, 171);
-  background: url(https://www.eastsidefunding.com/wp-content/uploads/2016/08/counters-bg-image.jpg);
+  color: gray;
+  background: rgb(223,226,216);
+  background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
   border-radius: 15px;
+  outline: cyan 1px ridge;
+
 }
 
 .titlesCourse {
@@ -656,7 +661,7 @@ PostStore.findPostWithRow()
 }
 
 .valueCourse {
-  color: #9ae6c4;
+  color: darkmagenta;
   font-size: 18px;
   font-family: "Fira Code Medium", monospace;
 }
@@ -710,4 +715,12 @@ ion-col {
   margin: 10px;
   color: #fff;
 }
+
+.color_post_read{
+  width: 20px;
+  height: 20px;
+  margin: 10px auto;
+  border-radius: 50px;
+}
+
 </style>

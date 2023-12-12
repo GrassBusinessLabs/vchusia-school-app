@@ -2,21 +2,23 @@
 import {IonPage, IonContent, IonText, IonFooter, IonIcon, IonCol, IonGrid, IonRow} from "@ionic/vue";
 import router from "@/router";
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
+import { useToast } from 'vue-toastification';
 
 import {group} from "@/stores/group";
 import {reactive, ref} from "vue";
 import {Group, JoinGroup} from "@/models/Group";
+import {add} from "ionicons/icons";
 let sheet_change = ref(false);
 let sheet_del = ref(false);
 const GroupStore = group();
 let groupIdentifier = "";
 let groupName = "";
-let groupId = 0;
-
+let groupId: any
+const toast = useToast();
+const courseAddInGroup = ref(false)
 const loadGroup = () => {
   groupIdentifier = "";
   groupName = "";
-  groupId = 0;
   for (let i of GroupStore.allGroups){
     for(let j of i){
       if(j.id === GroupStore.idGroup){
@@ -24,10 +26,14 @@ const loadGroup = () => {
         groupIdentifier = j.identifier
         groupName = j.name
         groupId = j.id
-
+      } else{
+        groupId = GroupStore.idGroup
+        localStorage.setItem('groupId', j.id)
       }
     }
   }
+
+  return groupId
 }
 loadGroup()
 
@@ -35,10 +41,25 @@ let groupInfo = reactive({
   name: groupName
 });
 
+function triggerToast() {
+  toast.success("Успішно скопійовано", {
+    position: "top-right",
+    timeout: 2000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  });
+}
 async function copyIdentifier(identifier) {
   try {
     await navigator.clipboard.writeText(identifier);
-    alert("Acces")
   } catch ($e) {
     console.log($e)
   }
@@ -53,7 +74,6 @@ const changeGroup = (id) => {
 
 const deleteGroup = (id) => {
   GroupStore.deleteGroup(id)
-  router.replace('/main/groups')
 }
 
 const leaveGroup = (id) => {
@@ -71,6 +91,7 @@ getUsersInGroup(groupId)
 
 const copyEmail = (email) => {
   try {
+    triggerToast()
     navigator.clipboard.writeText(email)
   } catch ($e) {
     console.log($e)
@@ -89,7 +110,7 @@ const copyEmail = (email) => {
       </div>
 
       <div class="set_group">
-        <v-btn icon="mdi-plus" size="large" @click="copyIdentifier(groupIdentifier)" color="teal-accent-2"></v-btn>
+        <v-btn icon="mdi-plus" size="large" @click="copyIdentifier(groupIdentifier), triggerToast()" color="teal-accent-2"></v-btn>
         <v-btn icon="mdi-pencil-outline" size="large" @click="sheet_change = !sheet_change" color="purple-lighten-2"></v-btn>
         <v-btn icon="mdi-delete-outline" size="large" @click="sheet_del = !sheet_del" color="red-accent-2"></v-btn>
       </div>
@@ -108,6 +129,16 @@ const copyEmail = (email) => {
       </v-card>
     </v-layout>
 
+    <v-layout class="mt-4">
+      <v-card class="content_people" elevation="4">
+        <p class="title_user_list">Список курсів</p>
+        <v-list class="list_users">
+          <div>
+            <v-list-item title="Курс" subtitle="email" class="user_item" ><pre class="role_users"></pre></v-list-item>
+          </div>
+        </v-list>
+      </v-card>
+    </v-layout>
 
   </ion-content>
 
@@ -163,6 +194,32 @@ const copyEmail = (email) => {
         </v-card>
       </v-bottom-sheet>
     </div>
+
+    <div class="text-center">
+      <v-btn class="btn-add-course mb-1" size="large">
+        <ion-icon :icon="add" color="danger" id="open-modal" @click="courseAddInGroup = !courseAddInGroup"></ion-icon>
+      </v-btn>
+
+      <v-bottom-sheet v-model="courseAddInGroup">
+        <v-card height="300">
+          <v-card-text>
+            <v-select
+                :items="['blue', 'red', 'yellow', 'green']"
+                label="Вибрати курс"
+                multiple
+            >
+            </v-select>
+
+            <v-btn>
+              Додати
+            </v-btn>
+          </v-card-text>
+
+        </v-card>
+      </v-bottom-sheet>
+    </div>
+
+
   </ion-footer>
 </ion-page>
 </template>
@@ -237,5 +294,11 @@ const copyEmail = (email) => {
 
 .role_users{
   color: #4c148e;
+}
+
+.btn-add-course{
+  min-width: 30px;
+  border-radius: 50px;
+  margin-top: 10px;
 }
 </style>
