@@ -8,11 +8,11 @@ function joinGroup(body: JoinGroup) {
     return axios.post('/groups/joinGroup', body)
 }
 
-function leaveGroup(id) {
+function leaveGroup(id: any) {
     return axios.delete(`/groups/${id}/leaveGroup`)
 }
 
-function updateGroup(id, body: Group) {
+function updateGroup(id: any, body: Group) {
     return axios.put(`/group/${id}`, body)
 }
 
@@ -24,12 +24,20 @@ function myGroupsList() {
     return axios.get('/users/groups')
 }
 
-function deleteGroup(id) {
+function deleteGroup(id: any) {
     return axios.delete(`/group/${id}`)
 }
 
-function getUsersInGroup(id) {
+function getUsersInGroup(id: any) {
     return axios.get(`/groups/${id}/users?page=1&count=10`)
+}
+
+function addCourseToGroup(groupId: any, courseId: any) {
+    return axios.post(`/group/${groupId}/course/${courseId}?page=1&count=10`)
+}
+
+function removeCourseFromGroup(groupId: any, courseId: any) {
+    return axios.delete(`/group/${groupId}/course/${courseId}?page=1&count=10`)
 }
 export default {
     createGroup,
@@ -39,5 +47,7 @@ export default {
     getCreatedGroupsList,
     myGroupsList,
     deleteGroup,
-    getUsersInGroup
+    getUsersInGroup,
+    addCourseToGroup,
+    removeCourseFromGroup
 }

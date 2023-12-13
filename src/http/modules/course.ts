@@ -26,7 +26,10 @@ function deleteCourse(){
 function updateCourse(body: Course){
     let courseId = localStorage.getItem('courseId')
     return axios.put(`/courses/${courseId}`, body)
+}
 
+function coursesByGroupId(groupId: any) {
+    return axios.get(`courses/byGroup/${groupId}?page=1&count=10`)
 }
 
 export default {
@@ -34,5 +37,6 @@ export default {
     getAllCourse,
     findCourseById,
     deleteCourse,
-    updateCourse
+    updateCourse,
+    coursesByGroupId
 }

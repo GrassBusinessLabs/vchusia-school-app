@@ -15,6 +15,7 @@ import AccountStudent from "@/components/Student/AccountStudent.vue";
 import CourseStudent from "@/components/Student/CourseStudent.vue";
 import GroupStudent from "@/components/Student/GroupStudent.vue";
 import GroupPage from "@/components/Teacher/GroupPage/GroupPage.vue";
+import CourseInGroup from "@/components/Teacher/GroupPage/CourseInGroup.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -126,6 +127,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'groupPage',
         name: 'GroupPage',
         component: GroupPage
+      },
+      {
+        path: 'courseInGroup',
+        name: 'CourseInGroup',
+        component: CourseInGroup
       }
 
 

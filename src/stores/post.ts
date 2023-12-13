@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {Post, UpdatePost} from "@/models/Post";
+import {Post, sharePost, UpdatePost} from "@/models/Post";
 import PostApi from "@/http/modules/post"
 
 interface State {
@@ -72,6 +72,17 @@ export const post = defineStore('post', {
             catch (e) {
                 console.log(e)
             }
+        },
+
+        async sharePost(body: sharePost){
+            try {
+                const response: any = await PostApi.sharePost(body)
+                console.log(response)
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
+
     }
 })

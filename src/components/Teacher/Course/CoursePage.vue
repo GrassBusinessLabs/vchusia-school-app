@@ -230,6 +230,10 @@
                 <v-btn class="btn_del_post" color="#F44336" @click="deletePost()">
                   Видалити
                 </v-btn>
+
+                <v-btn class="btn_del_post" color="yellow" @click="sharePostOpenSheet()">
+                  Пошарити пост
+                </v-btn>
               </div>
 
             </v-card-text>
@@ -394,6 +398,106 @@
           </v-card>
         </v-bottom-sheet>
       </div>
+
+<!--      <div class="text-center">-->
+<!--        <v-bottom-sheet v-model="sheet_sharePost">-->
+<!--          <v-card height="550">-->
+<!--            <v-card-text>-->
+<!--              <v-select-->
+<!--              :items="groups"-->
+<!--              multiple-->
+<!--              variant="outlined"-->
+<!--              label="Групи"-->
+<!--              v-model="sharePostBody.groups"-->
+<!--              >-->
+<!--              </v-select>-->
+
+<!--              <v-text-field-->
+<!--                label="Коментар"-->
+<!--                variant="outlined"-->
+<!--                v-model="sharePostBody.comment"-->
+
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <v-text-field-->
+<!--                label="Дата здачі"-->
+<!--                variant="outlined"-->
+<!--                type="datetime-local"-->
+<!--                v-model="sharePostBody.deadline"-->
+
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <div class="btnShare">-->
+<!--                <v-btn class="btn_share_post" @click="sharePost()">-->
+<!--                  Пошарити-->
+<!--                </v-btn>-->
+<!--              </div>-->
+
+<!--            </v-card-text>-->
+<!--          </v-card>-->
+<!--        </v-bottom-sheet>-->
+<!--      </div>-->
+
+      <div class="text-center">
+          <v-dialog
+              v-model="dialog"
+              activator="parent"
+              width="auto"
+          >
+            <v-card>
+              <v-card-text>
+<!--                <v-select-->
+<!--                    :items="groups"-->
+<!--                    variant="outlined"-->
+<!--                    label="Групи"-->
+<!--                    v-model="sharePostBody.groups"-->
+<!--                >-->
+<!--                </v-select>-->
+                <v-select
+                    :items="groups"
+                    item-title="id"
+                    variant="outlined"
+                    label="Групи"
+                    multiple
+                    v-model="sharePostBody.groups"
+                >
+                  <template v-slot:item="{ props, item }">
+                    <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
+                  </template>
+                </v-select>
+
+                <v-text-field
+                    label="Коментар"
+                    variant="outlined"
+                    v-model="sharePostBody.comment"
+
+                >
+                </v-text-field>
+
+                <v-text-field
+                    label="Дата здачі"
+                    variant="outlined"
+                    type="datetime-local"
+                    v-model="sharePostBody.deadline"
+
+                >
+                </v-text-field>
+
+                <div class="btnShare">
+                  <v-btn class="btn_share_post" @click="sharePost()">
+                    Пошарити
+                  </v-btn>
+                </div>
+
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+      </div>
     </ion-footer>
 
 
@@ -419,11 +523,12 @@ import router from "@/router";
 import {course} from "@/stores/course";
 import {onMounted, reactive, ref} from "vue";
 import {Course} from "@/models/Course";
-import {Post, UpdatePost} from "@/models/Post";
+import {Post, sharePost, UpdatePost} from "@/models/Post";
 import {post} from "@/stores/post";
 import PostGrid from '/src/components/Teacher/Course/PostGrid.vue';
 import {reload} from "ionicons/icons";
 import logger from "api/dist/cli/logger";
+import {group} from "@/stores/group";
 
 
 const CourseStore = course();
@@ -435,15 +540,25 @@ const displayPost = ref(false)
 let sheet_change_post = ref(false)
 let sheet = ref(false);
 let r, c;
+const dialog = ref(false)
 let sheet_change = ref(false);
 let sheet_parent = ref(false);
+let sheet_sharePost = ref(false)
 const PostStore = post();
+const GroupStore = group()
 let allPost = JSON.parse(localStorage.getItem('allPost'));
-let items = []
+let items: any = []
 const outlineNone = ref('none')
 const outlinePost = ref('1px solid grey')
 let switchMode = ref(false)
 let sheet_read = ref(false)
+let groups: any = []
+let sharePostBody = reactive({
+  groups: null,
+  comment: "",
+  deadline: ""
+})
+
 let courseUpdate = reactive({
   name: "",
   discipline: "",
@@ -517,6 +632,26 @@ const deletePost = () => {
   sheet_change_post.value = false
 }
 
+const sharePostOpenSheet = () => {
+  sheet_change_post.value = false
+  dialog.value = true
+  groups = []
+  for (let i of GroupStore.allGroups){
+    for (let j of i){
+      groups.push({id: j.id, name: j.name})
+    }
+  }
+}
+const sharePost = () => {
+  const body: sharePost = {
+    groups: sharePostBody.groups,
+    comment: sharePostBody.comment,
+    deadline: new Date(sharePostBody.deadline).toISOString()
+  }
+  PostStore.sharePost(body)
+  dialog.value = false
+}
+
 const updatePost = () => {
   const body: UpdatePost = {
     title: PostStore.info.title,
@@ -576,7 +711,10 @@ const handlePost = (row : any, column : any) => {
         }
       }
     } else{
+      GroupStore.allGroups = []
       sheet_change_post.value = true
+      GroupStore.getCreatedGroupsList()
+
       console.log('edit create')
       for (let i of PostStore.PostInfo){
         if(row + 1 === i.row && column === i.column){
@@ -723,4 +861,14 @@ ion-col {
   border-radius: 50px;
 }
 
+.btnShare{
+  display: flex;
+  justify-content: center;
+}
+.btn_share_post{
+  width: 85%;
+  background: rgb(85,255,216);
+  background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
+  outline: 2px cyan ridge;
+}
 </style>

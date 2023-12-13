@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {Group, JoinGroup} from "@/models/Group";
 import GroupApi from "@/http/modules/group"
 import router from "@/router";
+import CourseApi from "@/http/modules/course";
 
 interface State {
     items: any,
@@ -19,11 +20,11 @@ export const group = defineStore('group', {
         allGroups: [],
         myGroups: [],
         idGroup: null,
-        usersInGroup: []
+        usersInGroup: [],
     }),
 
     actions: {
-        async createGroup(body: Group){
+        async createGroup(body: Group): Promise <void>{
             try {
                 this.allGroups = []
                 const response = await GroupApi.createGroup(body)
@@ -35,7 +36,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async joinGroup(body: JoinGroup){
+        async joinGroup(body: JoinGroup): Promise <void>{
             try{
                 const response = await GroupApi.joinGroup(body)
                 console.log(response)
@@ -46,7 +47,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async leaveGroup(id){
+        async leaveGroup(id: any): Promise <void>{
             try {
                 const response: any = await GroupApi.leaveGroup(id)
                 console.log(response)
@@ -57,7 +58,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async updateGroup(id, body: Group){
+        async updateGroup(id: any, body: Group): Promise <void>{
             try {
                 const response: any = await GroupApi.updateGroup(id, body)
                 console.log(response)
@@ -67,9 +68,8 @@ export const group = defineStore('group', {
             }
         },
 
-        async getCreatedGroupsList(){
+        async getCreatedGroupsList(): Promise <void>{
             try {
-
                 const response: any = await GroupApi.getCreatedGroupsList()
                 this.allGroups.push(response.items)
                 console.log(response)
@@ -78,7 +78,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async myGroupsList(){
+        async myGroupsList(): Promise <void>{
             try {
                 const response: any = await GroupApi.myGroupsList()
                 this.myGroups.push(response.items)
@@ -88,7 +88,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async deleteGroup(id){
+        async deleteGroup(id: any): Promise <void>{
             try {
                 const response: any = await GroupApi.deleteGroup(id)
                 console.log(response)
@@ -98,7 +98,7 @@ export const group = defineStore('group', {
             }
         },
 
-        async getUsersInGroup(id){
+        async getUsersInGroup(id: any): Promise <void>{
             try {
                 const response: any = await GroupApi.getUsersInGroup(id)
                 this.usersInGroup.push(response.items)
@@ -106,6 +106,25 @@ export const group = defineStore('group', {
             } catch (e) {
                 console.log(e)
             }
-        }
+        },
+
+        async addCourseToGroup(groupId: any, courseId: any): Promise <void>{
+            try {
+                const response: any = await GroupApi.addCourseToGroup(groupId, courseId)
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async removeCourseFromGroup(groupId: any, courseId: any){
+            try {
+                const response: any = GroupApi.removeCourseFromGroup(groupId, courseId)
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
     }
 })

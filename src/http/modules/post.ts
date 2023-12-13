@@ -1,4 +1,4 @@
-import {Post, UpdatePost} from "@/models/Post";
+import {Post, sharePost, UpdatePost} from "@/models/Post";
 import {post} from "@/stores/post";
 
 
@@ -26,10 +26,16 @@ function deletePost() {
     let postId: number | null = post().idPostsNow
     return axios.delete(`/post/${postId}`)
 }
+
+function sharePost(body: sharePost) {
+    let postId: number | null = post().idPostsNow
+    return axios.post(`/post/${postId}/group`, body)
+}
 export default {
     createPost,
     findPostWithRow,
     updatePost,
-    deletePost
+    deletePost,
+    sharePost
 
 }

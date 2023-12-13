@@ -20,3 +20,9 @@ export interface UpdatePost{
     requiredPoints : number,
     deadline : string,
 }
+
+export interface sharePost {
+    groups: any,
+    comment: string,
+    deadline: string,
+}

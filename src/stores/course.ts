@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {Course} from "@/models/Course";
 import CourseApi from "@/http/modules/course";
+import {AxiosResponse} from "axios";
 
 
 const token = localStorage.getItem('token')
@@ -10,7 +11,8 @@ console.log(token)
 interface State {
     items: any,
     total: number,
-    thisCourse: any
+    thisCourse: any,
+    courseInGroup: any
 }
 
 
@@ -18,7 +20,8 @@ export const course = defineStore('course', {
     state: (): State => ({
         items: [],
         total: 0,
-        thisCourse: []
+        thisCourse: [],
+        courseInGroup: []
     }),
 
     getters: {
@@ -75,6 +78,16 @@ export const course = defineStore('course', {
                 const response = await CourseApi.updateCourse(body)
                 console.log(response)
             }catch (e) {
+                console.log(e)
+            }
+        },
+
+        async coursesByGroupId(groupId: any){
+            try {
+                const response = await CourseApi.coursesByGroupId(groupId)
+                this.courseInGroup = response.items
+                console.log(response)
+            } catch (e) {
                 console.log(e)
             }
         }

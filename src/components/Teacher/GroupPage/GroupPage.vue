@@ -5,16 +5,19 @@ import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import { useToast } from 'vue-toastification';
 
 import {group} from "@/stores/group";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {Group, JoinGroup} from "@/models/Group";
 import {add} from "ionicons/icons";
+import {course} from "@/stores/course";
 let sheet_change = ref(false);
 let sheet_del = ref(false);
 const GroupStore = group();
 let groupIdentifier = "";
 let groupName = "";
 let groupId: any
+const CourseStore = course()
 const toast = useToast();
+let courseSelected = reactive({id: null});
 const courseAddInGroup = ref(false)
 const loadGroup = () => {
   groupIdentifier = "";
@@ -57,7 +60,7 @@ function triggerToast() {
     rtl: false
   });
 }
-async function copyIdentifier(identifier) {
+async function copyIdentifier(identifier: any) {
   try {
     await navigator.clipboard.writeText(identifier);
   } catch ($e) {
@@ -65,31 +68,38 @@ async function copyIdentifier(identifier) {
   }
 }
 
-const changeGroup = (id) => {
+const changeGroup = (id: any) => {
   const body: Group = {
     name: groupInfo.name
   }
   GroupStore.updateGroup(id, body)
 }
 
-const deleteGroup = (id) => {
+const deleteGroup = (id: any) => {
   GroupStore.deleteGroup(id)
+  CourseStore.coursesByGroupId(groupId)
+
 }
 
-const leaveGroup = (id) => {
+const leaveGroup = (id: any) => {
   GroupStore.leaveGroup(id)
   router.replace('/main/groups')
 
 }
 
-const getUsersInGroup = (id) => {
+const getUsersInGroup = (id: any) => {
   GroupStore.usersInGroup = []
   GroupStore.getUsersInGroup(id)
 }
 
 getUsersInGroup(groupId)
 
-const copyEmail = (email) => {
+const addCourseToGroup = () => {
+  courseAddInGroup.value = false
+  GroupStore.addCourseToGroup(groupId, courseSelected.id)
+  courseSelected.id = null
+}
+const copyEmail = (email: any) => {
   try {
     triggerToast()
     navigator.clipboard.writeText(email)
@@ -97,6 +107,24 @@ const copyEmail = (email) => {
     console.log($e)
   }
 }
+
+const deleteCourseFromGroup = (courseId: any) => {
+   GroupStore.removeCourseFromGroup(groupId, courseId)
+}
+
+let totalCourses = CourseStore.total
+let courses: any[]
+const loadCourses = () => {
+  courses = []
+  CourseStore.getAllCourse({page: 1, count: totalCourses})
+  for(let i of CourseStore.items){
+    courses.push({id: i.id, name: i.name})
+  }
+  console.log(courses)
+}
+loadCourses();
+
+onMounted(() => {CourseStore.coursesByGroupId(groupId)})
 </script>
 
 <template>
@@ -116,12 +144,23 @@ const copyEmail = (email) => {
       </div>
     </div>
 
-    <v-layout class="mt-4">
+    <v-layout class="mt-4" v-show="CourseStore.courseInGroup.length > 0">
       <v-card class="content_courses" elevation="4">
         <p class="title_courses_list">Список курсів</p>
         <v-list class="list_courses">
-          <div>
-            <v-list-item title="Курс" subtitle="email" class="course_item" ><pre class="role_users"></pre></v-list-item>
+          <div v-for="i of CourseStore.courseInGroup">
+            <v-list-item :title="i.name" :subtitle="i.discipline" class="course_item" @click="router.replace('/main/courseInGroup')" ><pre class="role_users">Клас: {{i.grade}}</pre>
+              <template v-slot:append>
+
+
+                <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-trash-can-outline"
+                    variant="text"
+                    @click="deleteCourseFromGroup(i.id)"
+                ></v-btn>
+              </template></v-list-item>
+
           </div>
         </v-list>
       </v-card>
@@ -137,7 +176,6 @@ const copyEmail = (email) => {
         </v-list>
       </v-card>
     </v-layout>
-
 
 
   </ion-content>
@@ -181,14 +219,24 @@ const copyEmail = (email) => {
         <v-card height="300">
           <v-card-text>
             <v-select
-                :items="['blue', 'red', 'yellow', 'green']"
+                :items="courses"
+                prepend-icon="mdi-book-outline"
                 label="Вибрати курс"
+                item-title="id"
+                v-model="courseSelected.id"
+                variant="outlined"
             >
+              <template v-slot:item="{ props, item }">
+                <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
+              </template>
             </v-select>
 
-            <v-btn>
-              Додати
-            </v-btn>
+            <div class="btnAddCourse">
+              <v-btn @click="addCourseToGroup()" class="btn_add_course">
+                Додати
+              </v-btn>
+            </div>
+
           </v-card-text>
 
         </v-card>
@@ -323,5 +371,17 @@ const copyEmail = (email) => {
   min-width: 30px;
   border-radius: 50px;
   margin-top: 10px;
+}
+
+.btnAddCourse{
+  display: flex;
+  justify-content: center;
+
+}
+
+.btn_add_course{
+  width: 80%;
+  background: rgb(85,255,216);
+  background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
 }
 </style>
