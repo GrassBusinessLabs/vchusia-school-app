@@ -116,7 +116,16 @@ const copyEmail = (email) => {
       </div>
     </div>
 
-
+    <v-layout class="mt-4">
+      <v-card class="content_courses" elevation="4">
+        <p class="title_courses_list">Список курсів</p>
+        <v-list class="list_courses">
+          <div>
+            <v-list-item title="Курс" subtitle="email" class="course_item" ><pre class="role_users"></pre></v-list-item>
+          </div>
+        </v-list>
+      </v-card>
+    </v-layout>
 
     <v-layout class="mt-4">
       <v-card class="content_people" elevation="4">
@@ -129,16 +138,7 @@ const copyEmail = (email) => {
       </v-card>
     </v-layout>
 
-    <v-layout class="mt-4">
-      <v-card class="content_people" elevation="4">
-        <p class="title_user_list">Список курсів</p>
-        <v-list class="list_users">
-          <div>
-            <v-list-item title="Курс" subtitle="email" class="user_item" ><pre class="role_users"></pre></v-list-item>
-          </div>
-        </v-list>
-      </v-card>
-    </v-layout>
+
 
   </ion-content>
 
@@ -172,6 +172,30 @@ const copyEmail = (email) => {
       </v-bottom-sheet>
     </div>
 
+    <div class="text-center">
+      <v-btn class="btn-add-course mb-1" size="large">
+        <ion-icon :icon="add" color="danger" id="open-modal" @click="courseAddInGroup = !courseAddInGroup"></ion-icon>
+      </v-btn>
+
+      <v-bottom-sheet v-model="courseAddInGroup">
+        <v-card height="300">
+          <v-card-text>
+            <v-select
+                :items="['blue', 'red', 'yellow', 'green']"
+                label="Вибрати курс"
+            >
+            </v-select>
+
+            <v-btn>
+              Додати
+            </v-btn>
+          </v-card-text>
+
+        </v-card>
+      </v-bottom-sheet>
+    </div>
+
+
 
     <div class="text-center">
       <v-bottom-sheet v-model="sheet_del" >
@@ -195,29 +219,6 @@ const copyEmail = (email) => {
       </v-bottom-sheet>
     </div>
 
-    <div class="text-center">
-      <v-btn class="btn-add-course mb-1" size="large">
-        <ion-icon :icon="add" color="danger" id="open-modal" @click="courseAddInGroup = !courseAddInGroup"></ion-icon>
-      </v-btn>
-
-      <v-bottom-sheet v-model="courseAddInGroup">
-        <v-card height="300">
-          <v-card-text>
-            <v-select
-                :items="['blue', 'red', 'yellow', 'green']"
-                label="Вибрати курс"
-                multiple
-            >
-            </v-select>
-
-            <v-btn>
-              Додати
-            </v-btn>
-          </v-card-text>
-
-        </v-card>
-      </v-bottom-sheet>
-    </div>
 
 
   </ion-footer>
@@ -266,10 +267,7 @@ const copyEmail = (email) => {
   width: 85%;
   margin: 0 auto;
 }
-.content_people{
-  width: 95%;
-  margin: 15px auto;
-}
+
 
 .user_item{
   border-radius: 10px;
@@ -286,12 +284,37 @@ const copyEmail = (email) => {
 .content_people{
   background: rgb(215,255,202);
   background: linear-gradient(183deg, rgba(215,255,202,1) 0%, rgba(159,219,250,1) 100%);
+  width: 95%;
+  margin: 15px auto;
 }
 .list_users{
   background: rgb(239,241,233);
   background: linear-gradient(183deg, rgba(239,241,233,0.8519782913165266) 0%, rgba(226,255,246,0.7819502801120448) 100%);
 }
 
+.content_courses{
+  background: rgb(0,160,215);
+  background: linear-gradient(183deg, rgba(0,160,215,1) 16%, rgba(100,246,255,1) 100%);
+  width: 95%;
+  margin: 15px auto;
+}
+
+.list_courses{
+  background: rgb(0,215,202);
+  background: linear-gradient(183deg, rgba(0,215,202,1) 16%, rgba(100,246,255,1) 100%);
+}
+.title_courses_list{
+  color: #fff;
+  text-align: center;
+  font-family: "Fira Code Medium", monospace;
+}
+.course_item{
+  border-radius: 10px;
+  margin: 12px;
+  background: rgb(85,255,216);
+  background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
+  color: grey;
+}
 .role_users{
   color: #4c148e;
 }

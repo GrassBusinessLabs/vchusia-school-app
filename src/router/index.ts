@@ -16,10 +16,10 @@ import CourseStudent from "@/components/Student/CourseStudent.vue";
 import GroupStudent from "@/components/Student/GroupStudent.vue";
 import GroupPage from "@/components/Teacher/GroupPage/GroupPage.vue";
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: '/',
-  //   redirect: '/start'
-  // },
+  {
+    path: '/',
+    redirect: '/auth/start'
+  },
   // {
   //   path: '/start',
   //   name: 'Start',
