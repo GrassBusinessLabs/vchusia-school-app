@@ -156,16 +156,17 @@ onMounted(() => {CourseStore.coursesByGroupId(groupId)})
         <v-list class="list_courses">
           <div v-for="i of CourseStore.courseInGroup">
             <v-list-item :title="i.name" :subtitle="i.discipline" class="course_item" @click="replaceToCourse(i)" ><pre class="role_users">Клас: {{i.grade}}</pre>
-              <template v-slot:append>
+<!--              <template v-slot:append>-->
 
 
-                <v-btn
-                    color="grey-lighten-1"
-                    icon="mdi-trash-can-outline"
-                    variant="text"
-                    @click="deleteCourseFromGroup(i.id)"
-                ></v-btn>
-              </template></v-list-item>
+<!--                <v-btn-->
+<!--                    color="grey-lighten-1"-->
+<!--                    icon="mdi-trash-can-outline"-->
+<!--                    variant="text"-->
+<!--                    @click="deleteCourseFromGroup(i.id)"-->
+<!--                ></v-btn>-->
+<!--              </template>-->
+</v-list-item>
 
           </div>
         </v-list>

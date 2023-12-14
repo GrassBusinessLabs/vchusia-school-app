@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {IonCol, IonGrid, IonPage, IonRow, IonContent, IonFooter} from "@ionic/vue";
+import {IonCol, IonGrid, IonPage, IonRow, IonContent, IonFooter, IonHeader} from "@ionic/vue";
 import {course} from "@/stores/course";
 import {post} from "@/stores/post"
 import {ref} from "vue";
 import {group} from "@/stores/group";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
+import router from "@/router";
 
 const CourseStore = course()
 const PostStore = post()
@@ -33,26 +34,26 @@ const getPostByCords = (row : any, column : any) => {
 const handlePost = (row : any, column : any) => {
 
   let idPost
-  if(getPostByCords(row + 1, column)){
+  if(getPostByCords(row + 1, column)) {
 
-    if(switchMode.value === true){
+    if (switchMode.value === true) {
       sheet_read.value = true
 
-      for (let i of PostStore.PostInfo){
-        if(row + 1 === i.row && column === i.column){
+      for (let i of PostStore.PostInfo) {
+        if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
         }
       }
-    } else{
+    } else {
       GroupStore.allGroups = []
       GroupStore.getCreatedGroupsList()
 
       console.log('edit create')
-      for (let i of PostStore.PostInfo){
-        if(row + 1 === i.row && column === i.column){
+      for (let i of PostStore.PostInfo) {
+        if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
@@ -62,23 +63,26 @@ const handlePost = (row : any, column : any) => {
     }
 
 
-
-
-  } else{
-    items = []
-    for (let i of PostStore.PostInfo){
-      if(i.row === row){
-        items.push(i.id)
-      }
-    }
-    r = row + 1;
-    c = column
-    console.log(row + 1, column)
-    console.log('create')
-
   }
+  // } else{
+  //   items = []
+  //   // for (let i of PostStore.PostInfo){
+  //   //   if(i.row === row){
+  //   //     items.push(i.id)
+  //   //   }
+  //   // }
+  //   // r = row + 1;
+  //   // c = column
+  //   // console.log(row + 1, column)
+  //   // console.log('create')
+  //
+  // }
   return idPost, r, c, items
 
+}
+
+const deleteCourseFromGroup = (courseId: any) => {
+  GroupStore.removeCourseFromGroup(GroupStore.idGroup, courseId)
 }
 
 PostStore.findPostWithRowGroupCourse()
@@ -86,13 +90,20 @@ PostStore.findPostWithRowGroupCourse()
 
 <template>
 <ion-page>
-
+<ion-header>
   <div class="course">
     <p>Курс <span> {{courseInfo.name}}</span></p>
     <p>Назва <span>{{courseInfo.discipline}}</span></p>
     <p>Клас <span>{{courseInfo.grade}}</span></p>
     <p>Вік від <span>{{courseInfo.yearsFrom}}</span></p>
     <p>Вік до <span>{{courseInfo.yearsTo}}</span></p>
+  </div>
+</ion-header>
+
+  <div class="d-flex justify-center mb-6">
+    <v-btn color="red" @click="deleteCourseFromGroup(CourseStore.thisCourse.id) ">
+      Видалити курс
+    </v-btn>
   </div>
 
   <ion-content>
@@ -104,6 +115,7 @@ PostStore.findPostWithRowGroupCourse()
           </ion-row>
         </ion-grid>
     </v-layout>
+
   </ion-content>
 
   <ion-footer>

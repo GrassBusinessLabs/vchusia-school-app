@@ -121,6 +121,7 @@ export const group = defineStore('group', {
         async removeCourseFromGroup(groupId: any, courseId: any){
             try {
                 const response: any = GroupApi.removeCourseFromGroup(groupId, courseId)
+                this.getCreatedGroupsList()
                 console.log(response)
             } catch (e) {
                 console.log(e)

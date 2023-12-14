@@ -269,12 +269,16 @@
 
                 <v-select
                     label="Тип"
-                    :items="['Пост', 'Завдання']"
+                    :items="[{type: 'Post', name: 'Пост'}, {type: 'Task', name: 'Завдання'}]"
+                    item-title="type"
                     variant="outlined"
                     color="primary"
                     v-model="task$.type"
                     prepend-icon="mdi-file-tree"
                 >
+                  <template v-slot:item="{ props, item }">
+                    <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
+                  </template>
                 </v-select>
 
                 <v-text-field
@@ -569,6 +573,12 @@ let courseUpdate = reactive({
 })
 PostStore.PostInfo = [];
 
+let typePost = reactive({
+  type: {
+    type: 'Post', name: 'Пост'
+  }
+})
+
 
 let task$ = reactive({
   courseId: Number(courseId),
@@ -580,7 +590,7 @@ let task$ = reactive({
   parentId: 0,
   requiredPoints: 0,
   color: "",
-  type: "Пост"
+  type: typePost.type.type
 })
 
 async function createPost() {
