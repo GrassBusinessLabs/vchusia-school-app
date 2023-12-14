@@ -12,7 +12,7 @@ interface State {
     items: any,
     total: number,
     thisCourse: any,
-    courseInGroup: any
+    courseInGroup: any,
 }
 
 
@@ -21,7 +21,7 @@ export const course = defineStore('course', {
         items: [],
         total: 0,
         thisCourse: [],
-        courseInGroup: []
+        courseInGroup: [],
     }),
 
     getters: {

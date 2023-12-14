@@ -9,7 +9,8 @@ interface State {
     createdGroup: any,
     allGroups: any,
     myGroups: any,
-    idGroup: null,
+    // idGroup: any,
+    idGroup: number | null
     usersInGroup: any,
 }
 
@@ -17,11 +18,19 @@ export const group = defineStore('group', {
     state: (): State =>({
         items: [],
         createdGroup: [],
-        allGroups: [],
+        allGroups: [JSON.parse(localStorage.getItem('allGroups'))],
         myGroups: [],
-        idGroup: null,
+        // idGroup: null,
         usersInGroup: [],
+        idGroup: Number(localStorage.getItem('idGroup')) || null,
+
     }),
+
+
+    getters: {
+        groupId: state => state.idGroup
+    },
+
 
     actions: {
         async createGroup(body: Group): Promise <void>{
@@ -70,6 +79,7 @@ export const group = defineStore('group', {
 
         async getCreatedGroupsList(): Promise <void>{
             try {
+                this.allGroups = []
                 const response: any = await GroupApi.getCreatedGroupsList()
                 this.allGroups.push(response.items)
                 localStorage.setItem('allGroups', JSON.stringify(response.items))

@@ -82,8 +82,9 @@ import {Group} from "@/models/Group";
 import {group} from "@/stores/group"
 import router from "@/router";
 import { useToast } from 'vue-toastification';
+import {course} from "@/stores/course";
 const toast = useToast();
-
+const CourseStore = course()
 let sheet = ref(false)
 const GroupStore = group()
 
@@ -136,11 +137,14 @@ function triggerToast() {
   });
 }
 const replaceToPageGroup = (info: any) => {
+  localStorage.setItem('idGroup', info.id)
+  CourseStore.idGroup = info.id
   GroupStore.idGroup = info.id
   router.replace('/main/GroupPage')
 }
 
 
+localStorage.setItem('allGroups', JSON.stringify([GroupStore.allGroups]))
 </script>
 
 <style scoped>

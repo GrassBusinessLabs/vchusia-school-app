@@ -19,6 +19,7 @@ const CourseStore = course()
 const toast = useToast();
 let courseSelected = reactive({id: null});
 const courseAddInGroup = ref(false)
+groupId = GroupStore.idGroup
 const loadGroup = () => {
   groupIdentifier = "";
   groupName = "";
@@ -28,9 +29,6 @@ const loadGroup = () => {
         console.log(j)
         groupIdentifier = j.identifier
         groupName = j.name
-        groupId = j.id
-      } else{
-        groupId = GroupStore.idGroup
       }
     }
   }
@@ -137,6 +135,7 @@ onMounted(() => {CourseStore.coursesByGroupId(groupId)})
 <ion-page>
   <ion-content>
     <div v-for="i of GroupStore.allGroups">
+
       <div v-for="f of i">
         <div v-if="f.id === GroupStore.idGroup" class="group">
           <span>{{f.name}}</span>
