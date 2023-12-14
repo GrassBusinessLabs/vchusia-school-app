@@ -5,7 +5,7 @@
     <ion-content>
       <v-list lines="one">
         <div v-for="i of GroupStore.allGroups">
-          <v-list-item v-for="j of i" :title="j.name" class="listGroupItem" @click="replaceToPageGroup(j.id)">
+          <v-list-item v-for="j of i" :title="j.name" class="listGroupItem" @click="replaceToPageGroup(j)">
             <template v-slot:append>
               <v-btn
                   color="grey-lighten-1"
@@ -135,9 +135,8 @@ function triggerToast() {
     rtl: false
   });
 }
-const replaceToPageGroup = (id) => {
-  console.log(id)
-  GroupStore.idGroup = id
+const replaceToPageGroup = (info: any) => {
+  GroupStore.idGroup = info.id
   router.replace('/main/GroupPage')
 }
 

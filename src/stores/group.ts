@@ -72,6 +72,7 @@ export const group = defineStore('group', {
             try {
                 const response: any = await GroupApi.getCreatedGroupsList()
                 this.allGroups.push(response.items)
+                localStorage.setItem('allGroups', JSON.stringify(response.items))
                 console.log(response)
             } catch (e) {
                 console.log(e)

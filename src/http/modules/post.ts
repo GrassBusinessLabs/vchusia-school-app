@@ -3,6 +3,7 @@ import {post} from "@/stores/post";
 
 
 import axios from "../api";
+import {course} from "@/stores/course";
 
 
 
@@ -13,6 +14,11 @@ function createPost(body: Post) {
 
 function findPostWithRow() {
     let courseId: string | null = localStorage.getItem('courseId')
+    return axios.get(`/courses/${courseId}/post`)
+}
+
+function findPostWithRowGroupCourse() {
+    const courseId = course().thisCourse.id
     return axios.get(`/courses/${courseId}/post`)
 
 }
@@ -36,6 +42,7 @@ export default {
     findPostWithRow,
     updatePost,
     deletePost,
-    sharePost
+    sharePost,
+    findPostWithRowGroupCourse
 
 }

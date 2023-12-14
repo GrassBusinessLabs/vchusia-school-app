@@ -31,13 +31,14 @@ const loadGroup = () => {
         groupId = j.id
       } else{
         groupId = GroupStore.idGroup
-        localStorage.setItem('groupId', j.id)
       }
     }
   }
 
   return groupId
 }
+console.log(GroupStore.idGroup)
+
 loadGroup()
 
 let groupInfo = reactive({
@@ -92,7 +93,7 @@ const getUsersInGroup = (id: any) => {
   GroupStore.getUsersInGroup(id)
 }
 
-getUsersInGroup(groupId)
+getUsersInGroup(GroupStore.idGroup)
 
 const addCourseToGroup = () => {
   courseAddInGroup.value = false
@@ -106,6 +107,11 @@ const copyEmail = (email: any) => {
   } catch ($e) {
     console.log($e)
   }
+}
+
+const replaceToCourse = (info: any) => {
+  router.replace('/main/courseInGroup')
+  CourseStore.thisCourse = info
 }
 
 const deleteCourseFromGroup = (courseId: any) => {
@@ -149,7 +155,7 @@ onMounted(() => {CourseStore.coursesByGroupId(groupId)})
         <p class="title_courses_list">Список курсів</p>
         <v-list class="list_courses">
           <div v-for="i of CourseStore.courseInGroup">
-            <v-list-item :title="i.name" :subtitle="i.discipline" class="course_item" @click="router.replace('/main/courseInGroup')" ><pre class="role_users">Клас: {{i.grade}}</pre>
+            <v-list-item :title="i.name" :subtitle="i.discipline" class="course_item" @click="replaceToCourse(i)" ><pre class="role_users">Клас: {{i.grade}}</pre>
               <template v-slot:append>
 
 

@@ -53,6 +53,18 @@ export const post = defineStore('post', {
             }
         },
 
+        async findPostWithRowGroupCourse(){
+            try{
+                const response: any = await PostApi.findPostWithRowGroupCourse()
+                console.log(response)
+                this.total = response.total
+                localStorage.setItem('allPost', JSON.stringify(response))
+                this.PostInfo = [...response.items]
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
         async deletePost(){
             try {
                 const response: any = await PostApi.deletePost()
