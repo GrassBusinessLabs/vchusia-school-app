@@ -13,6 +13,7 @@ interface State {
     total: number,
     thisCourse: any,
     courseInGroup: any,
+    groupsInCourse: any
 }
 
 
@@ -22,6 +23,7 @@ export const course = defineStore('course', {
         total: 0,
         thisCourse: [],
         courseInGroup: [],
+        groupsInCourse: [],
     }),
 
     getters: {
@@ -86,6 +88,16 @@ export const course = defineStore('course', {
             try {
                 const response = await CourseApi.coursesByGroupId(groupId)
                 this.courseInGroup = response.items
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async groupsByCourseId(){
+            try{
+                const response: any = await CourseApi.groupsByCourseId()
+                this.groupsInCourse = response.items
                 console.log(response)
             } catch (e) {
                 console.log(e)

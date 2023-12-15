@@ -7,56 +7,83 @@
 
 
       <div v-for="value in CourseStore.thisCourse" class="course">
+        <div class="setting_course">
+          <v-btn icon="mdi-cog-outline" class="btn_setting_course" elevation="0"
+                 @click="router.replace('/main/setting')"></v-btn>
+        </div>
         <div v-for="(name, value, index) in value"
-             v-show="value !== 'id' && value !== 'userid' && value !== 'Завдання' && value !== 'Опис курсу'  && value !== 'Ідентифікатор' "
+             v-show="value !== 'id' && value !== 'userid' && value !== 'Завдання' && value !== 'Опис курсу'"
              class="titlesCourse">
           {{ value = nameCourse[index] }} <span class="valueCourse"> {{ name }} </span>
         </div>
+        <b> Ідентифікатор курсу: <span class="valueCourse">{{ identifier }}</span></b>
       </div>
 
 
-      <v-layout class="mt-4 mb-4">
-        <v-card elevation="3" class="pa-5 w-75 mx-auto bg-indigo-lighten-2">
-          Код класу : <b>{{ identifier }}</b>
-        </v-card>
-      </v-layout>
-
-      <v-card class="pa-5 w-75 mx-auto d-flex flex-column align-center" elevation="1">
-        <v-btn class="btn" color="indigo" @click="sheet_change = !sheet_change">
-          Редагувати курс
-        </v-btn>
-
-        <v-btn class="btn" color="indigo-accent-3" @click="deleteCourse">
-          Видалити курс
-        </v-btn>
-
+      <v-card class="ma-6" elevation="0">
+        <v-tabs fixed-tabs bg-color="teal-lighten-5" v-model="tab">
+          <v-tab value="posts" prepend-icon="mdi-calendar-check">Пости</v-tab>
+          <v-tab value="groups" prepend-icon="mdi-account-group">Групи</v-tab>
+        </v-tabs>
       </v-card>
 
 
-      <div class="d-flex justify-center align-center">
-        <v-switch inset label="Mode read" class="d-flex justify-center" color="primary" v-model="switchMode"></v-switch>
-      </div>
+      <!--      <v-card class="pa-5 w-75 mx-auto d-flex flex-column align-center" elevation="1">-->
+      <!--        <v-btn class="btn" color="indigo" @click="sheet_change = !sheet_change">-->
+      <!--          Редагувати курс-->
+      <!--        </v-btn>-->
 
-      <v-layout class="mt-4">
-        <v-card elevation="3"
-                class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
-                id="parentGrid">
+      <!--        <v-btn class="btn" color="indigo-accent-3" @click="deleteCourse">-->
+      <!--          Видалити курс-->
+      <!--        </v-btn>-->
 
-          <ion-grid class="grid_post d-flex justify-center align-center flex-column-reverse" id="ionGrid" >
-            <ion-row v-for="(post, indexRow) in mapPosts()">
-              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)" :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">{{getPostByCords(indexRow + 1, indexCol)?.id}}</ion-col>
-            </ion-row>
-
-            <ion-row v-show="switchMode === false">
-              <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent" v-for="(indexCol, index) in 5" ></ion-col>
-            </ion-row>
-
-          </ion-grid>
+      <!--      </v-card>-->
 
 
-        </v-card>
-      </v-layout>
+      <!--      <div class="d-flex justify-center align-center">-->
+      <!--        <v-switch inset label="Mode read" class="d-flex justify-center" color="primary" v-model="switchMode"></v-switch>-->
+      <!--      </div>-->
 
+
+      <v-window v-model="tab">
+        <v-window-item value="posts">
+          <p class="text-center ma-2" v-show="PostStore.PostInfo.length < 1">Постів немає</p>
+          <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">
+            <v-card elevation="0"
+                    class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
+                    id="parentGrid">
+
+              <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">
+                <ion-row v-for="(post, indexRow) in mapPosts()">
+                  <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"
+                           :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">
+                    {{ getPostByCords(indexRow + 1, indexCol)?.id }}
+                  </ion-col>
+                </ion-row>
+
+                <ion-row v-show="switchMode === false">
+                  <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent"
+                           v-for="(indexCol, index) in 5"></ion-col>
+                </ion-row>
+
+              </ion-grid>
+
+
+            </v-card>
+          </v-layout>
+        </v-window-item>
+        <v-window-item value="groups">
+          <p v-show="CourseStore.groupsInCourse.length < 1" class="text-center">Групи не прив'язані</p>
+
+          <v-layout>
+            <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="0">
+              <v-list class="list_groups_in_course">
+                <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course"></v-list-item>
+              </v-list>
+            </v-card>
+          </v-layout>
+        </v-window-item>
+      </v-window>
 
     </ion-content>
 
@@ -138,7 +165,7 @@
 
       <div class="text-center d-flex">
         <v-bottom-sheet v-model="sheet_change_post">
-          <v-card height="750" >
+          <v-card height="750">
 
             <v-card-text>
               <v-select
@@ -169,7 +196,6 @@
                   color="primary"
                   prepend-icon="mdi-information-outline"
                   v-model="PostStore.info.description"
-
 
 
               >
@@ -239,7 +265,6 @@
             </v-card-text>
 
 
-
           </v-card>
         </v-bottom-sheet>
       </div>
@@ -259,7 +284,6 @@
                   v-model="task$.parentId"
               ></v-select>
             </div>
-
 
 
             <v-card-text>
@@ -300,7 +324,6 @@
                     color="primary"
                     prepend-icon="mdi-information-outline"
                     v-model="task$.description"
-
 
 
                 >
@@ -348,15 +371,16 @@
 
                 <v-select
                     :items="['blue', 'red', 'yellow', 'green']"
-                  variant="outlined"
-                  label="Колір завдання"
-                  density="compact"
-                  prepend-icon="mdi-palette"
-                  v-model="task$.color"
+                    variant="outlined"
+                    label="Колір завдання"
+                    density="compact"
+                    prepend-icon="mdi-palette"
+                    v-model="task$.color"
                 ></v-select>
 
                 <div class="btnAddPostParent">
-                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" id="btnAddTask" variant="tonal" color="indigo"
+                  <v-btn prepend-icon="mdi-plus-circle" class="btnAddTaskParent" id="btnAddTask" variant="tonal"
+                         color="indigo"
                          @click="sheet_parent = !sheet_parent, createPost()">
                     Додати завдання
                   </v-btn>
@@ -373,29 +397,36 @@
       </div>
 
       <div class="text-center">
-        <v-bottom-sheet v-model="sheet_read" >
-          <v-card height="500" :subtitle="PostStore.info.type" class="text-center" >
+        <v-bottom-sheet v-model="sheet_read">
+          <v-card height="500" :subtitle="PostStore.info.type" class="text-center">
             <v-card-subtitle>
-              {{PostStore.info.id}}
+              {{ PostStore.info.id }}
               <div class="color_post_read" :style="{backgroundColor: PostStore.info.color}"></div>
             </v-card-subtitle>
-            <v-card-title class="font-weight-bold" >
-              {{PostStore.info.title}}
+            <v-card-title class="font-weight-bold">
+              {{ PostStore.info.title }}
             </v-card-title>
 
 
             <v-card-text class="d-flex justify-center flex-column align-center">
               <small>Опис завдання</small>
-              {{PostStore.info.description}}
+              {{ PostStore.info.description }}
             </v-card-text>
 
             <v-card-text>
             </v-card-text>
 
             <v-card-text>
-              Оцінка за завдання <i>{{PostStore.info.points}}</i> <br>
+              Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
 
-              Виконати до <b>{{PostStore.info.deadline}}</b>
+              Виконати до <b>{{ PostStore.info.deadline }}</b>
+
+              <div>
+                <v-btn prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
+                       @click="sharePostOpenSheet()">
+                  Поділитись постом
+                </v-btn>
+              </div>
             </v-card-text>
 
 
@@ -403,104 +434,104 @@
         </v-bottom-sheet>
       </div>
 
-<!--      <div class="text-center">-->
-<!--        <v-bottom-sheet v-model="sheet_sharePost">-->
-<!--          <v-card height="550">-->
-<!--            <v-card-text>-->
-<!--              <v-select-->
-<!--              :items="groups"-->
-<!--              multiple-->
-<!--              variant="outlined"-->
-<!--              label="Групи"-->
-<!--              v-model="sharePostBody.groups"-->
-<!--              >-->
-<!--              </v-select>-->
+      <!--      <div class="text-center">-->
+      <!--        <v-bottom-sheet v-model="sheet_sharePost">-->
+      <!--          <v-card height="550">-->
+      <!--            <v-card-text>-->
+      <!--              <v-select-->
+      <!--              :items="groups"-->
+      <!--              multiple-->
+      <!--              variant="outlined"-->
+      <!--              label="Групи"-->
+      <!--              v-model="sharePostBody.groups"-->
+      <!--              >-->
+      <!--              </v-select>-->
 
-<!--              <v-text-field-->
-<!--                label="Коментар"-->
-<!--                variant="outlined"-->
-<!--                v-model="sharePostBody.comment"-->
+      <!--              <v-text-field-->
+      <!--                label="Коментар"-->
+      <!--                variant="outlined"-->
+      <!--                v-model="sharePostBody.comment"-->
 
-<!--              >-->
-<!--              </v-text-field>-->
+      <!--              >-->
+      <!--              </v-text-field>-->
 
-<!--              <v-text-field-->
-<!--                label="Дата здачі"-->
-<!--                variant="outlined"-->
-<!--                type="datetime-local"-->
-<!--                v-model="sharePostBody.deadline"-->
+      <!--              <v-text-field-->
+      <!--                label="Дата здачі"-->
+      <!--                variant="outlined"-->
+      <!--                type="datetime-local"-->
+      <!--                v-model="sharePostBody.deadline"-->
 
-<!--              >-->
-<!--              </v-text-field>-->
+      <!--              >-->
+      <!--              </v-text-field>-->
 
-<!--              <div class="btnShare">-->
-<!--                <v-btn class="btn_share_post" @click="sharePost()">-->
-<!--                  Пошарити-->
-<!--                </v-btn>-->
-<!--              </div>-->
+      <!--              <div class="btnShare">-->
+      <!--                <v-btn class="btn_share_post" @click="sharePost()">-->
+      <!--                  Пошарити-->
+      <!--                </v-btn>-->
+      <!--              </div>-->
 
-<!--            </v-card-text>-->
-<!--          </v-card>-->
-<!--        </v-bottom-sheet>-->
-<!--      </div>-->
+      <!--            </v-card-text>-->
+      <!--          </v-card>-->
+      <!--        </v-bottom-sheet>-->
+      <!--      </div>-->
 
       <div class="text-center">
-          <v-dialog
-              v-model="dialog"
-              activator="parent"
-              width="auto"
-          >
-            <v-card>
-              <v-card-text>
-<!--                <v-select-->
-<!--                    :items="groups"-->
-<!--                    variant="outlined"-->
-<!--                    label="Групи"-->
-<!--                    v-model="sharePostBody.groups"-->
-<!--                >-->
-<!--                </v-select>-->
-                <v-select
-                    :items="groups"
-                    item-title="id"
-                    variant="outlined"
-                    label="Групи"
-                    multiple
-                    v-model="sharePostBody.groups"
-                >
-                  <template v-slot:item="{ props, item }">
-                    <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
-                  </template>
-                </v-select>
+        <v-dialog
+            v-model="dialog"
+            activator="parent"
+            width="auto"
+        >
+          <v-card>
+            <v-card-text>
+              <!--                <v-select-->
+              <!--                    :items="groups"-->
+              <!--                    variant="outlined"-->
+              <!--                    label="Групи"-->
+              <!--                    v-model="sharePostBody.groups"-->
+              <!--                >-->
+              <!--                </v-select>-->
+              <v-select
+                  :items="groups"
+                  item-title="id"
+                  variant="outlined"
+                  label="Групи"
+                  multiple
+                  v-model="sharePostBody.groups"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
+                </template>
+              </v-select>
 
-                <v-text-field
-                    label="Коментар"
-                    variant="outlined"
-                    v-model="sharePostBody.comment"
+              <v-text-field
+                  label="Коментар"
+                  variant="outlined"
+                  v-model="sharePostBody.comment"
 
-                >
-                </v-text-field>
+              >
+              </v-text-field>
 
-                <v-text-field
-                    label="Дата здачі"
-                    variant="outlined"
-                    type="datetime-local"
-                    v-model="sharePostBody.deadline"
+              <v-text-field
+                  label="Дата здачі"
+                  variant="outlined"
+                  type="datetime-local"
+                  v-model="sharePostBody.deadline"
 
-                >
-                </v-text-field>
+              >
+              </v-text-field>
 
-                <div class="btnShare">
-                  <v-btn class="btn_share_post" @click="sharePost()">
-                    Пошарити
-                  </v-btn>
-                </div>
+              <div class="btnShare">
+                <v-btn class="btn_share_post" @click="sharePost()">
+                  Пошарити
+                </v-btn>
+              </div>
 
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </div>
     </ion-footer>
 
@@ -544,6 +575,7 @@ const displayPost = ref(false)
 let sheet_change_post = ref(false)
 let sheet = ref(false);
 let r, c;
+const tab = ref('posts')
 const dialog = ref(false)
 let sheet_change = ref(false);
 let sheet_parent = ref(false);
@@ -554,7 +586,7 @@ let allPost = JSON.parse(localStorage.getItem('allPost'));
 let items: any = []
 const outlineNone = ref('none')
 const outlinePost = ref('1px solid grey')
-let switchMode = ref(false)
+let switchMode = ref(true)
 let sheet_read = ref(false)
 let groups: any = []
 let sharePostBody = reactive({
@@ -608,46 +640,46 @@ async function createPost() {
     type: task$.type
   }
 
-    task$.answer = "";
-    task$.title = "";
-    task$.description = "";
-    task$.deadline = "";
+  task$.answer = "";
+  task$.title = "";
+  task$.description = "";
+  task$.deadline = "";
 
 
   PostStore.createPost(body);
 
 }
 
-const updateCourse = () => {
-  const changedCourse: Course = {
-    name: courseUpdate.name,
-    discipline: courseUpdate.discipline,
-    grade: +courseUpdate.grade,
-    yearsFrom: +courseUpdate.yearsFrom,
-    yearsTo: +courseUpdate.yearsTo
-  }
+// const updateCourse = () => {
+//   const changedCourse: Course = {
+//     name: courseUpdate.name,
+//     discipline: courseUpdate.discipline,
+//     grade: +courseUpdate.grade,
+//     yearsFrom: +courseUpdate.yearsFrom,
+//     yearsTo: +courseUpdate.yearsTo
+//   }
+//
+//   CourseStore.updateCourse(changedCourse)
+//
+//   courseUpdate.name = "";
+//   courseUpdate.discipline = "";
+//   courseUpdate.grade = null;
+//   courseUpdate.yearsFrom = null;
+//   courseUpdate.yearsTo = null;
+//
+// }
 
-  CourseStore.updateCourse(changedCourse)
-
-  courseUpdate.name = "";
-  courseUpdate.discipline = "";
-  courseUpdate.grade = null;
-  courseUpdate.yearsFrom = null;
-  courseUpdate.yearsTo = null;
-
-}
-
-const deletePost = () => {
-  PostStore.deletePost()
-  sheet_change_post.value = false
-}
+// const deletePost = () => {
+//   PostStore.deletePost()
+//   sheet_change_post.value = false
+// }
 
 const sharePostOpenSheet = () => {
-  sheet_change_post.value = false
+  sheet_read.value = false
   dialog.value = true
   groups = []
-  for (let i of GroupStore.allGroups){
-    for (let j of i){
+  for (let i of GroupStore.allGroups) {
+    for (let j of i) {
       groups.push({id: j.id, name: j.name})
     }
   }
@@ -662,34 +694,33 @@ const sharePost = () => {
   dialog.value = false
 }
 
-const updatePost = () => {
-  const body: UpdatePost = {
-    title: PostStore.info.title,
-    description: PostStore.info.description,
-    answer: PostStore.info.answer,
-    points: +PostStore.info.points,
-    deadline: new Date(task$.deadline).toISOString(),
-    requiredPoints: PostStore.info.requiredPoints,
-    type: PostStore.info.type,
-    color: PostStore.info.color
-  }
+// const updatePost = () => {
+//   const body: UpdatePost = {
+//     title: PostStore.info.title,
+//     description: PostStore.info.description,
+//     answer: PostStore.info.answer,
+//     points: +PostStore.info.points,
+//     deadline: new Date(task$.deadline).toISOString(),
+//     requiredPoints: PostStore.info.requiredPoints,
+//     type: PostStore.info.type,
+//     color: PostStore.info.color
+//   }
+//
+//   PostStore.updatePost(body)
+//   sheet_change_post.value = false
+// }
 
-  PostStore.updatePost(body)
-  sheet_change_post.value = false
-}
 
-
-
-const deleteCourse = () => {
-  CourseStore.deleteCourse()
-  router.replace('/main/courses')
-}
+// const deleteCourse = () => {
+//   CourseStore.deleteCourse()
+//   router.replace('/main/courses')
+// }
 
 const loadCourse = () => {
   console.log(CourseStore.findCourseById())
 }
 
-const getPostByCords = (row : any, column : any) => {
+const getPostByCords = (row: any, column: any) => {
   return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
 
@@ -705,29 +736,29 @@ const mapPosts = () => {
   return mappedUniqueSet
 }
 
-const handlePost = (row : any, column : any) => {
+const handlePost = (row: any, column: any) => {
 
   let idPost
-  if(getPostByCords(row + 1, column)){
+  if (getPostByCords(row + 1, column)) {
 
-    if(switchMode.value === true){
+    if (switchMode.value === true) {
       sheet_read.value = true
-      for (let i of PostStore.PostInfo){
-        if(row + 1 === i.row && column === i.column){
+      for (let i of PostStore.PostInfo) {
+        if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
         }
       }
-    } else{
+    } else {
       GroupStore.allGroups = []
       sheet_change_post.value = true
       GroupStore.getCreatedGroupsList()
 
       console.log('edit create')
-      for (let i of PostStore.PostInfo){
-        if(row + 1 === i.row && column === i.column){
+      for (let i of PostStore.PostInfo) {
+        if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
@@ -737,13 +768,11 @@ const handlePost = (row : any, column : any) => {
     }
 
 
-
-
-  } else{
+  } else {
     items = []
     task$.parentId = null;
-    for (let i of PostStore.PostInfo){
-      if(i.row === row){
+    for (let i of PostStore.PostInfo) {
+      if (i.row === row) {
         items.push(i.id)
       }
     }
@@ -763,13 +792,13 @@ const createNewPost = (column) => {
   const uniqueSet = Array.from(new Set(rows))
   console.log(Math.max(...uniqueSet) + 1)
   console.log(rows)
-  if (rows.length === 0){
+  if (rows.length === 0) {
     r = 1
-  } else{
+  } else {
     items = []
     r = Math.max(...uniqueSet) + 1;
-    for (let i of PostStore.PostInfo){
-      if(i.row === r - 1){
+    for (let i of PostStore.PostInfo) {
+      if (i.row === r - 1) {
         items.push(i.id)
       }
     }
@@ -780,6 +809,7 @@ const createNewPost = (column) => {
 
 loadCourse();
 PostStore.findPostWithRow()
+CourseStore.groupsByCourseId()
 </script>
 
 <style scoped>
@@ -789,8 +819,8 @@ PostStore.findPostWithRow()
   width: 80%;
   margin: 15px auto;
   color: gray;
-  background: rgb(223,226,216);
-  background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
+  background: rgb(223, 226, 216);
+  background: linear-gradient(110deg, rgba(223, 226, 216, 1) 0%, rgba(225, 255, 249, 1) 100%);
   border-radius: 15px;
   outline: cyan 1px ridge;
 
@@ -836,49 +866,76 @@ ion-col {
   overflow: hidden;
 }
 
-.selectPost{
+.selectPost {
   margin: 15px 25px 0 25px;
 }
 
-.btnAddTaskParent{
+.btnAddTaskParent {
   display: flex;
   justify-content: center;
 
 }
-.btnAddPostParent{
+
+.btnAddPostParent {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.btn_changes_post{
+.btn_changes_post {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.btn_change_post, .btn_del_post{
+.btn_change_post, .btn_del_post {
   width: 80%;
   margin: 10px;
   color: #fff;
 }
 
-.color_post_read{
+.color_post_read {
   width: 20px;
   height: 20px;
   margin: 10px auto;
   border-radius: 50px;
 }
 
-.btnShare{
+.btnShare {
   display: flex;
   justify-content: center;
 }
-.btn_share_post{
+
+.btn_share_post {
   width: 85%;
-  background: rgb(85,255,216);
-  background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
+  background: rgb(85, 255, 216);
+  background: linear-gradient(207deg, rgba(85, 255, 216, 1) 16%, rgba(214, 255, 255, 1) 100%);
   outline: 2px cyan ridge;
+}
+
+.setting_course {
+  display: flex;
+  justify-content: end;
+}
+
+.btn_setting_course {
+  background: transparent;
+
+}
+.item_group_in_course{
+  font-family: "Leelawadee UI", sans-serif;
+  margin: 12px;
+  color: grey;
+  border-radius: 15px;
+  background: rgb(223,226,216);
+  background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
+}
+.list_groups_in_course{
+  width: 100%;
+}
+
+.card_groups{
+  width: 90%;
 }
 </style>

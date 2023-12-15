@@ -32,11 +32,16 @@ function coursesByGroupId(groupId: any) {
     return axios.get(`courses/byGroup/${groupId}?page=1&count=10`)
 }
 
+function groupsByCourseId() {
+    let courseId = localStorage.getItem('courseId')
+    return axios.get(`/groups/${courseId}?page=1&count=10`)
+}
 export default {
     createCourse,
     getAllCourse,
     findCourseById,
     deleteCourse,
     updateCourse,
-    coursesByGroupId
+    coursesByGroupId,
+    groupsByCourseId
 }

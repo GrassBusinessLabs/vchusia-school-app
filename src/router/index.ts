@@ -16,36 +16,12 @@ import CourseStudent from "@/components/Student/CourseStudent.vue";
 import GroupStudent from "@/components/Student/GroupStudent.vue";
 import GroupPage from "@/components/Teacher/GroupPage/GroupPage.vue";
 import CourseInGroup from "@/components/Teacher/GroupPage/CourseInGroup.vue";
+import SettingCourse from "@/components/Teacher/Course/SettingCourse.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/auth/start'
   },
-  // {
-  //   path: '/start',
-  //   name: 'Start',
-  //   component: StartPage,
-  // },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: () => import('../views/LoginPage.vue'),
-  // },
-  // {
-  //   path: '/signup',
-  //   name: 'SignUp',
-  //   component: () => import('../views/SignUpPage.vue')
-  // },
-  // {
-  //   path: '/teacher-room',
-  //   name: 'TeacherCabinet',
-  //   component: TeacherCabinet,
-  // },
-  // {
-  //   path: '/student-room',
-  //   name: 'StudentCabinet',
-  //   component: StudentCabinet
-  // },
   {
     path: '/course',
     name: 'Course',
@@ -106,7 +82,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'course',
         name: 'Course',
         component: CoursePage,
-
       },
       {
         path: 'student',
@@ -132,6 +107,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'courseInGroup',
         name: 'CourseInGroup',
         component: CourseInGroup
+      },
+      {
+        path: 'setting',
+        name: 'SettingCourse',
+        component: SettingCourse
       }
 
 
