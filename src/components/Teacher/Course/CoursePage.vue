@@ -753,7 +753,7 @@ const handlePost = (row: any, column: any) => {
       }
     } else {
       GroupStore.allGroups = []
-      sheet_change_post.value = true
+      // sheet_change_post.value = true
       GroupStore.getCreatedGroupsList()
 
       console.log('edit create')
@@ -776,11 +776,8 @@ const handlePost = (row: any, column: any) => {
         items.push(i.id)
       }
     }
-    sheet_parent.value = true
     r = row + 1;
     c = column
-    console.log(row + 1, column)
-    console.log('create')
 
   }
   return idPost, r, c, items

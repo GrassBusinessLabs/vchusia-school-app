@@ -93,10 +93,11 @@ const getUsersInGroup = (id: any) => {
 
 getUsersInGroup(GroupStore.idGroup)
 
-const addCourseToGroup = () => {
+async function addCourseToGroup () {
   courseAddInGroup.value = false
-  GroupStore.addCourseToGroup(groupId, courseSelected.id)
+  await GroupStore.addCourseToGroup(groupId, courseSelected.id)
   courseSelected.id = null
+  CourseStore.coursesByGroupId(groupId)
 }
 const copyEmail = (email: any) => {
   try {
@@ -108,27 +109,30 @@ const copyEmail = (email: any) => {
 }
 
 const replaceToCourse = (info: any) => {
+  console.log(info)
   router.replace('/main/courseInGroup')
   CourseStore.thisCourse = info
 }
 
-const deleteCourseFromGroup = (courseId: any) => {
-   GroupStore.removeCourseFromGroup(groupId, courseId)
+ async function deleteCourseFromGroup (courseId: any) {
+   await GroupStore.removeCourseFromGroup(groupId, courseId)
+   CourseStore.coursesByGroupId(groupId)
 }
 
-let totalCourses = CourseStore.total
-let courses: any[]
-const loadCourses = () => {
-  courses = []
-  CourseStore.getAllCourse({page: 1, count: totalCourses})
-  for(let i of CourseStore.items){
-    courses.push({id: i.id, name: i.name})
-  }
-  console.log(courses)
-}
-loadCourses();
-
+// let totalCourses = CourseStore.total
+// let courses: any[]
+// const loadCourses = () => {
+//   courses = []
+//   CourseStore.getAllCourse({page: 1, count: totalCourses})
+//   for(let i of CourseStore.items){
+//     courses.push({id: i.id, name: i.name})
+//   }
+//   console.log(courses)
+// }
+// loadCourses();
+onMounted(() => {GroupStore.getCreatedGroupsList()})
 onMounted(() => {CourseStore.coursesByGroupId(groupId)})
+
 </script>
 
 <template>
@@ -154,17 +158,28 @@ onMounted(() => {CourseStore.coursesByGroupId(groupId)})
         <p class="title_courses_list">Список курсів</p>
         <v-list class="list_courses">
           <div v-for="i of CourseStore.courseInGroup">
-            <v-list-item :title="i.name" :subtitle="i.discipline" class="course_item" @click="replaceToCourse(i)" ><pre class="role_users">Клас: {{i.grade}}</pre>
-<!--              <template v-slot:append>-->
+            <v-list-item class="course_item"  >
+              <div @click="replaceToCourse(i)">
+                <v-list-item-title>
+                  {{i.name}}
+                </v-list-item-title>
 
+                <v-list-item-subtitle>
+                  {{i.discipline}}
+                </v-list-item-subtitle>
+              <v-list-item-action>
+                <pre class="role_users">Клас: {{i.grade}}</pre>
+              </v-list-item-action>
+              </div>
+              <template v-slot:append>
 
-<!--                <v-btn-->
-<!--                    color="grey-lighten-1"-->
-<!--                    icon="mdi-trash-can-outline"-->
-<!--                    variant="text"-->
-<!--                    @click="deleteCourseFromGroup(i.id)"-->
-<!--                ></v-btn>-->
-<!--              </template>-->
+                <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-trash-can-outline"
+                    variant="text"
+                    @click="deleteCourseFromGroup(i.id)"
+                ></v-btn>
+              </template>
 </v-list-item>
 
           </div>
@@ -225,7 +240,7 @@ onMounted(() => {CourseStore.coursesByGroupId(groupId)})
         <v-card height="300">
           <v-card-text>
             <v-select
-                :items="courses"
+                :items="GroupStore.allCourses"
                 prepend-icon="mdi-book-outline"
                 label="Вибрати курс"
                 item-title="id"

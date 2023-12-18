@@ -63,9 +63,9 @@
       </ion-content>
       <v-layout class="overflow-visible layout-footer">
         <v-bottom-navigation class="bottom-nav"
-                             mode="shift"
                              v-model="value"
-                             :bg-color="color">
+                             :bg-color="color"
+        >
           <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Курси</span>
@@ -120,6 +120,7 @@ import {
 import {course} from "@/stores/course";
 import CoursePage from "@/components/Teacher/Course/CoursePage.vue";
 import router from "@/router";
+import {routerKey} from "vue-router";
 
 
 
@@ -159,6 +160,9 @@ export default defineComponent({
     }
   },
   computed: {
+    routerKey() {
+      return routerKey
+    },
     color () {
       switch (this.value) {
         case 0: return '#ffedba'
@@ -250,7 +254,7 @@ ion-item:hover {
   color: #000;
 }
 .btn-bottom-nav span{
-  padding-top: 10px;
+  padding-top: 5px;
   font-weight: 900;
 }
 .btn-course-bottom span{

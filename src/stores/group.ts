@@ -10,6 +10,7 @@ interface State {
     allGroups: any,
     myGroups: any,
     // idGroup: any,
+    allCourses: any,
     idGroup: number | null
     usersInGroup: any,
 }
@@ -21,6 +22,7 @@ export const group = defineStore('group', {
         allGroups: [JSON.parse(localStorage.getItem('allGroups'))],
         myGroups: [],
         // idGroup: null,
+        allCourses: [],
         usersInGroup: [],
         idGroup: Number(localStorage.getItem('idGroup')) || null,
 
@@ -82,6 +84,9 @@ export const group = defineStore('group', {
                 this.allGroups = []
                 const response: any = await GroupApi.getCreatedGroupsList()
                 this.allGroups.push(response.items)
+                const page = {page: 1, count: 10}
+                const allCourseResponse = await CourseApi.getAllCourse(page)
+                this.allCourses = allCourseResponse.items
                 localStorage.setItem('allGroups', JSON.stringify(response.items))
                 console.log(response)
             } catch (e) {
@@ -128,10 +133,9 @@ export const group = defineStore('group', {
             }
         },
 
-        async removeCourseFromGroup(groupId: any, courseId: any){
+        async removeCourseFromGroup(groupId: any, courseId: any): Promise <void>{
             try {
-                const response: any = GroupApi.removeCourseFromGroup(groupId, courseId)
-                this.getCreatedGroupsList()
+                const response: any = await GroupApi.removeCourseFromGroup(groupId, courseId)
                 console.log(response)
             } catch (e) {
                 console.log(e)

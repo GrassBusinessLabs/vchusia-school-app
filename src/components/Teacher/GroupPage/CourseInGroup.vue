@@ -81,9 +81,6 @@ const handlePost = (row : any, column : any) => {
 
 }
 
-const deleteCourseFromGroup = (courseId: any) => {
-  GroupStore.removeCourseFromGroup(GroupStore.idGroup, courseId)
-}
 
 PostStore.findPostWithRowGroupCourse()
 </script>
@@ -100,11 +97,7 @@ PostStore.findPostWithRowGroupCourse()
   </div>
 </ion-header>
 
-  <div class="d-flex justify-center mb-6">
-    <v-btn color="red" @click="deleteCourseFromGroup(CourseStore.thisCourse.id) ">
-      Видалити курс
-    </v-btn>
-  </div>
+
 
   <ion-content>
     <v-layout>
