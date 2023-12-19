@@ -42,7 +42,7 @@
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header>
+      <ion-header v-if="route.path !== '/main/tape/tape' && route.path !== '/main/tape/task'">
         <div>
           <v-toolbar
               dark
@@ -61,10 +61,12 @@
         <ion-router-outlet/>
 
       </ion-content>
-      <v-layout class="overflow-visible layout-footer">
-        <v-bottom-navigation class="bottom-nav"
+      <v-layout class="overflow-visible layout-footer" v-if="route.path !== '/main/tape/tape' && route.path !== '/main/tape/task'">
+        <v-bottom-navigation class="bottom-nav rounded custom"
                              v-model="value"
                              :bg-color="color"
+                             :grow='true'
+
         >
           <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
@@ -99,6 +101,8 @@ import GroupTeacher from "@/components/Teacher/GroupTeacher.vue";
 import PupilsTeacher from "@/components/Teacher/PupilsTeacher.vue"
 import {ref} from "vue";
 import {auth} from "@/stores/auth";
+import { useRoute } from 'vue-router'
+
 
 import {
   IonButtons,
@@ -147,7 +151,7 @@ export default defineComponent({
     TaskTeacher,
     GroupTeacher,
     PupilsTeacher,
-    IonRouterOutlet
+    IonRouterOutlet,
   },
 
   data() {
@@ -156,7 +160,8 @@ export default defineComponent({
       authStore: auth(),
       value: 0,
       numCount: 0,
-      role: ""
+      role: "",
+      route: useRoute()
     }
   },
   computed: {
@@ -176,6 +181,9 @@ export default defineComponent({
 
 
   methods: {
+    router() {
+      return router
+    },
     checkRole(){
       let user = JSON.parse(localStorage.getItem('user'))
       this.role = user.role

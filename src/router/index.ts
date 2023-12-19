@@ -17,6 +17,9 @@ import GroupStudent from "@/components/Student/GroupStudent.vue";
 import GroupPage from "@/components/Teacher/GroupPage/GroupPage.vue";
 import CourseInGroup from "@/components/Teacher/GroupPage/CourseInGroup.vue";
 import SettingCourse from "@/components/Teacher/Course/SettingCourse.vue";
+import GroupTapePage from "@/components/layouts/GroupTapePage.vue";
+import TapePage from "@/components/Teacher/Course/Tape/TapePage.vue";
+import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -28,6 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     component: CoursePage,
 
   },
+
   {
     path: '/auth',
     component: auth,
@@ -112,6 +116,23 @@ const routes: Array<RouteRecordRaw> = [
         path: 'setting',
         name: 'SettingCourse',
         component: SettingCourse
+      },
+      {
+        path: 'tape',
+        name: 'TapePage',
+        component: GroupTapePage,
+        children: [
+          {
+            path: 'tape',
+            name: 'Tape',
+            component: TapePage
+          },
+          {
+            path: 'task',
+            name: 'Task',
+            component: TaskPage
+          }
+        ]
       }
 
 

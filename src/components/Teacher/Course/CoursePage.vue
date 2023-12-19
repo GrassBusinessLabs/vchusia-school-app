@@ -22,7 +22,6 @@
 
       <v-card class="ma-6" elevation="0">
         <v-tabs fixed-tabs bg-color="teal-lighten-5" v-model="tab">
-          <v-tab value="posts" prepend-icon="mdi-calendar-check">Пости</v-tab>
           <v-tab value="groups" prepend-icon="mdi-account-group">Групи</v-tab>
         </v-tabs>
       </v-card>
@@ -46,39 +45,39 @@
 
 
       <v-window v-model="tab">
-        <v-window-item value="posts">
-          <p class="text-center ma-2" v-show="PostStore.PostInfo.length < 1">Постів немає</p>
-          <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">
-            <v-card elevation="0"
-                    class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
-                    id="parentGrid">
+<!--        <v-window-item value="posts">-->
+<!--          <p class="text-center ma-2" v-show="PostStore.PostInfo.length < 1">Постів немає</p>-->
+<!--          <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">-->
+<!--            <v-card elevation="0"-->
+<!--                    class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"-->
+<!--                    id="parentGrid">-->
 
-              <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">
-                <ion-row v-for="(post, indexRow) in mapPosts()">
-                  <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"
-                           :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">
-                    {{ getPostByCords(indexRow + 1, indexCol)?.id }}
-                  </ion-col>
-                </ion-row>
+<!--              <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">-->
+<!--                <ion-row v-for="(post, indexRow) in mapPosts()">-->
+<!--                  <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"-->
+<!--                           :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">-->
+<!--                    {{ getPostByCords(indexRow + 1, indexCol)?.id }}-->
+<!--                  </ion-col>-->
+<!--                </ion-row>-->
 
-                <ion-row v-show="switchMode === false">
-                  <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent"
-                           v-for="(indexCol, index) in 5"></ion-col>
-                </ion-row>
+<!--                <ion-row v-show="switchMode === false">-->
+<!--                  <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent"-->
+<!--                           v-for="(indexCol, index) in 5"></ion-col>-->
+<!--                </ion-row>-->
 
-              </ion-grid>
+<!--              </ion-grid>-->
 
 
-            </v-card>
-          </v-layout>
-        </v-window-item>
+<!--            </v-card>-->
+<!--          </v-layout>-->
+<!--        </v-window-item>-->
         <v-window-item value="groups">
           <p v-show="CourseStore.groupsInCourse.length < 1" class="text-center">Групи не прив'язані</p>
 
           <v-layout>
             <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="0">
               <v-list class="list_groups_in_course">
-                <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course"></v-list-item>
+                <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course" @click="router.replace('/main/tape/tape')"></v-list-item>
               </v-list>
             </v-card>
           </v-layout>
@@ -89,185 +88,185 @@
 
 
     <ion-footer>
-      <div class="text-center">
-        <v-bottom-sheet v-model="sheet_change">
-          <v-card
-              class="text-center"
-              height="700"
-          >
-            <v-card-text>
-              <br>
-              <br>
-              <div>
-                <v-text-field
-                    class="input-course"
-                    color="primary"
-                    label="Назва курсу"
-                    variant="outlined"
-                    prepend-icon="mdi-book-outline"
-                    v-model="courseUpdate.name">
-                </v-text-field>
+<!--      <div class="text-center">-->
+<!--        <v-bottom-sheet v-model="sheet_change">-->
+<!--          <v-card-->
+<!--              class="text-center"-->
+<!--              height="700"-->
+<!--          >-->
+<!--            <v-card-text>-->
+<!--              <br>-->
+<!--              <br>-->
+<!--              <div>-->
+<!--                <v-text-field-->
+<!--                    class="input-course"-->
+<!--                    color="primary"-->
+<!--                    label="Назва курсу"-->
+<!--                    variant="outlined"-->
+<!--                    prepend-icon="mdi-book-outline"-->
+<!--                    v-model="courseUpdate.name">-->
+<!--                </v-text-field>-->
 
-                <v-text-field
-                    class="input-course"
-                    v-model="courseUpdate.discipline"
-                    color="primary"
-                    label="Назва дисципліни"
-                    prepend-icon="mdi-information-outline"
+<!--                <v-text-field-->
+<!--                    class="input-course"-->
+<!--                    v-model="courseUpdate.discipline"-->
+<!--                    color="primary"-->
+<!--                    label="Назва дисципліни"-->
+<!--                    prepend-icon="mdi-information-outline"-->
 
-                    variant="outlined">
+<!--                    variant="outlined">-->
 
-                </v-text-field>
+<!--                </v-text-field>-->
 
-                <v-text-field
-                    class="input-course"
-                    v-model="courseUpdate.grade"
-                    color="primary"
-                    label="Клас"
-                    prepend-icon="mdi-google-classroom"
-                    variant="outlined">
+<!--                <v-text-field-->
+<!--                    class="input-course"-->
+<!--                    v-model="courseUpdate.grade"-->
+<!--                    color="primary"-->
+<!--                    label="Клас"-->
+<!--                    prepend-icon="mdi-google-classroom"-->
+<!--                    variant="outlined">-->
 
-                </v-text-field>
+<!--                </v-text-field>-->
 
-                <v-text-field
-                    class="input-course"
-                    v-model="courseUpdate.yearsFrom"
-                    color="primary"
-                    label="Вік від"
-                    prepend-icon="mdi-account-child-outline"
-                    variant="outlined">
-
-
-                </v-text-field>
-
-                <v-text-field
-                    class="input-course"
-                    v-model="courseUpdate.yearsTo"
-                    color="primary"
-                    prepend-icon="mdi-human-child"
-                    label="Вік до"
-                    variant="outlined"
-                >
-                </v-text-field>
+<!--                <v-text-field-->
+<!--                    class="input-course"-->
+<!--                    v-model="courseUpdate.yearsFrom"-->
+<!--                    color="primary"-->
+<!--                    label="Вік від"-->
+<!--                    prepend-icon="mdi-account-child-outline"-->
+<!--                    variant="outlined">-->
 
 
-                <v-btn class="btnAddCourse" variant="tonal" color="indigo"
-                       @click="updateCourse">
-                  Змінити курс
-                </v-btn>
+<!--                </v-text-field>-->
 
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-bottom-sheet>
-      </div>
-
-
-      <div class="text-center d-flex">
-        <v-bottom-sheet v-model="sheet_change_post">
-          <v-card height="750">
-
-            <v-card-text>
-              <v-select
-                  label="Тип завдання"
-                  :items="['Пост', 'Завдання']"
-                  variant="outlined"
-                  color="primary"
-                  v-model="PostStore.info.type"
-                  prepend-icon="mdi-file-tree"
-              >
-
-              </v-select>
-
-              <v-text-field
-                  class="inputTaskStyled"
-                  variant="outlined"
-                  label="Заголовок"
-                  prepend-icon="mdi-bookmark-outline"
-                  color="primary"
-                  v-model="PostStore.info.title"
-              >
-              </v-text-field>
-
-              <v-text-field
-                  class="inputTaskStyled"
-                  variant="outlined"
-                  label="Опис завдання"
-                  color="primary"
-                  prepend-icon="mdi-information-outline"
-                  v-model="PostStore.info.description"
+<!--                <v-text-field-->
+<!--                    class="input-course"-->
+<!--                    v-model="courseUpdate.yearsTo"-->
+<!--                    color="primary"-->
+<!--                    prepend-icon="mdi-human-child"-->
+<!--                    label="Вік до"-->
+<!--                    variant="outlined"-->
+<!--                >-->
+<!--                </v-text-field>-->
 
 
-              >
-              </v-text-field>
+<!--                <v-btn class="btnAddCourse" variant="tonal" color="indigo"-->
+<!--                       @click="updateCourse">-->
+<!--                  Змінити курс-->
+<!--                </v-btn>-->
 
-              <v-text-field
-                  class="inputTaskStyled"
-                  variant="outlined"
-                  label="Відповідь"
-                  color="primary"
-                  prepend-icon="mdi-forum"
-                  v-model="PostStore.info.answer"
-
-
-              >
-              </v-text-field>
-
-              <v-text-field
-                  class="inputTaskStyled"
-                  type="number"
-                  variant="outlined"
-                  label="Кількість балів"
-                  color="primary"
-                  prepend-icon="mdi-star"
-                  v-model="PostStore.info.points"
+<!--              </div>-->
+<!--            </v-card-text>-->
+<!--          </v-card>-->
+<!--        </v-bottom-sheet>-->
+<!--      </div>-->
 
 
-              >
-              </v-text-field>
+<!--      <div class="text-center d-flex">-->
+<!--        <v-bottom-sheet v-model="sheet_change_post">-->
+<!--          <v-card height="750">-->
 
-              <v-text-field
-                  class="inputTaskStyled"
-                  type="datetime-local"
-                  variant="outlined"
-                  label="Дата здачі"
-                  color="primary"
-                  prepend-icon="mdi-calendar-range"
-                  v-model="task$.deadline"
+<!--            <v-card-text>-->
+<!--              <v-select-->
+<!--                  label="Тип завдання"-->
+<!--                  :items="['Пост', 'Завдання']"-->
+<!--                  variant="outlined"-->
+<!--                  color="primary"-->
+<!--                  v-model="PostStore.info.type"-->
+<!--                  prepend-icon="mdi-file-tree"-->
+<!--              >-->
 
+<!--              </v-select>-->
 
-              >
-              </v-text-field>
+<!--              <v-text-field-->
+<!--                  class="inputTaskStyled"-->
+<!--                  variant="outlined"-->
+<!--                  label="Заголовок"-->
+<!--                  prepend-icon="mdi-bookmark-outline"-->
+<!--                  color="primary"-->
+<!--                  v-model="PostStore.info.title"-->
+<!--              >-->
+<!--              </v-text-field>-->
 
-              <v-select
-                  :items="['blue', 'red', 'yellow', 'green']"
-                  variant="outlined"
-                  label="Колір завдання"
-                  density="compact"
-                  prepend-icon="mdi-palette"
-                  v-model="PostStore.info.color"
-              ></v-select>
-
-              <div class="btn_changes_post">
-                <v-btn class="btn_change_post" color="#9C27B0" @click="updatePost()">
-                  Редагувати
-                </v-btn>
-
-                <v-btn class="btn_del_post" color="#F44336" @click="deletePost()">
-                  Видалити
-                </v-btn>
-
-                <v-btn class="btn_del_post" color="yellow" @click="sharePostOpenSheet()">
-                  Пошарити пост
-                </v-btn>
-              </div>
-
-            </v-card-text>
+<!--              <v-text-field-->
+<!--                  class="inputTaskStyled"-->
+<!--                  variant="outlined"-->
+<!--                  label="Опис завдання"-->
+<!--                  color="primary"-->
+<!--                  prepend-icon="mdi-information-outline"-->
+<!--                  v-model="PostStore.info.description"-->
 
 
-          </v-card>
-        </v-bottom-sheet>
-      </div>
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <v-text-field-->
+<!--                  class="inputTaskStyled"-->
+<!--                  variant="outlined"-->
+<!--                  label="Відповідь"-->
+<!--                  color="primary"-->
+<!--                  prepend-icon="mdi-forum"-->
+<!--                  v-model="PostStore.info.answer"-->
+
+
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <v-text-field-->
+<!--                  class="inputTaskStyled"-->
+<!--                  type="number"-->
+<!--                  variant="outlined"-->
+<!--                  label="Кількість балів"-->
+<!--                  color="primary"-->
+<!--                  prepend-icon="mdi-star"-->
+<!--                  v-model="PostStore.info.points"-->
+
+
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <v-text-field-->
+<!--                  class="inputTaskStyled"-->
+<!--                  type="datetime-local"-->
+<!--                  variant="outlined"-->
+<!--                  label="Дата здачі"-->
+<!--                  color="primary"-->
+<!--                  prepend-icon="mdi-calendar-range"-->
+<!--                  v-model="task$.deadline"-->
+
+
+<!--              >-->
+<!--              </v-text-field>-->
+
+<!--              <v-select-->
+<!--                  :items="['blue', 'red', 'yellow', 'green']"-->
+<!--                  variant="outlined"-->
+<!--                  label="Колір завдання"-->
+<!--                  density="compact"-->
+<!--                  prepend-icon="mdi-palette"-->
+<!--                  v-model="PostStore.info.color"-->
+<!--              ></v-select>-->
+
+<!--              <div class="btn_changes_post">-->
+<!--                <v-btn class="btn_change_post" color="#9C27B0" @click="updatePost()">-->
+<!--                  Редагувати-->
+<!--                </v-btn>-->
+
+<!--                <v-btn class="btn_del_post" color="#F44336" @click="deletePost()">-->
+<!--                  Видалити-->
+<!--                </v-btn>-->
+
+<!--                <v-btn class="btn_del_post" color="yellow" @click="sharePostOpenSheet()">-->
+<!--                  Пошарити пост-->
+<!--                </v-btn>-->
+<!--              </div>-->
+
+<!--            </v-card-text>-->
+
+
+<!--          </v-card>-->
+<!--        </v-bottom-sheet>-->
+<!--      </div>-->
 
       <div class="sheet_parent">
         <v-bottom-sheet v-model="sheet_parent">
@@ -522,13 +521,13 @@
 
               <div class="btnShare">
                 <v-btn class="btn_share_post" @click="sharePost()">
-                  Пошарити
+                  Поділитися
                 </v-btn>
               </div>
 
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
+              <v-btn color="primary" block @click="dialog = false">Закрити</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>

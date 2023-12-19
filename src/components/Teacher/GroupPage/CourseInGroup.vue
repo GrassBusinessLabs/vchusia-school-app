@@ -129,8 +129,6 @@ PostStore.findPostWithRowGroupCourse()
             {{PostStore.info.description}}
           </v-card-text>
 
-          <v-card-text>
-          </v-card-text>
 
           <v-card-text>
             Оцінка за завдання <i>{{PostStore.info.points}}</i> <br>
