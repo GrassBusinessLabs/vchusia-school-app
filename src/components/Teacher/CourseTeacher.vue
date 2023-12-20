@@ -153,7 +153,6 @@ const redirect = (value) => {
   let identifier = value.identifier
   localStorage.setItem('courseId', idCourse)
   localStorage.setItem('identifier', identifier)
-  console.log(identifier)
   console.log(idCourse)
 
 }
@@ -168,7 +167,6 @@ let course$ = reactive({
 
 })
 let totalCourses = CourseStore["total"]
-console.log(totalCourses)
 
 
 const loadCourses = () => {

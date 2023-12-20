@@ -7,16 +7,21 @@
 
 
       <div v-for="value in CourseStore.thisCourse" class="course">
+
+
+        <div class="content_course">
+          <div v-for="(name, value, index) in value"
+               v-show="value !== 'id' && value !== 'userid' && value !== 'Завдання' && value !== 'Опис курсу'"
+               class="titlesCourse">
+            {{ value = nameCourse[index] }} <span class="valueCourse"> {{ name }} </span>
+          </div>
+          <b> Ідентифікатор курсу: <span class="valueCourse">{{ identifier }}</span></b>
+        </div>
+
         <div class="setting_course">
           <v-btn icon="mdi-cog-outline" class="btn_setting_course" elevation="0"
                  @click="router.replace('/main/setting')"></v-btn>
         </div>
-        <div v-for="(name, value, index) in value"
-             v-show="value !== 'id' && value !== 'userid' && value !== 'Завдання' && value !== 'Опис курсу'"
-             class="titlesCourse">
-          {{ value = nameCourse[index] }} <span class="valueCourse"> {{ name }} </span>
-        </div>
-        <b> Ідентифікатор курсу: <span class="valueCourse">{{ identifier }}</span></b>
       </div>
 
 
@@ -77,7 +82,7 @@
           <v-layout>
             <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="0">
               <v-list class="list_groups_in_course">
-                <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course" @click="router.replace('/main/tape/tape')"></v-list-item>
+                <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course" @click="router.replace('/main/tape/tape'), GroupStore.idGroup = i.id"></v-list-item>
               </v-list>
             </v-card>
           </v-layout>
@@ -402,6 +407,7 @@
               {{ PostStore.info.id }}
               <div class="color_post_read" :style="{backgroundColor: PostStore.info.color}"></div>
             </v-card-subtitle>
+
             <v-card-title class="font-weight-bold">
               {{ PostStore.info.title }}
             </v-card-title>
@@ -566,7 +572,7 @@ import {group} from "@/stores/group";
 
 
 const CourseStore = course();
-const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор'];
+const nameCourse = ['id', 'userid', 'Курс', 'Назва курсу', 'Клас', 'Вік від', 'Вік до', 'Опис курсу', 'Завдання', 'Ідентифікатор' ];
 const identifier = localStorage.getItem('identifier');
 const parentGrid = document.querySelector('.parentGrid');
 const courseId = localStorage.getItem('courseId');
@@ -810,7 +816,7 @@ CourseStore.groupsByCourseId()
 
 <style scoped>
 .course {
-  text-align: center;
+  text-align: left;
   padding: 15px;
   width: 80%;
   margin: 15px auto;
@@ -819,6 +825,8 @@ CourseStore.groupsByCourseId()
   background: linear-gradient(110deg, rgba(223, 226, 216, 1) 0%, rgba(225, 255, 249, 1) 100%);
   border-radius: 15px;
   outline: cyan 1px ridge;
+  display: flex;
+
 
 }
 
@@ -911,14 +919,18 @@ ion-col {
 }
 
 .setting_course {
-  display: flex;
-  justify-content: end;
+  padding: 0;
+  margin: 0;
 }
 
 .btn_setting_course {
   background: transparent;
-
 }
+
+.content_course{
+  padding: 10px;
+}
+
 .item_group_in_course{
   font-family: "Leelawadee UI", sans-serif;
   margin: 12px;
@@ -934,4 +946,6 @@ ion-col {
 .card_groups{
   width: 90%;
 }
+
+
 </style>

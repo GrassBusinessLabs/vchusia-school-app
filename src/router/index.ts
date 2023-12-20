@@ -20,6 +20,10 @@ import SettingCourse from "@/components/Teacher/Course/SettingCourse.vue";
 import GroupTapePage from "@/components/layouts/GroupTapePage.vue";
 import TapePage from "@/components/Teacher/Course/Tape/TapePage.vue";
 import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
+
+const user = JSON.parse(localStorage.getItem('user'))
+const role = user.role
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -90,17 +94,21 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'student',
         name: 'Student',
-        component: AccountStudent
+        component: AccountStudent,
+        meta: { role: 'STUDENT' }
       },
       {
         path: 'course-student',
         name: 'CourseStudent',
-        component: CourseStudent
+        component: CourseStudent,
+        meta: { role: 'STUDENT' }
       },
       {
         path: 'groups-student',
         name: 'GroupStudent',
-        component: GroupStudent
+        component: GroupStudent,
+        meta: { role: 'STUDENT' }
+
       },
       {
         path: 'groupPage',
@@ -142,9 +150,26 @@ const routes: Array<RouteRecordRaw> = [
 
 ]
 
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  mode: 'history'
 })
+
+router.beforeEach((to, from, next) => {
+  const userRole = role; // Отримайте роль користувача, наприклад, збережену в стані або з сервера
+  const requiredRole = to.meta.role;
+
+  // Перевірте, чи користувач має необхідну роль для переходу
+  if (requiredRole && userRole !== requiredRole) {
+    // Якщо немає відповідної ролі, перенаправте користувача на необхідну сторінку
+    next({ name: 'GroupPage' }); // Ви можете створити сторінку з помилкою 403
+  } else {
+    // Якщо роль відповідає, продовжте перехід
+    next();
+  }
+});
 
 export default router

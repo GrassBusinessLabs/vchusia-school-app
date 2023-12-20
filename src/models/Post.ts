@@ -3,7 +3,6 @@ export interface Post {
     requiredPoints: number,
     description: string,
     title:string,
-    deadline: string,
     parentId: number | null,
     points: number,
     row: number,

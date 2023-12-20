@@ -1,7 +1,8 @@
 import {defineStore} from "pinia";
 import {Post, sharePost, UpdatePost} from "@/models/Post";
 import PostApi from "@/http/modules/post"
-
+import { useToast } from 'vue-toastification';
+const toast = useToast();
 interface State {
     posts: any,
     idPostsNow: any,
@@ -9,6 +10,7 @@ interface State {
     total: number,
     info: any
 }
+
 
 export const post = defineStore('post', {
     state: (): State => ({
@@ -23,8 +25,44 @@ export const post = defineStore('post', {
         task: state => state.posts
     },
 
-    actions:{
-        async createPost(body: Post){
+    actions: {
+
+        triggerToastSuccess() {
+            toast.success("Успішно пошарено!", {
+                position: "top-right",
+                timeout: 2000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+            });
+        },
+
+        triggerToastError() {
+            toast.error("Цей пост уже є в стрічці!", {
+                position: "top-right",
+                timeout: 2000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+            });
+        },
+
+
+        async createPost(body: Post) {
             try {
                 const response: any = await PostApi.createPost(body)
                 localStorage.setItem('post', JSON.stringify(response))
@@ -35,26 +73,25 @@ export const post = defineStore('post', {
                 this.findPostWithRow()
 
 
-            }catch (e) {
+            } catch (e) {
                 console.log(e)
             }
         },
 
-        async findPostWithRow(){
+        async findPostWithRow() {
             try {
                 const response: any = await PostApi.findPostWithRow()
                 console.log(response)
                 this.total = response.total
                 localStorage.setItem('allPost', JSON.stringify(response))
                 this.PostInfo = [...response.items]
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e)
             }
         },
 
-        async findPostWithRowGroupCourse(){
-            try{
+        async findPostWithRowGroupCourse() {
+            try {
                 const response: any = await PostApi.findPostWithRowGroupCourse()
                 console.log(response)
                 this.total = response.total
@@ -65,33 +102,32 @@ export const post = defineStore('post', {
             }
         },
 
-        async deletePost(){
+        async deletePost() {
             try {
                 const response: any = await PostApi.deletePost()
                 console.log(response)
                 this.findPostWithRow()
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e)
             }
         },
 
-        async updatePost(body: UpdatePost){
+        async updatePost(body: UpdatePost) {
             try {
                 const response: any = await PostApi.updatePost(body)
                 console.log(response)
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e)
             }
         },
 
-        async sharePost(body: sharePost){
+        async sharePost(body: sharePost) {
             try {
                 const response: any = await PostApi.sharePost(body)
+                this.triggerToastSuccess()
                 console.log(response)
-            }
-            catch (e) {
+            } catch (e) {
+                this.triggerToastError()
                 console.log(e)
             }
         }

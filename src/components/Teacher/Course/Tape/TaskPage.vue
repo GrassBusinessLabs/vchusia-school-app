@@ -97,7 +97,7 @@ const sharePostOpenSheet = () => {
 }
 const sharePost = () => {
   const body: sharePost = {
-    groups: sharePostBody.groups,
+    groups: [GroupStore.idGroup],
     comment: sharePostBody.comment,
     deadline: new Date(sharePostBody.deadline).toISOString()
   }
@@ -165,13 +165,15 @@ const nextPost = (id: any) => {
             <div class="main d-flex flex-column justify-center align-center">
               <v-card-subtitle>
                 {{ PostStore.info.type }}
-                <div class="color_post_read" :style="{backgroundColor: PostStore.info.color}"></div>
               </v-card-subtitle>
 
               <v-card-subtitle>
                 {{ PostStore.info.id }}
-                <div class="color_post_read" :style="{backgroundColor: PostStore.info.color}"></div>
               </v-card-subtitle>
+
+              <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read">
+
+              </div>
 
               <v-card-title class="font-weight-bold">
                 {{ PostStore.info.title }}
@@ -187,8 +189,6 @@ const nextPost = (id: any) => {
 
               <v-card-text class="d-flex justify-center flex-column align-center">
                 Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
-
-                Виконати до <b>{{ PostStore.info.deadline }}</b>
 
                 <div>
                   <v-btn prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
@@ -217,18 +217,19 @@ const nextPost = (id: any) => {
       >
         <v-card>
           <v-card-text>
-            <v-select
-                :items="groups"
-                item-title="id"
-                variant="outlined"
-                label="Групи"
-                multiple
-                v-model="sharePostBody.groups"
-            >
-              <template v-slot:item="{ props, item }">
-                <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>
-              </template>
-            </v-select>
+            <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
+<!--            <v-select-->
+<!--                :items="groups"-->
+<!--                item-title="id"-->
+<!--                variant="outlined"-->
+<!--                label="Групи"-->
+<!--                multiple-->
+<!--                v-model="sharePostBody.groups"-->
+<!--            >-->
+<!--              <template v-slot:item="{ props, item }">-->
+<!--                <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>-->
+<!--              </template>-->
+<!--            </v-select>-->
 
             <v-text-field
                 label="Коментар"
@@ -290,6 +291,11 @@ ion-col {
   background: linear-gradient(207deg, rgba(85, 255, 216, 1) 16%, rgba(214, 255, 255, 1) 100%);
   outline: 2px cyan ridge;
 }
-
+.color_post_read {
+  width: 20px;
+  height: 20px;
+  margin: 10px auto;
+  border-radius: 50px;
+}
 
 </style>

@@ -75,7 +75,6 @@ async function createPost() {
     description: task$.description,
     answer: task$.answer,
     points: +task$.points,
-    deadline: new Date(task$.deadline).toISOString(),
     parentId: Number(task$.parentId),
     requiredPoints: task$.requiredPoints,
     row: r,
@@ -219,7 +218,7 @@ PostStore.findPostWithRow()
 
   <ion-content>
     <v-layout class="mt-4">
-      <v-card elevation="3"
+      <v-card elevation="0"
               class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
               id="parentGrid">
 
@@ -433,19 +432,6 @@ PostStore.findPostWithRow()
               >
               </v-text-field>
 
-              <v-text-field
-                  class="inputTaskStyled"
-                  type="datetime-local"
-                  variant="outlined"
-                  label="Дата здачі"
-                  color="primary"
-                  prepend-icon="mdi-calendar-range"
-                  v-model="task$.deadline"
-
-
-              >
-              </v-text-field>
-
               <v-select
                   :items="['blue', 'red', 'yellow', 'green']"
                   variant="outlined"
@@ -473,16 +459,6 @@ PostStore.findPostWithRow()
         <v-card height="750" >
 
           <v-card-text>
-<!--            <v-select-->
-<!--                label="Тип завдання"-->
-<!--                :items="['Пост', 'Завдання']"-->
-<!--                variant="outlined"-->
-<!--                color="primary"-->
-<!--                v-model="PostStore.info.type"-->
-<!--                prepend-icon="mdi-file-tree"-->
-<!--            >-->
-
-<!--            </v-select>-->
 
             <v-select
                 label="Тип"
@@ -541,19 +517,6 @@ PostStore.findPostWithRow()
                 color="primary"
                 prepend-icon="mdi-star"
                 v-model="PostStore.info.points"
-
-
-            >
-            </v-text-field>
-
-            <v-text-field
-                class="inputTaskStyled"
-                type="datetime-local"
-                variant="outlined"
-                label="Дата здачі"
-                color="primary"
-                prepend-icon="mdi-calendar-range"
-                v-model="task$.deadline"
 
 
             >
