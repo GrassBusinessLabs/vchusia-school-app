@@ -20,87 +20,98 @@
           </ion-accordion>
 
           <ion-item>
-            <ion-button class="btn-changes mr-1" id="open-modal">Змінити пароль</ion-button>
-            <ion-modal ref="modal" trigger="open-modal">
-              <ion-header>
-                <ion-toolbar>
-                  <ion-buttons slot="start">
-                    <ion-button @click="cancel()">Назад</ion-button>
-                  </ion-buttons>
-                  <ion-title>Змінити пароль</ion-title>
-                </ion-toolbar>
-              </ion-header>
-              <ion-content class="ion-padding">
-                <v-text-field
-                    v-model="oldPassword"
-                    ref="input"
-                    type="password"
-                    color="primary"
-                    label="Введіть старий пароль"
-                    placeholder="********"
-                    variant="solo"
-                    density="compact"
-                    class="input-password"
+            <ion-button class="btn-changes mr-1" id="open-modal" @click="sheet_change_password = !sheet_change_password">Змінити пароль</ion-button>
+            <ion-button class="btn-changes" id="open-modal-me" @click="sheet_change_me = !sheet_change_me">Редагувати дані</ion-button>
+          </ion-item>
+
+          <ion-item>
+            <ion-button class="btn-changes" color="warning" @click="dialog_delete_account = !dialog_delete_account">Видалити аккаунт</ion-button>
+          </ion-item>
+
+        </ion-accordion-group>
+
+      </ion-list>
+    </ion-header>
+
+    <ion-footer>
+      <div>
+        <v-bottom-sheet v-model="sheet_change_password">
+          <v-card height="300">
+            <v-card-text>
+
+              <v-text-field
+                v-model="oldPassword"
+                ref="input"
+                type="password"
+                color="primary"
+                label="Введіть старий пароль"
+                placeholder="********"
+                variant="outlined"
+                class="input-password"
                 ></v-text-field>
 
 
                 <v-text-field
                     v-model="newPassword"
                     type="password"
-                    density="compact"
                     ref="input"
                     color="primary"
                     label="Новий пароль"
                     placeholder="********"
-                    variant="solo"
+                    variant="outlined"
                     class="input-password"
                 ></v-text-field>
 
-                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()" class="d-flex mx-auto btn-confirm" width="85%">
-                  Змінити пароль
-                </v-btn>
-              </ion-content>
-            </ion-modal>
-            <ion-button class="btn-changes" id="open-modal-me">Редагувати дані</ion-button>
-            <ion-modal ref="modalMe" trigger="open-modal-me">
-              <ion-header>
 
-                <ion-toolbar>
-                  <ion-buttons slot="start">
-                    <ion-button @click="cancelMe()">Відмінити</ion-button>
-                  </ion-buttons>
-                  <ion-title>Змінити дані</ion-title>
-                </ion-toolbar>
-              </ion-header>
-              <ion-content class="ion-padding">
-
-                <v-text-field
-                    ref="inputMe"
-                    v-model="nameMe"
-                    color="primary"
-                    label="Ваше ім'я"
-                    placeholder="Михайло"
-                    variant="solo"
-                    density="compact"
-                    class="input-password"
-                ></v-text-field>
-                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirmMe()" class="d-flex mx-auto btn-confirm" width="85%">
-                  Редагувати
-                </v-btn>
-              </ion-content>
-            </ion-modal>
-
-          </ion-item>
-          <ion-item>
-            <ion-button class="btn-changes" color="warning" @click="deleteAccount()">Видалити аккаунт</ion-button>
+              <v-btn variant="tonal" color="indigo" @click="confirm()"
+                     class="d-flex mx-auto btn-confirm" width="85%">
+                Змінити пароль
+              </v-btn>
+            </v-card-text>
 
 
-          </ion-item>
-        </ion-accordion-group>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
 
-      </ion-list>
-    </ion-header>
 
+      <div>
+        <v-bottom-sheet v-model="sheet_change_me">
+          <v-card height="300">
+            <v-card-text>
+              <v-text-field
+                  ref="inputMe"
+                  v-model="nameMe"
+                  color="primary"
+                  label="Ваше ім'я"
+                  placeholder="Михайло"
+                  variant="outlined"
+                  class="input-password"
+              ></v-text-field>
+              <v-btn variant="tonal" color="indigo" @click="confirmMe()"
+                     class="d-flex mx-auto btn-confirm" width="85%">
+                Редагувати
+              </v-btn>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
+      <div>
+        <v-dialog v-model="dialog_delete_account">
+          <v-card height="230">
+            <v-card-text class="d-flex flex-column align-center">
+              <h3>Ви бажаєте видалити свій аккаунт?</h3>
+              <v-btn class="w-75 mt-3" color="red" @click="deleteAccount()">Так</v-btn>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-center">
+              <v-btn color="indigo" @click="dialog_delete_account = !dialog_delete_account">Відмінити</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+
+    </ion-footer>
   </ion-page>
 
 
@@ -122,13 +133,18 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+    IonFooter,
   IonInput,
 } from "@ionic/vue";
 import {auth} from "@/stores/auth";
 import axios from "axios";
 import { ref } from 'vue'
+import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 
 const dialog = ref(true)
+const dialog_delete_account = ref(false)
+const sheet_change_password = ref(false);
+const sheet_change_me = ref(false);
 const modal = ref();
 const modalMe = ref();
 const input = ref();
@@ -145,19 +161,18 @@ const user = JSON.parse(localStorage.getItem('user'))
 const token = localStorage.getItem('token')
 
 const confirm = () => {
-  modal.value.$el.dismiss('confirm');
   auth().changePassword({
     "oldPassword": oldPassword,
     "newPassword": newPassword
   })
+  sheet_change_password.value = false
   oldPassword = "";
   newPassword = "";
 
-
 }
 const confirmMe = () => {
-  modalMe.value.$el.dismiss('confirm');
   auth().changeMe({"name": nameMe})
+  sheet_change_me.value = false
   nameMe = ""
 }
 

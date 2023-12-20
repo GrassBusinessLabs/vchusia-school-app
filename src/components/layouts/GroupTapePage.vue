@@ -45,13 +45,13 @@ const value = ref(1)
           </v-btn>
 
 
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.replace('/main/tape/tape'), title = 'Стрічка'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.push('/main/tape/tape'), title = 'Стрічка'">
            <v-icon icon="mdi-tooltip-check-outline" class="icon-course"/>
             <span>Стрічка</span>
 
           </v-btn>
 
-          <v-btn class="btn-bottom-nav" @click="router.replace('/main/tape/task'), title = 'Завдання'">
+          <v-btn class="btn-bottom-nav" @click="router.push('/main/tape/task'), title = 'Завдання'">
             <v-icon icon="mdi-calendar-check-outline"></v-icon>
             <span>Завдання</span>
 

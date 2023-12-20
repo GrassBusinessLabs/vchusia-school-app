@@ -23,83 +23,12 @@
             <ion-button class="btn-changes mr-1" id="open-modal" @click="sheetChangePass = !sheetChangePass">Змінити
               пароль
             </ion-button>
-
-            <!--            <ion-modal ref="modal" trigger="open-modal">-->
-            <!--              <ion-header>-->
-            <!--                <ion-toolbar>-->
-            <!--                  <ion-buttons slot="start">-->
-            <!--                    <ion-button @click="cancel()">Назад</ion-button>-->
-            <!--                  </ion-buttons>-->
-            <!--                  <ion-title>Змінити пароль</ion-title>-->
-            <!--                </ion-toolbar>-->
-            <!--              </ion-header>-->
-            <!--              <ion-content class="ion-padding">-->
-            <!--                <v-text-field-->
-            <!--                    v-model="oldPassword"-->
-            <!--                    ref="input"-->
-            <!--                    type="password"-->
-            <!--                    color="primary"-->
-            <!--                    label="Введіть старий пароль"-->
-            <!--                    placeholder="********"-->
-            <!--                    variant="solo"-->
-            <!--                    density="compact"-->
-            <!--                    class="input-password"-->
-            <!--                ></v-text-field>-->
-
-
-            <!--                <v-text-field-->
-            <!--                    v-model="newPassword"-->
-            <!--                    type="password"-->
-            <!--                    density="compact"-->
-            <!--                    ref="input"-->
-            <!--                    color="primary"-->
-            <!--                    label="Новий пароль"-->
-            <!--                    placeholder="********"-->
-            <!--                    variant="solo"-->
-            <!--                    class="input-password"-->
-            <!--                ></v-text-field>-->
-
-            <!--                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()"-->
-            <!--                       class="d-flex mx-auto btn-confirm" width="85%">-->
-            <!--                  Змінити пароль-->
-            <!--                </v-btn>-->
-            <!--              </ion-content>-->
-            <!--            </ion-modal>-->
             <ion-button class="btn-changes" id="open-modal-me" @click="sheetChangeUser = !sheetChangeUser">Редагувати
               дані
             </ion-button>
-            <!--            <ion-modal ref="modalMe" trigger="open-modal-me">-->
-            <!--              <ion-header>-->
-
-            <!--                <ion-toolbar>-->
-            <!--                  <ion-buttons slot="start">-->
-            <!--                    <ion-button @click="cancelMe()">Відмінити</ion-button>-->
-            <!--                  </ion-buttons>-->
-            <!--                  <ion-title>Змінити дані</ion-title>-->
-            <!--                </ion-toolbar>-->
-            <!--              </ion-header>-->
-            <!--              <ion-content class="ion-padding">-->
-
-            <!--                <v-text-field-->
-            <!--                    ref="inputMe"-->
-            <!--                    v-model="nameMe"-->
-            <!--                    color="primary"-->
-            <!--                    label="Ваше ім'я"-->
-            <!--                    placeholder="Михайло"-->
-            <!--                    variant="solo"-->
-            <!--                    density="compact"-->
-            <!--                    class="input-password"-->
-            <!--                ></v-text-field>-->
-            <!--                <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirmMe()"-->
-            <!--                       class="d-flex mx-auto btn-confirm" width="85%">-->
-            <!--                  Редагувати-->
-            <!--                </v-btn>-->
-            <!--              </ion-content>-->
-            <!--            </ion-modal>-->
-
           </ion-item>
           <ion-item>
-            <ion-button class="btn-changes" color="warning" @click="deleteAccount()">Видалити аккаунт</ion-button>
+            <ion-button class="btn-changes" color="warning" @click="dialogDelAccount = !dialogDelAccount">Видалити аккаунт</ion-button>
 
 
           </ion-item>
@@ -109,6 +38,24 @@
     </ion-header>
 
     <ion-footer>
+
+      <div class="text-center">
+        <v-dialog v-model="dialogDelAccount">
+          <v-card height="200">
+
+            <v-card-text class="d-flex justify-center flex-column">
+              <h3 class="text-center">Ви хочете видалити аккаунт? </h3>
+              <v-btn color="red" @click="deleteAccount()">Так</v-btn>
+            </v-card-text>
+
+            <v-card-actions class="d-flex justify-center">
+              <v-btn @click="dialogDelAccount = !dialogDelAccount">Відмінити</v-btn>
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
+      </div>
+
       <div class="text-center">
         <v-bottom-sheet v-model="sheetChangePass">
           <v-card height="500">
@@ -201,7 +148,9 @@ const modal = ref();
 const modalMe = ref();
 const input = ref();
 const inputMe = ref();
-const sheetChangeUser = ref(false)
+
+const dialogDelAccount = ref(false);
+const sheetChangeUser = ref(false);
 let oldPassword = "";
 let newPassword = "";
 let nameMe = "";

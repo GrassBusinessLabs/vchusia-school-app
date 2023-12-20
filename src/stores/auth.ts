@@ -83,7 +83,8 @@ export const auth = defineStore('auth', {
         async deleteAccount(){
             try {
                 const response = await AuthApi.deleteAccount()
-                router.replace('/start')
+                localStorage.clear()
+                router.push('/auth/start')
                 console.log(response)
             }catch (e) {
                 console.log(e)
