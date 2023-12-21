@@ -6,7 +6,9 @@ import {add} from "ionicons/icons";
 import {JoinGroup} from "@/models/Group";
 import {group} from "@/stores/group";
 let sheet = ref(false);
+const sheet_leave_group = ref(false)
 let GroupStore = group()
+let idGroup = ref()
 let identify = reactive({
   id: ""
 })
@@ -54,7 +56,7 @@ onMounted(() => {myGroupsList()})
                   color="grey-lighten-1"
                   icon="mdi-export"
                   variant="text"
-                  @click="leaveGroup(i.id)"
+                  @click="idGroup = i.id, sheet_leave_group = !sheet_leave_group"
               ></v-btn>
             </template>
 
@@ -94,6 +96,27 @@ onMounted(() => {myGroupsList()})
         </v-card>
       </v-bottom-sheet>
     </div>
+
+    <div class="text-center">
+      <v-bottom-sheet v-model="sheet_leave_group">
+        <v-card height="250">
+          <v-card-text>
+            <h3 class="text-center">Ви точно хочете покинути групу?</h3>
+
+            <div class="leave_group">
+              <v-btn class="btn_leave_group" color="red" @click="leaveGroup(idGroup), sheet_leave_group = !sheet_leave_group">
+                Покинути групу
+              </v-btn>
+
+              <v-btn @click="sheet_leave_group = !sheet_leave_group">
+              Відмінити
+              </v-btn>
+            </div>
+          </v-card-text>
+
+        </v-card>
+      </v-bottom-sheet>
+    </div>
   </ion-footer>
 </ion-page>
 </template>
@@ -112,5 +135,14 @@ onMounted(() => {myGroupsList()})
   border-radius: 15px;
   background: rgb(223,226,216);
   background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
+}
+.leave_group{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.btn_leave_group{
+  margin: 15px 0;
 }
 </style>

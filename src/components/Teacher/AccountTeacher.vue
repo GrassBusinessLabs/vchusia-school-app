@@ -40,7 +40,7 @@
     <ion-footer>
 
       <div class="text-center">
-        <v-dialog v-model="dialogDelAccount">
+        <v-bottom-sheet v-model="dialogDelAccount">
           <v-card height="200">
 
             <v-card-text class="d-flex justify-center flex-column">
@@ -53,7 +53,7 @@
             </v-card-actions>
 
           </v-card>
-        </v-dialog>
+        </v-bottom-sheet>
       </div>
 
       <div class="text-center">

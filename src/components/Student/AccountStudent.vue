@@ -98,7 +98,7 @@
       </div>
 
       <div>
-        <v-dialog v-model="dialog_delete_account">
+        <v-bottom-sheet v-model="dialog_delete_account">
           <v-card height="230">
             <v-card-text class="d-flex flex-column align-center">
               <h3>Ви бажаєте видалити свій аккаунт?</h3>
@@ -108,7 +108,7 @@
               <v-btn color="indigo" @click="dialog_delete_account = !dialog_delete_account">Відмінити</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-bottom-sheet>
       </div>
 
     </ion-footer>
