@@ -20,6 +20,8 @@ export const auth = defineStore('auth', {
                 const response: any = await AuthApi.login(body)
                 localStorage.setItem('token', response.token)
                 localStorage.setItem('user', JSON.stringify(response.user))
+                this.user = response
+                this.token = response.token
                 const userData = JSON.parse(localStorage.getItem('user'));
                 if (userData.role === "TEACHER") {
                     router.replace('/main/courses')

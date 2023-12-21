@@ -21,8 +21,15 @@ import GroupTapePage from "@/components/layouts/GroupTapePage.vue";
 import TapePage from "@/components/Teacher/Course/Tape/TapePage.vue";
 import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
 
-const user = JSON.parse(localStorage.getItem('user'))
-const role = user.role
+
+const getUserAndRole = () => {
+  return new Promise((resolve) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const role = user?.role;
+    resolve(role);
+  });
+};
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -60,6 +67,25 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
 
+  {
+    path: '/tape',
+    name: 'TapePage',
+    component: GroupTapePage,
+    meta: { role: 'TEACHER' },
+    children: [
+      {
+        path: 'tape',
+        name: 'Tape',
+        component: TapePage
+      },
+      {
+        path: 'task',
+        name: 'Task',
+        component: TaskPage
+      }
+    ]
+  },
+
 
   {
     path: '/main',
@@ -69,28 +95,35 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'account',
         name: 'Account',
-        component: AccountTeacher
+        component: AccountTeacher,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'courses',
         name: 'Courses',
         component: CourseTeacher,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'tasks',
         name: 'Tasks',
         component: TaskTeacher,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'groups',
         name: 'Groups',
         component: GroupTeacher,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'course',
         name: 'Course',
         component: CoursePage,
+        meta: { role: 'TEACHER' }
       },
+
+
       {
         path: 'student',
         name: 'Student',
@@ -108,40 +141,26 @@ const routes: Array<RouteRecordRaw> = [
         name: 'GroupStudent',
         component: GroupStudent,
         meta: { role: 'STUDENT' }
-
       },
       {
         path: 'groupPage',
         name: 'GroupPage',
-        component: GroupPage
+        component: GroupPage,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'courseInGroup',
         name: 'CourseInGroup',
-        component: CourseInGroup
+        component: CourseInGroup,
+        meta: { role: 'TEACHER' }
       },
       {
         path: 'setting',
         name: 'SettingCourse',
-        component: SettingCourse
+        component: SettingCourse,
+        meta: { role: 'TEACHER' }
       },
-      {
-        path: 'tape',
-        name: 'TapePage',
-        component: GroupTapePage,
-        children: [
-          {
-            path: 'tape',
-            name: 'Tape',
-            component: TapePage
-          },
-          {
-            path: 'task',
-            name: 'Task',
-            component: TaskPage
-          }
-        ]
-      }
+
 
 
     ],
@@ -158,16 +177,19 @@ const router = createRouter({
   mode: 'history'
 })
 
-router.beforeEach((to, from, next) => {
-  const userRole = role; // Отримайте роль користувача, наприклад, збережену в стані або з сервера
-  const requiredRole = to.meta.role;
 
-  // Перевірте, чи користувач має необхідну роль для переходу
-  if (requiredRole && userRole !== requiredRole) {
-    // Якщо немає відповідної ролі, перенаправте користувача на необхідну сторінку
-    next({ name: 'GroupPage' }); // Ви можете створити сторінку з помилкою 403
-  } else {
-    // Якщо роль відповідає, продовжте перехід
+router.beforeEach(async (to, from, next) => {
+  try {
+    const userRole = await getUserAndRole();
+    const requiredRole = to.meta.role;
+
+    if (requiredRole && userRole !== requiredRole) {
+      next({ name: 'Login' });
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.error('Error retrieving user role:', error);
     next();
   }
 });

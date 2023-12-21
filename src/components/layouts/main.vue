@@ -42,7 +42,7 @@
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header v-if="route.path !== '/main/tape/tape' && route.path !== '/main/tape/task'">
+      <ion-header v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
         <div>
           <v-toolbar
               dark
@@ -61,7 +61,7 @@
         <ion-router-outlet/>
 
       </ion-content>
-      <v-layout class="overflow-visible layout-footer" v-if="route.path !== '/main/tape/tape' && route.path !== '/main/tape/task'">
+      <v-layout class="overflow-visible layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
         <v-bottom-navigation class="bottom-nav rounded custom"
                              v-model="value"
                              :bg-color="color"
