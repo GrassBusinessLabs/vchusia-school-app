@@ -11,11 +11,13 @@ let identify = reactive({
   id: ""
 })
 
-const joinGroup = () => {
+async function joinGroup () {
   const body: JoinGroup = {
     identifier: identify.id
   }
-  GroupStore.joinGroup(body)
+  await GroupStore.joinGroup(body)
+  identify.id = ""
+  GroupStore.myGroupsList()
 }
 
 const myGroupsList = () => {
@@ -24,8 +26,10 @@ const myGroupsList = () => {
   console.log(GroupStore.myGroups)
 }
 
-const leaveGroup = (id) => {
-  GroupStore.leaveGroup(id)
+async function leaveGroup (id) {
+  await GroupStore.leaveGroup(id)
+  GroupStore.myGroupsList()
+
 }
 onMounted(() => {myGroupsList()})
 </script>
@@ -37,11 +41,12 @@ onMounted(() => {myGroupsList()})
 </header>
 
   <ion-content>
-    <div v-for="i of GroupStore.myGroups">
+    <div>
+
         <v-list>
           <v-list-item
-            v-for="j in i"
-            :title="j.name"
+            v-for="i of GroupStore.myGroups"
+            :title="i.name"
             class="listGroupItem"
           >
             <template v-slot:append>
@@ -49,7 +54,7 @@ onMounted(() => {myGroupsList()})
                   color="grey-lighten-1"
                   icon="mdi-export"
                   variant="text"
-                  @click="leaveGroup(j.id)"
+                  @click="leaveGroup(i.id)"
               ></v-btn>
             </template>
 

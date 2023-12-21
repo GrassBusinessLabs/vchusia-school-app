@@ -88,12 +88,7 @@ let sharePostBody = reactive({
 const sharePostOpenSheet = () => {
   sheet_read.value = false
   dialog.value = true
-  groups = []
-  for (let i of GroupStore.allGroups) {
-    for (let j of i) {
-      groups.push({id: j.id, name: j.name})
-    }
-  }
+
 }
 const sharePost = () => {
   const body: sharePost = {
@@ -210,27 +205,10 @@ const nextPost = (id: any) => {
 
 
     <div class="text-center">
-      <v-dialog
-          v-model="dialog"
-          activator="parent"
-          width="auto"
-      >
+      <v-bottom-sheet v-model="dialog">
         <v-card>
           <v-card-text>
             <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
-<!--            <v-select-->
-<!--                :items="groups"-->
-<!--                item-title="id"-->
-<!--                variant="outlined"-->
-<!--                label="Групи"-->
-<!--                multiple-->
-<!--                v-model="sharePostBody.groups"-->
-<!--            >-->
-<!--              <template v-slot:item="{ props, item }">-->
-<!--                <v-list-item v-bind="props" :subtitle="item.raw.name"></v-list-item>-->
-<!--              </template>-->
-<!--            </v-select>-->
-
             <v-text-field
                 label="Коментар"
                 variant="outlined"
@@ -254,12 +232,13 @@ const nextPost = (id: any) => {
               </v-btn>
             </div>
 
+            <div class="d-flex justify-center ma-6">
+              <v-btn color="red"  @click="dialog = false">Закрити</v-btn>
+            </div>
           </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" block @click="dialog = false">Закрити</v-btn>
-          </v-card-actions>
+
         </v-card>
-      </v-dialog>
+      </v-bottom-sheet>
     </div>
   </ion-footer>
 </ion-page>

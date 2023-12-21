@@ -51,7 +51,6 @@ export const group = defineStore('group', {
             try{
                 const response = await GroupApi.joinGroup(body)
                 console.log(response)
-                location.reload()
 
             } catch (e) {
                 console.log(e)
@@ -62,8 +61,6 @@ export const group = defineStore('group', {
             try {
                 const response: any = await GroupApi.leaveGroup(id)
                 console.log(response)
-                location.reload()
-
             } catch (e) {
                 console.log(e)
             }
@@ -97,7 +94,7 @@ export const group = defineStore('group', {
         async myGroupsList(): Promise <void>{
             try {
                 const response: any = await GroupApi.myGroupsList()
-                this.myGroups.push(response.items)
+                this.myGroups = response.items
                 console.log(response)
             } catch (e) {
                 console.log(e)

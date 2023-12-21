@@ -1,8 +1,9 @@
 <script setup lang="ts">
 
-import {IonContent, IonPage, IonFooter} from "@ionic/vue";
+import {IonContent, IonPage, IonFooter, IonIcon} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {ref} from "vue";
+import {add} from "ionicons/icons";
 
 const sheet_comment = ref(false)
 const comment = ref('')
@@ -28,9 +29,13 @@ const user = JSON.parse(localStorage.getItem('user'))
 
   <ion-footer>
 
-    <v-btn icon="mdi-plus" @click="sheet_comment = !sheet_comment" class="d-flex justify-center align-center mb-2 mx-auto"></v-btn>
+
+<!--    <v-btn icon="mdi-plus" @click="sheet_comment = !sheet_comment" class="d-flex justify-center align-center mb-2 mx-auto"></v-btn>-->
 
     <div class="text-center">
+      <v-btn class="btn-add-course mb-1" size="large" @click="sheet_comment = !sheet_comment">
+        <ion-icon :icon="add" color="danger" id="open-modal" ></ion-icon>
+      </v-btn>
       <v-bottom-sheet v-model="sheet_comment">
         <v-card height="250" >
           <v-card-text>
@@ -65,5 +70,10 @@ const user = JSON.parse(localStorage.getItem('user'))
   background: rgb(85,255,216);
   background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
   color: grey;
+}
+.btn-add-course {
+  min-width: 30px;
+  border-radius: 50px;
+  margin-top: 10px;
 }
 </style>
