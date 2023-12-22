@@ -20,6 +20,8 @@ import SettingCourse from "@/components/Teacher/Course/SettingCourse.vue";
 import GroupTapePage from "@/components/layouts/GroupTapePage.vue";
 import TapePage from "@/components/Teacher/Course/Tape/TapePage.vue";
 import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
+import FeedPage from "@/components/Student/FeedStudentPage.vue";
+import FeedStudentPage from "@/components/Student/FeedStudentPage.vue";
 
 
 const getUserAndRole = () => {
@@ -160,6 +162,12 @@ const routes: Array<RouteRecordRaw> = [
         component: SettingCourse,
         meta: { role: 'TEACHER' }
       },
+      {
+        path: 'feed-student',
+        name: 'FeedStudent',
+        component: FeedStudentPage,
+        meta: { role: 'STUDENT'}
+      }
 
 
 

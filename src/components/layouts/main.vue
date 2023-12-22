@@ -68,7 +68,7 @@
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" v-if="this.user.role !== 'TEACHER'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), activePage='Стрічка'" v-if="this.user.role !== 'TEACHER'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Стрічка</span>
           </v-btn>
@@ -216,6 +216,10 @@ export default defineComponent({
       } else{
         router.replace('/main/student')
       }
+    },
+    replaceFeed(){
+      this.checkRole()
+        router.replace('/main/feed-student')
     }
   }
 })
