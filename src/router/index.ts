@@ -22,6 +22,7 @@ import TapePage from "@/components/Teacher/Course/Tape/TapePage.vue";
 import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
 import FeedPage from "@/components/Student/FeedStudentPage.vue";
 import FeedStudentPage from "@/components/Student/FeedStudentPage.vue";
+import GroupStudentPage from "@/components/Student/Group/GroupStudentPage.vue";
 
 
 const getUserAndRole = () => {
@@ -142,7 +143,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'groups-student',
         name: 'GroupStudent',
         component: GroupStudent,
-        meta: { role: 'STUDENT' }
+        meta: {role: 'STUDENT'},
       },
       {
         path: 'groupPage',
@@ -167,6 +168,13 @@ const routes: Array<RouteRecordRaw> = [
         name: 'FeedStudent',
         component: FeedStudentPage,
         meta: { role: 'STUDENT'}
+      },
+      {
+        path: 'group-student-page',
+        name: 'GroupStudentPage',
+        component: GroupStudentPage,
+        meta: { role: 'STUDENT'}
+
       }
 
 

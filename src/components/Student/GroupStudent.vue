@@ -5,6 +5,7 @@ import {onMounted, reactive, ref} from "vue";
 import {add} from "ionicons/icons";
 import {JoinGroup} from "@/models/Group";
 import {group} from "@/stores/group";
+import router from "@/router";
 let sheet = ref(false);
 const sheet_leave_group = ref(false)
 let GroupStore = group()
@@ -33,6 +34,12 @@ async function leaveGroup (id) {
   GroupStore.myGroupsList()
 
 }
+
+const replaceGroupPage = (groupId: any) => {
+  GroupStore.idGroup = groupId
+  console.log(groupId)
+  router.push('/main/group-student-page')
+}
 onMounted(() => {myGroupsList()})
 </script>
 
@@ -43,23 +50,25 @@ onMounted(() => {myGroupsList()})
 </header>
 
   <ion-content>
-    <div>
+    <div class="mt-4">
+        <v-list  v-for="i of GroupStore.myGroups" class="list_groups">
+          <v-list-item class="listGroupItem">
+            <div @click="replaceGroupPage(i.id)">
+              <v-list-item-title>
+                {{ i.name }}
+              </v-list-item-title>
 
-        <v-list>
-          <v-list-item
-            v-for="i of GroupStore.myGroups"
-            :title="i.name"
-            class="listGroupItem"
-          >
+            </div>
             <template v-slot:append>
+
               <v-btn
                   color="grey-lighten-1"
                   icon="mdi-export"
                   variant="text"
                   @click="idGroup = i.id, sheet_leave_group = !sheet_leave_group"
               ></v-btn>
-            </template>
 
+            </template>
           </v-list-item>
         </v-list>
     </div>
@@ -130,7 +139,7 @@ onMounted(() => {myGroupsList()})
 
 .listGroupItem {
   font-family: "Leelawadee UI", sans-serif;
-  margin: 12px;
+  margin: 8px 15px;
   color: grey;
   border-radius: 15px;
   background: rgb(223,226,216);
@@ -144,5 +153,8 @@ onMounted(() => {myGroupsList()})
 
 .btn_leave_group{
   margin: 15px 0;
+}
+.list_groups{
+  padding: 0;
 }
 </style>
