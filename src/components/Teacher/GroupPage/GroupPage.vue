@@ -117,8 +117,25 @@ const replaceToCourse = (info: any) => {
   CourseStore.thisCourse = info
 }
 
+function triggerDeletedCourseFromGroup() {
+  toast.error("Курс видалено з групи", {
+    position: "top-right",
+    timeout: 2000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  });
+}
 async function deleteCourseFromGroup(courseId: any) {
   await GroupStore.removeCourseFromGroup(groupId, courseId)
+  triggerDeletedCourseFromGroup()
   CourseStore.coursesByGroupId(groupId)
 }
 
@@ -280,18 +297,13 @@ onMounted(() => {
 
       <div class="text-center">
         <v-bottom-sheet v-model="sheet_del">
-          <v-card class="text-center" height="300">
+          <v-card class="text-center" height="200">
 
             <br>
             <br>
             <div class="sheet_del">
 
-              <v-btn prepend-icon="mdi-export" @click="sheet_del = !sheet_del, leaveGroup(groupId)" color="indigo"
-                     class="btn_leave">
-                Покинути групу
-              </v-btn>
-
-              <v-btn prepend-icon="mdi-delete-outline" @click="sheet_del = !sheet_del, deleteGroup(groupId)"
+              <v-btn prepend-icon="mdi-delete-outline" color="red" @click="sheet_del = !sheet_del, deleteGroup(groupId)"
                      class="btn_del">
                 Видалити групу
               </v-btn>

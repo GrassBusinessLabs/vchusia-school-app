@@ -5,7 +5,13 @@
     <ion-content>
       <v-list lines="one">
         <div v-for="i of GroupStore.allGroups">
-          <v-list-item v-for="j of i" :title="j.name" class="listGroupItem" @click="replaceToPageGroup(j)">
+          <v-list-item v-for="j of i" class="listGroupItem">
+            <div  @click="replaceToPageGroup(j)">
+              <v-list-item-title>
+                {{ j.name }}
+              </v-list-item-title>
+            </div>
+
             <template v-slot:append>
               <v-btn
                   color="grey-lighten-1"
@@ -18,7 +24,7 @@
                   color="grey-lighten-1"
                   icon="mdi-trash-can-outline"
                   variant="text"
-                  @click="deleteGroup(j.id)"
+                  @click="sheet_del_group = !sheet_del_group, GroupStore.idGroup = j.id"
               ></v-btn>
             </template>
           </v-list-item>
@@ -68,6 +74,18 @@
           </v-card>
         </v-bottom-sheet>
       </div>
+
+      <div class="text-center">
+        <v-bottom-sheet v-model="sheet_del_group">
+            <v-card height="200">
+              <v-card-text class="d-flex flex-column justify-center align-center">
+                <p class="ma-2">Ви точно хочете видалити групу?</p>
+                <v-btn class="ma-2" color="red" @click="deleteGroup(GroupStore.idGroup), sheet_del_group = !sheet_del_group">Видалити</v-btn>
+                <v-btn @click="sheet_del_group = !sheet_del_group">Відмінити</v-btn>
+              </v-card-text>
+            </v-card>
+        </v-bottom-sheet>
+      </div>
     </ion-footer>
 
 
@@ -88,6 +106,7 @@ const toast = useToast();
 const CourseStore = course()
 let sheet = ref(false)
 const GroupStore = group()
+const sheet_del_group = ref(false)
 
 let nameGroup = reactive({
   name: ""
@@ -101,9 +120,27 @@ const createGroup = () => {
   nameGroup.name = ""
 }
 
+function trigerCopyIdentify() {
+  toast.success("Код групи скопійовано", {
+    position: "top-right",
+    timeout: 1533,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.32,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: false,
+    rtl: false
+  });
+}
+
 async function copyIdentifier(identifier) {
   try {
     await navigator.clipboard.writeText(identifier);
+    trigerCopyIdentify()
   } catch ($e) {
     console.log($e)
   }
