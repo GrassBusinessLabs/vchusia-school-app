@@ -91,6 +91,8 @@ export const group = defineStore('group', {
             }
         },
 
+
+
         async myGroupsList(): Promise <void>{
             try {
                 const response: any = await GroupApi.myGroupsList()

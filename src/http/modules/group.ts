@@ -17,7 +17,7 @@ function updateGroup(id: any, body: Group) {
 }
 
 function getCreatedGroupsList() {
-    return axios.get('/groups?page=1&count=40')
+    return axios.get(`/groups?page=1&count=10`)
 }
 
 function myGroupsList() {

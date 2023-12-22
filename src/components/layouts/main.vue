@@ -68,7 +68,11 @@
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" v-if="this.user.role !== 'TEACHER'">
+            <v-icon icon="mdi-book-outline" class="icon-course"/>
+            <span>Стрічка</span>
+          </v-btn>
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'" v-if="this.user.role !== 'STUDENT'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Курси</span>
           </v-btn>
@@ -161,7 +165,8 @@ export default defineComponent({
       value: 0,
       numCount: 0,
       role: "",
-      route: useRoute()
+      route: useRoute(),
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   computed: {

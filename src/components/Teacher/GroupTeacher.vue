@@ -25,6 +25,7 @@
         </div>
 
       </v-list>
+
     </ion-content>
 
 
@@ -74,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import {IonPage, IonContent, IonText, IonFooter, IonIcon} from "@ionic/vue";
+import {IonPage, IonContent, IonText, IonFooter, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent} from "@ionic/vue";
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import {onMounted, reactive, ref} from "vue";
 import {add} from "ionicons/icons";
@@ -108,16 +109,18 @@ async function copyIdentifier(identifier) {
   }
 }
 
-const getAllGroups = () => {
+function getAllGroups ()  {
   GroupStore.allGroups = []
   GroupStore.getCreatedGroupsList()
 }
 onMounted(() => {getAllGroups()})
 
-const deleteGroup = (id) => {
+async function deleteGroup  (id) {
+  GroupStore.allGroups = []
   console.log(id)
   triggerToast()
-  GroupStore.deleteGroup(id)
+  await GroupStore.deleteGroup(id)
+  GroupStore.getCreatedGroupsList()
 }
 
 function triggerToast() {
