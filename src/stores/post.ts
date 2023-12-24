@@ -2,13 +2,15 @@ import {defineStore} from "pinia";
 import {Post, sharePost, UpdatePost} from "@/models/Post";
 import PostApi from "@/http/modules/post"
 import { useToast } from 'vue-toastification';
+import GroupApi from "@/http/modules/group";
 const toast = useToast();
 interface State {
     posts: any,
     idPostsNow: any,
     PostInfo: any,
     total: number,
-    info: any
+    info: any,
+    feedPosts: any
 }
 
 
@@ -18,7 +20,8 @@ export const post = defineStore('post', {
         idPostsNow: [],
         PostInfo: [],
         total: 0,
-        info: []
+        info: [],
+        feedPosts: []
     }),
 
     getters: {
@@ -130,7 +133,19 @@ export const post = defineStore('post', {
                 this.triggerToastError()
                 console.log(e)
             }
+        },
+
+        async getPosts(groupId: any, courseId: any){
+            try {
+                const response: any = await PostApi.getPosts(groupId, courseId)
+                this.feedPosts = [...response.items]
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
         }
+
+
 
     }
 })

@@ -1,13 +1,30 @@
 <script setup lang="ts">
 
-import {IonContent, IonPage, IonFooter, IonIcon} from "@ionic/vue";
+import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {ref} from "vue";
+import {onBeforeMount, onMounted, onUpdated, ref} from "vue";
 import {add} from "ionicons/icons";
+import {group} from "@/stores/group";
+import {course} from "@/stores/course";
+import {post} from "@/stores/post";
 
 const sheet_comment = ref(false)
 const comment = ref('')
 const user = JSON.parse(localStorage.getItem('user'))
+const GroupStore = group()
+const CourseStore = course()
+const PostStore = post()
+
+
+async function getFeed() {
+  await PostStore.getPosts(GroupStore.groupId, CourseStore.courseId);
+}
+
+onIonViewWillEnter(() => {
+  // Call getFeed when the page is about to enter
+  getFeed();
+});
+
 </script>
 
 <template>
@@ -15,12 +32,21 @@ const user = JSON.parse(localStorage.getItem('user'))
 <ion-page>
   <ion-content>
     <v-card elevation="0">
-      <v-list class="tape_list">
-        <v-list-item :title="user.name" subtitle="Коментар" v-for="i in 3" class="tape_list_item">
-          <v-list-item-action></v-list-item-action>
+      <v-list class="tape_list" v-for="i of PostStore.feedPosts">
+        <v-list-item class="tape_list_item">
+          <v-list-item-title>
+            {{i.title}}
+          </v-list-item-title>
+
+          <v-list-item-subtitle>
+            {{i.description}}
+          </v-list-item-subtitle>
+
+          <v-list-item-action>
+            {{i.id}}
+          </v-list-item-action>
         </v-list-item>
 
-        <v-list-item :title="user.name" subtitle="Пост" v-for="i in 2" class="tape_list_item"></v-list-item>
 
       </v-list>
     </v-card>
@@ -61,12 +87,13 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 <style scoped>
 .tape_list{
-
+  margin: 5px;
+  padding: 0;
 }
 
 .tape_list_item{
   border-radius: 10px;
-  margin: 12px;
+  margin: 5px;
   background: rgb(85,255,216);
   background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
   color: grey;

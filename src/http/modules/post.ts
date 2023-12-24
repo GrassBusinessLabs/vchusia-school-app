@@ -37,12 +37,17 @@ function sharePost(body: sharePost) {
     let postId: number | null = post().idPostsNow
     return axios.post(`/post/${postId}/group`, body)
 }
+
+function getPosts(groupId: any, courseId: any) {
+    return axios.get(`/post/getPosts?page=1&count=10&groupId=${groupId}&courseId=${courseId}`)
+}
 export default {
     createPost,
     findPostWithRow,
     updatePost,
     deletePost,
     sharePost,
-    findPostWithRowGroupCourse
+    findPostWithRowGroupCourse,
+    getPosts
 
 }

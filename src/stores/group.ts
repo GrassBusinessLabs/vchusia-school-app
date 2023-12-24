@@ -25,7 +25,6 @@ export const group = defineStore('group', {
         allCourses: [],
         usersInGroup: [],
         idGroup: Number(localStorage.getItem('idGroup')) || null,
-
     }),
 
 
@@ -140,6 +139,8 @@ export const group = defineStore('group', {
                 console.log(e)
             }
         },
+
+
 
     }
 })

@@ -39,6 +39,8 @@ function addCourseToGroup(groupId: any, courseId: any) {
 function removeCourseFromGroup(groupId: any, courseId: any) {
     return axios.delete(`/group/${groupId}/course/${courseId}?page=1&count=10`)
 }
+
+
 export default {
     createGroup,
     joinGroup,
@@ -49,5 +51,5 @@ export default {
     deleteGroup,
     getUsersInGroup,
     addCourseToGroup,
-    removeCourseFromGroup
+    removeCourseFromGroup,
 }
