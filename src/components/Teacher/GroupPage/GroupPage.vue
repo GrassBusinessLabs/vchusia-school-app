@@ -21,6 +21,7 @@ const CourseStore = course()
 const toast = useToast();
 let courseSelected = reactive({id: null});
 const courseAddInGroup = ref(false)
+const sheet_course_del_from_group = ref(false)
 groupId = GroupStore.idGroup
 const loadGroup = () => {
   groupIdentifier = "";
@@ -137,6 +138,7 @@ function triggerDeletedCourseFromGroup() {
 async function deleteCourseFromGroup(courseId: any) {
   await GroupStore.removeCourseFromGroup(groupId, courseId)
   triggerDeletedCourseFromGroup()
+  sheet_course_del_from_group.value = false
   CourseStore.coursesByGroupId(groupId)
 }
 
@@ -204,7 +206,7 @@ onMounted(() => {
                       color="grey-lighten-1"
                       icon="mdi-trash-can-outline"
                       variant="text"
-                      @click="deleteCourseFromGroup(i.id)"
+                      @click="CourseStore.courseId = i.id, sheet_course_del_from_group = !sheet_course_del_from_group"
                   ></v-btn>
                 </template>
               </v-list-item>
@@ -316,10 +318,16 @@ onMounted(() => {
       </div>
 
       <div>
-        <v-bottom-sheet>
-          <v-card>
-
-
+        <v-bottom-sheet v-model="sheet_course_del_from_group">
+          <v-card height="200" class="d-flex justify-center align-center">
+            <div class="d-flex flex-column justify-center align-center w-100">
+              <v-btn prepend-icon="mdi-delete-outline" color="red" class="mb-3 w-75" @click="deleteCourseFromGroup(CourseStore.courseId)">
+                Видалити курс з групи
+              </v-btn>
+              <v-btn class="w-75" @click="sheet_course_del_from_group = !sheet_course_del_from_group">
+                Відмінити
+              </v-btn>
+            </div>
           </v-card>
         </v-bottom-sheet>
       </div>
