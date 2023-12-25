@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {IonCol, IonContent, IonGrid, IonRow, IonPage, IonFooter} from "@ionic/vue";
+import {IonCol, IonContent, IonGrid, IonRow, IonPage, IonFooter, onIonViewWillEnter} from "@ionic/vue";
 
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
@@ -16,6 +16,7 @@ const GroupStore = group()
 const sheet_read = ref(false)
 const dialog = ref(false)
 const courseInfo = CourseStore.thisCourse
+const userSharePost = ref(false)
 let items = []
 let groups: any = []
 let allIdPosts: any = []
@@ -23,6 +24,14 @@ let r, c;
 const switchMode = ref(true)
 const postShared = ref(false)
 allIdPosts = []
+const checkbox = ref(true)
+
+async function getUsersInGroup() {
+  GroupStore.usersInGroup = []
+  await GroupStore.getUsersInGroup(GroupStore.idGroup)
+}
+
+onIonViewWillEnter(() => {getUsersInGroup()})
 const mapPosts = () => {
   const rows = PostStore.PostInfo.map(post => post.row)
   const uniqueSet = Array.from(new Set(rows))
@@ -99,6 +108,7 @@ const sharePostOpenSheet = () => {
 
   sheet_read.value = false
   dialog.value = true
+  userSharePost.value = false
 
 }
 const sharePost = () => {
@@ -113,7 +123,6 @@ const sharePost = () => {
 
 const lastPost = (id: any) => {
   if(allIdPosts.indexOf(id) > 0){
-
     for(let i of PostStore.PostInfo){
       if(allIdPosts[allIdPosts.indexOf(id) - 1] === i.id){
         PostStore.info = i
@@ -132,11 +141,10 @@ const nextPost = (id: any) => {
         PostStore.info = i
       }
     }
-  } else {
-
   }
 
 }
+
 
 </script>
 
@@ -201,10 +209,10 @@ const nextPost = (id: any) => {
                 Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
 
                 <div>
-                  <v-btn v-show="postShared === false" prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
-                         @click="sharePostOpenSheet()">
-                    Поділитись постом
+                  <v-btn v-show="postShared === false" @click="userSharePost = !userSharePost">
+                    Поділитися постом
                   </v-btn>
+
                 </div>
               </v-card-text>
             </div>
@@ -218,10 +226,45 @@ const nextPost = (id: any) => {
       </v-bottom-sheet>
     </div>
 
+    <div>
+      <v-bottom-sheet fullscreen v-model="userSharePost">
+        <v-card>
+          <ion-content>
+            <div class="mt-6" v-for="i of GroupStore.usersInGroup">
+              <div v-for="j of i">
+                <v-list>
+                  <v-list-item class="item_student">
+                    <div class="content-item-student">
+                      <v-list-item-title>
+                        {{ j.name }}
+                      </v-list-item-title>
+
+                      <v-list-item-subtitle>
+                        {{ j.email }}
+                      </v-list-item-subtitle>
+                    </div>
+                    <template v-slot:append >
+                      <v-checkbox v-model="checkbox" v-bind:true-value="true"></v-checkbox>
+                    </template>
+
+                  </v-list-item>
+                </v-list>
+              </div>
+            </div>
+          </ion-content>
+
+          <v-btn  prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
+                 @click="sharePostOpenSheet()">
+            Поділитись постом
+          </v-btn>
+        </v-card>
+      </v-bottom-sheet>
+    </div>
+
 
     <div class="text-center">
-      <v-bottom-sheet v-model="dialog">
-        <v-card>
+      <v-bottom-sheet v-model="dialog" >
+        <v-card  >
           <v-card-text>
             <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
             <v-text-field
@@ -292,4 +335,9 @@ ion-col {
   border-radius: 50px;
 }
 
+.item_student{
+  outline: 1px solid grey;
+  margin: 0 10px;
+  border-radius: 15px;
+}
 </style>

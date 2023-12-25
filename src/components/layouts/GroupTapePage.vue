@@ -11,7 +11,7 @@ import router from "@/router"
 import {useRoute} from "vue-router";
 import {ref} from "vue";
 import {auth} from "@/stores/auth";
-const activePage = ref("Курси")
+const activePage = ref("Стрічка")
 const title = ref('Стрічка')
 const value = ref(1)
 let role = ref("")
