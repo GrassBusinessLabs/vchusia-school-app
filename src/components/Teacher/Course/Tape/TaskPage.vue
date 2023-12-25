@@ -105,7 +105,6 @@ let sharePostBody = reactive({
 })
 
 const sharePostOpenSheet = () => {
-
   sheet_read.value = false
   dialog.value = true
   userSharePost.value = false

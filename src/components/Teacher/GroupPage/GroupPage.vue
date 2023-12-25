@@ -16,6 +16,7 @@ const GroupStore = group();
 let groupIdentifier = "";
 let groupName = "";
 let groupId: any
+const delCourseInGroup= ref(false)
 const CourseStore = course()
 const toast = useToast();
 let courseSelected = reactive({id: null});
@@ -309,6 +310,15 @@ onMounted(() => {
               </v-btn>
 
             </div>
+
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
+      <div>
+        <v-bottom-sheet>
+          <v-card>
+
 
           </v-card>
         </v-bottom-sheet>

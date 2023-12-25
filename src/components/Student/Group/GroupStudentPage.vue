@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import {IonPage, IonHeader} from "@ionic/vue";
+import {IonPage, IonHeader, IonContent} from "@ionic/vue";
 import {group} from "@/stores/group";
+import {course} from "@/stores/course";
+import {onMounted} from "vue";
 
 const GroupStore = group()
+const CourseStore = course()
+
+const coursesByGroupId = () => {
+  CourseStore.courseInGroup = []
+  CourseStore.coursesByGroupId(GroupStore.idGroup)
+}
+
+onMounted(() => {coursesByGroupId()})
 </script>
 
 <template>
@@ -16,6 +26,35 @@ const GroupStore = group()
       </div>
     </div>
   </ion-header>
+
+  <ion-content>
+    <v-list class="list_courses">
+       <p class="text-center">Мої курси</p>
+        <v-list-item v-for="i of CourseStore.courseInGroup" class="item_course_group">
+          <div>
+            <v-list-item-title>
+              {{i.name}}
+            </v-list-item-title>
+
+            <v-list-item-subtitle>
+              {{i.discipline}}
+            </v-list-item-subtitle>
+
+            <v-list-item-action>
+              {{i.grade}}
+            </v-list-item-action>
+          </div>
+
+          <template v-slot:append>
+            <p>Test</p>
+          </template>
+
+
+        </v-list-item>
+
+    </v-list>
+
+  </ion-content>
 </ion-page>
 </template>
 
@@ -28,5 +67,20 @@ const GroupStore = group()
   height: 30px;
   background: rgb(223, 226, 216);
   background: linear-gradient(110deg, rgba(223, 226, 216, 1) 0%, rgba(225, 255, 249, 1) 100%);
+}
+
+.item_course_group{
+  background: rgb(223, 226, 216);
+  background: linear-gradient(110deg, rgba(223, 226, 216, 1) 0%, rgba(225, 255, 249, 1) 100%);
+  border-radius: 15px;
+  margin: 15px;
+  outline: 1px solid grey;
+
+}
+
+.list_courses{
+  outline: 1px solid #c2fff1;
+  margin: 10px;
+  border-radius: 15px;
 }
 </style>
