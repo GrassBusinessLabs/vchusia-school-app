@@ -21,7 +21,6 @@ async function getFeed() {
 }
 
 onIonViewWillEnter(() => {
-  // Call getFeed when the page is about to enter
   getFeed();
 });
 

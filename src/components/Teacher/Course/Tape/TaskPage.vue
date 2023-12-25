@@ -7,7 +7,7 @@ import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
 import {sharePost} from "@/models/Post";
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 
 const tab = ref('Tape')
 const CourseStore = course()
@@ -21,6 +21,7 @@ let groups: any = []
 let allIdPosts: any = []
 let r, c;
 const switchMode = ref(true)
+const postShared = ref(false)
 allIdPosts = []
 const mapPosts = () => {
   const rows = PostStore.PostInfo.map(post => post.row)
@@ -42,6 +43,8 @@ const getPostByCords = (row: any, column: any) => {
   return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
 
+
+
 const handlePost = (row: any, column: any) => {
 
   let idPost
@@ -52,10 +55,17 @@ const handlePost = (row: any, column: any) => {
 
       for (let i of PostStore.PostInfo) {
         if (row + 1 === i.row && column === i.column) {
+          postShared.value = false
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
+        }
+      }
+      for (const j of PostStore.feedPosts){
+        if(j.id === idPost){
+          postShared.value = true
+          console.log(true)
         }
       }
     } else {
@@ -86,6 +96,7 @@ let sharePostBody = reactive({
 })
 
 const sharePostOpenSheet = () => {
+
   sheet_read.value = false
   dialog.value = true
 
@@ -102,11 +113,15 @@ const sharePost = () => {
 
 const lastPost = (id: any) => {
   if(allIdPosts.indexOf(id) > 0){
+
     for(let i of PostStore.PostInfo){
       if(allIdPosts[allIdPosts.indexOf(id) - 1] === i.id){
         PostStore.info = i
+
       }
+
     }
+
   }
 }
 
@@ -186,7 +201,7 @@ const nextPost = (id: any) => {
                 Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
 
                 <div>
-                  <v-btn prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
+                  <v-btn v-show="postShared === false" prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
                          @click="sharePostOpenSheet()">
                     Поділитись постом
                   </v-btn>
