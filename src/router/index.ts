@@ -23,6 +23,9 @@ import TaskPage from "@/components/Teacher/Course/Tape/TaskPage.vue";
 import FeedPage from "@/components/Student/FeedStudentPage.vue";
 import FeedStudentPage from "@/components/Student/FeedStudentPage.vue";
 import GroupStudentPage from "@/components/Student/Group/GroupStudentPage.vue";
+import studentGroupPage from "@/components/layouts/studentGroupPage.vue";
+import FeedGroupStudent from "@/components/Student/Group/Feed/FeedGroupStudent.vue";
+import TaskGroupStudent from "@/components/Student/Group/Feed/TaskGroupStudent.vue";
 
 
 const getUserAndRole = () => {
@@ -85,6 +88,25 @@ const routes: Array<RouteRecordRaw> = [
         path: 'task',
         name: 'Task',
         component: TaskPage
+      }
+    ]
+  },
+
+  {
+    path: '/group-info-student',
+    name: 'GroupInfoStudent',
+    component: studentGroupPage,
+    meta: { role: 'STUDENT' },
+    children: [
+      {
+        path: 'feed-group-student',
+        name: 'FeedGroup',
+        component: FeedGroupStudent
+      },
+      {
+        path: 'task-group-student',
+        name: 'TaskGroup',
+        component: TaskGroupStudent
       }
     ]
   },

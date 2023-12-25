@@ -3,6 +3,7 @@ import {IonPage, IonHeader, IonContent} from "@ionic/vue";
 import {group} from "@/stores/group";
 import {course} from "@/stores/course";
 import {onMounted} from "vue";
+import router from "@/router";
 
 const GroupStore = group()
 const CourseStore = course()
@@ -10,6 +11,12 @@ const CourseStore = course()
 const coursesByGroupId = () => {
   CourseStore.courseInGroup = []
   CourseStore.coursesByGroupId(GroupStore.idGroup)
+}
+
+const redirectToCourseForGroup = (idCourse) => {
+  router.push('/group-info-student/feed-group-student')
+  CourseStore.courseId = idCourse
+  console.log(idCourse)
 }
 
 onMounted(() => {coursesByGroupId()})
@@ -30,7 +37,7 @@ onMounted(() => {coursesByGroupId()})
   <ion-content>
     <v-list class="list_courses">
        <p class="text-center">Мої курси</p>
-        <v-list-item v-for="i of CourseStore.courseInGroup" class="item_course_group">
+        <v-list-item v-for="i of CourseStore.courseInGroup" class="item_course_group" @click="redirectToCourseForGroup(i.id)">
           <div>
             <v-list-item-title>
               {{i.name}}
