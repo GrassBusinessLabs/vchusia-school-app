@@ -11,77 +11,80 @@
         <ion-title>Реєстрація</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-list>
-      <div>
-        <v-img
-            class="mx-auto my-6"
-            max-width="228"
-            src="https://www.twine.net/blog/wordpress/wp-content/uploads/2022/03/tresorit.png"
-        ></v-img>
+    <ion-content>
+      <ion-list>
+        <div>
+          <v-img
+              class="mx-auto my-6"
+              max-width="200"
+              src="/src/assets/Vchusia.png"
+          ></v-img>
 
-        <v-card
-            class="mx-auto pa-6 pb-8"
-            elevation="8"
-            max-width="448"
-            rounded="lg"
-        >
-          <div class="text-subtitle-1 text-medium-emphasis">Email</div>
-          <v-text-field
-              prepend-inner-icon="mdi-email-outline"
-              v-model="email"
-              density="compact"
-              type="email"
-              placeholder="admin@gmail.com"
-              variant="outlined"
-          ></v-text-field>
-
-          <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-            Пароль
-          </div>
-
-          <v-text-field
-              prepend-inner-icon="mdi-lock"
-              v-model="password"
-              density="compact"
-              placeholder="********"
-              variant="outlined"
-              type="password"
-          ></v-text-field>
-          <div class="text-subtitle-1 text-medium-emphasis">Роль</div>
-
-
-          <v-radio-group v-model="this.role">
-            <v-radio label="Студент" value="STUDENT" aria-label="Custom checkbox" color="indigo"></v-radio>
-            <v-radio label="Викладач" value="TEACHER" aria-label="Custom checkbox that is checked"
-                     color="indigo"></v-radio>
-          </v-radio-group>
-
-          <div class="text-subtitle-1 text-medium-emphasis">Ім'я</div>
-
-          <v-text-field
-              prepend-inner-icon="mdi-account"
-              v-model="name"
-              density="compact"
-              placeholder="Іван"
-              variant="outlined"
-          ></v-text-field>
-
-          <v-btn
-              class="mb-8 btnSignUp"
-              color="blue"
-              size="large"
-              variant="tonal"
-              @click="regSend"
+          <v-card
+              class="mx-auto pa-6 pb-8"
+              elevation="8"
+              max-width="448"
+              rounded="lg"
           >
-            Зареєструватися
-          </v-btn>
+            <div class="text-subtitle-1 text-medium-emphasis">Email</div>
+            <v-text-field
+                prepend-inner-icon="mdi-email-outline"
+                v-model="email"
+                density="compact"
+                type="email"
+                placeholder="admin@gmail.com"
+                variant="outlined"
+            ></v-text-field>
 
-          <ion-text class="loginText">
-            Вже маєте аккаунт? <a href="/auth/login"> Увійти</a>
-          </ion-text>
-        </v-card>
-      </div>
-    </ion-list>
+            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+              Пароль
+            </div>
+
+            <v-text-field
+                prepend-inner-icon="mdi-lock"
+                v-model="password"
+                density="compact"
+                placeholder="********"
+                variant="outlined"
+                type="password"
+            ></v-text-field>
+            <div class="text-subtitle-1 text-medium-emphasis">Роль</div>
+
+
+            <v-radio-group v-model="this.role">
+              <v-radio label="Студент" value="STUDENT" aria-label="Custom checkbox" color="indigo"></v-radio>
+              <v-radio label="Викладач" value="TEACHER" aria-label="Custom checkbox that is checked"
+                       color="indigo"></v-radio>
+            </v-radio-group>
+
+            <div class="text-subtitle-1 text-medium-emphasis">Ім'я</div>
+
+            <v-text-field
+                prepend-inner-icon="mdi-account"
+                v-model="name"
+                density="compact"
+                placeholder="Іван"
+                variant="outlined"
+            ></v-text-field>
+
+            <v-btn
+                class="mb-8 btnSignUp"
+                color="blue"
+                size="large"
+                variant="tonal"
+                @click="regSend"
+            >
+              Зареєструватися
+            </v-btn>
+
+            <ion-text class="loginText">
+              Вже маєте аккаунт? <a href="/auth/login"> Увійти</a>
+            </ion-text>
+          </v-card>
+        </div>
+      </ion-list>
+    </ion-content>
+
   </ion-page>
 </template>
 
@@ -99,6 +102,7 @@ import {
   IonRadioGroup,
   IonText,
     IonTitle,
+    IonContent
 
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
@@ -119,7 +123,8 @@ export default defineComponent({
     IonButtons,
     IonBackButton,
     IonText,
-    IonTitle
+    IonTitle,
+    IonContent
   },
   data() {
     return {

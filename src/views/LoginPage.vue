@@ -15,7 +15,7 @@
         <v-img
             class="mx-auto my-6"
             max-width="228"
-            src="https://www.twine.net/blog/wordpress/wp-content/uploads/2022/03/tresorit.png"
+            src="/src/assets/Vchusia.png"
         ></v-img>
 
         <v-card
