@@ -24,7 +24,8 @@ let r, c;
 const switchMode = ref(true)
 const postShared = ref(false)
 allIdPosts = []
-const checkbox = ref(true)
+const checkbox = ref(false)
+const checkboxes = ref({})
 
 async function getUsersInGroup() {
   GroupStore.usersInGroup = []
@@ -145,6 +146,9 @@ const nextPost = (id: any) => {
 }
 
 
+const selectAll = () => {
+  checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+};
 </script>
 
 <template>
@@ -230,7 +234,7 @@ const nextPost = (id: any) => {
         <v-card>
           <ion-content>
             <div class="mt-6" v-for="i of GroupStore.usersInGroup">
-              <div v-for="j of i">
+              <div v-for="(j, index) of i">
                 <v-list>
                   <v-list-item class="item_student">
                     <div class="content-item-student">
@@ -243,7 +247,7 @@ const nextPost = (id: any) => {
                       </v-list-item-subtitle>
                     </div>
                     <template v-slot:append >
-                      <v-checkbox v-model="checkbox" v-bind:true-value="true"></v-checkbox>
+                      <v-checkbox v-model="checkboxes[index]"></v-checkbox>
                     </template>
 
                   </v-list-item>
@@ -252,6 +256,9 @@ const nextPost = (id: any) => {
             </div>
           </ion-content>
 
+          <v-btn class="mx-6" color="blue" @click="selectAll()">
+            Вибрати всі
+          </v-btn >
           <v-btn  prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
                  @click="sharePostOpenSheet()">
             Поділитись постом
