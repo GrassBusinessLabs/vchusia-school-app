@@ -8,7 +8,7 @@
     </ion-header>
 
 
-    <ion-content>
+    <ion-content class="content">
       <div v-for="value in CourseStore.items" class="course" @click="redirect(value)">
 
         <div v-for="(name, value, index) in value"
@@ -21,11 +21,17 @@
 
 
     </ion-content>
-    <ion-footer>
+    <div class="block_btn_add_course">
+      <v-btn class="btn-add-course mb-1" @click="sheet = !sheet">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </div>
+    <ion-footer class="footer_course_teacher">
+
+
       <div class="text-center">
-        <v-btn class="btn-add-course mb-1" size="large" @click="sheet = !sheet">
-          <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
-        </v-btn>
+
+
 
         <v-bottom-sheet v-model="sheet">
           <v-card
@@ -205,6 +211,7 @@ const confirm = () => {
 </script>
 
 <style scoped>
+
 .course {
   padding: 15px;
   width: 80%;
@@ -214,14 +221,7 @@ const confirm = () => {
   background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
   border-radius: 15px;
   outline: cyan 1px ridge;
-}
 
-.container-modal {
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 90%;
 }
 
 .titlesCourse {
@@ -237,48 +237,42 @@ const confirm = () => {
 
 }
 
-.courses-content {
-  padding: 4px 15px;
-}
-
 ion-fab {
   position: relative;
   left: 44%;
 }
 
-.footer-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-height: 5vh;
-}
 
 v-btn {
   margin: 0 auto;
 }
 
 .btn-add-course {
-  min-width: 30px;
-  border-radius: 50px;
-  margin-top: 10px;
-}
-
-.add-course {
-  margin-right: 15px;
-}
-
-.confirm-btn {
-  border-radius: 20px;
-  padding: 5px 10px;
-}
-
-.modal-course {
-  --height: 600px
+  min-height: 100%;
+  border-radius: 100%;
+  min-width: 60%;
+  margin: 0 auto;
+  background: grey;
+  outline: 1px solid cyan;
+  color: #fff;
 }
 
 .btnAddCourse {
   border-radius: 15px;
   padding: 5px 15px;
 }
+
+.block_btn_add_course{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 7%;
+  width: 10%;
+  position: absolute;
+  top: 85%;
+  left: 80%;
+
+}
+
 
 </style>

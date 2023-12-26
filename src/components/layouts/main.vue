@@ -261,7 +261,7 @@ ion-item:hover {
 }
 
 .layout-footer {
-  max-height: 10vh;
+  max-height: 56px;
   width: 100%;
 
 }
