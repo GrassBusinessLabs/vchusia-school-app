@@ -9,10 +9,13 @@ import {onMounted} from "vue";
 const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
-
+const pagination = {
+  page: 1,
+  count: 10
+}
 async function getSharedPost () {
   PostStore.feedPosts = []
-  await PostStore.getPosts(GroupStore.idGroup, CourseStore.courseId)
+  await PostStore.getPosts(pagination, GroupStore.idGroup, CourseStore.courseId)
 }
 
 onIonViewWillEnter(() => {getSharedPost()})

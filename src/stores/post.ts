@@ -138,11 +138,12 @@ export const post = defineStore('post', {
             }
         },
 
-        async getPosts(groupId: any, courseId: any){
+        async getPosts(page?: any, groupId?: any, courseId?: any){
             try {
-                const response: any = await PostApi.getPosts(groupId, courseId)
+                const response: any = await PostApi.getPosts(page, groupId, courseId)
                 this.feedPosts = [...response.items]
                 console.log(response)
+                return response.items
             } catch (e) {
                 console.log(e)
             }
