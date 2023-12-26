@@ -61,6 +61,7 @@
         <ion-router-outlet/>
 
       </ion-content>
+
       <v-layout class="overflow-visible layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
         <v-bottom-navigation class="bottom-nav rounded custom"
                              v-model="value"
@@ -186,6 +187,9 @@ export default defineComponent({
 
 
   methods: {
+    changePage(page){
+      this.activePage.value = page;
+    },
     router() {
       return router
     },

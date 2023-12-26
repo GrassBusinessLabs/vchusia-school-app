@@ -15,6 +15,7 @@ export const auth = defineStore('auth', {
         token: null
     }),
     actions: {
+
         async login(body: Auth) {
             try {
                 const response: any = await AuthApi.login(body)

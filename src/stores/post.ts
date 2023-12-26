@@ -3,7 +3,11 @@ import {Post, sharePost, UpdatePost} from "@/models/Post";
 import PostApi from "@/http/modules/post"
 import { useToast } from 'vue-toastification';
 import GroupApi from "@/http/modules/group";
+import {watch} from "vue";
+import {state} from "vue-tsc/out/shared";
 const toast = useToast();
+
+
 interface State {
     posts: any,
     idPostsNow: any,
@@ -29,7 +33,6 @@ export const post = defineStore('post', {
     },
 
     actions: {
-
         triggerToastSuccess() {
             toast.success("Успішно пошарено!", {
                 position: "top-right",
@@ -143,9 +146,15 @@ export const post = defineStore('post', {
             } catch (e) {
                 console.log(e)
             }
-        }
+        },
 
 
 
-    }
+    },
+
 })
+
+
+
+
+

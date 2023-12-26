@@ -9,7 +9,6 @@ interface State {
     createdGroup: any,
     allGroups: any,
     myGroups: any,
-    // idGroup: any,
     allCourses: any,
     idGroup: number | null
     usersInGroup: any,
@@ -21,7 +20,6 @@ export const group = defineStore('group', {
         createdGroup: [],
         allGroups: [JSON.parse(localStorage.getItem('allGroups'))],
         myGroups: [],
-        // idGroup: null,
         allCourses: [],
         usersInGroup: [],
         idGroup: Number(localStorage.getItem('idGroup')) || null,
@@ -144,3 +142,4 @@ export const group = defineStore('group', {
 
     }
 })
+

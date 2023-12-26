@@ -7,7 +7,7 @@ import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
 import {sharePost} from "@/models/Post";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 
 const tab = ref('Tape')
 const CourseStore = course()
@@ -24,7 +24,6 @@ let r, c;
 const switchMode = ref(true)
 const postShared = ref(false)
 allIdPosts = []
-const checkbox = ref(false)
 const checkboxes = ref({})
 
 async function getUsersInGroup() {
@@ -146,9 +145,12 @@ const nextPost = (id: any) => {
 }
 
 
+
 const selectAll = () => {
   checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
 };
+
+
 </script>
 
 <template>
