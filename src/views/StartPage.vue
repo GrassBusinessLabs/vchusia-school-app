@@ -69,10 +69,7 @@ ion-button {
   height: 60px;
 }
 
-.btn-login {
-  margin-bottom: 15px;
 
-}
 .btn{
   width: 80%;
   margin: 0 auto;
@@ -96,7 +93,5 @@ ion-img{
   width: 99%;
   height: 100%;
 }
-.btnReg{
-  margin-bottom: 50px;
-}
+
 </style>

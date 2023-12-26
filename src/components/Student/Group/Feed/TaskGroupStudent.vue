@@ -4,7 +4,7 @@ import {IonPage} from "@ionic/vue";
 
 <template>
 <ion-page>
-  <h1>ttt</h1>
+  <h1>Завдання студенти</h1>
 </ion-page>
 </template>
 

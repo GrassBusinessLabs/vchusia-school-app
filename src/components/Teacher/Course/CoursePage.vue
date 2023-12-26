@@ -25,70 +25,23 @@
       </div>
 
 
-      <v-card class="ma-6" elevation="0">
-        <v-tabs fixed-tabs bg-color="teal-lighten-5" v-model="tab">
-          <v-tab value="groups" prepend-icon="mdi-account-group">Групи</v-tab>
-        </v-tabs>
+      <v-card class="ma-6" elevation="0" >
+        <div class="groups_tab">
+          Групи
+        </div>
+
       </v-card>
 
 
-      <!--      <v-card class="pa-5 w-75 mx-auto d-flex flex-column align-center" elevation="1">-->
-      <!--        <v-btn class="btn" color="indigo" @click="sheet_change = !sheet_change">-->
-      <!--          Редагувати курс-->
-      <!--        </v-btn>-->
-
-      <!--        <v-btn class="btn" color="indigo-accent-3" @click="deleteCourse">-->
-      <!--          Видалити курс-->
-      <!--        </v-btn>-->
-
-      <!--      </v-card>-->
-
-
-      <!--      <div class="d-flex justify-center align-center">-->
-      <!--        <v-switch inset label="Mode read" class="d-flex justify-center" color="primary" v-model="switchMode"></v-switch>-->
-      <!--      </div>-->
-
-
-      <v-window v-model="tab">
-<!--        <v-window-item value="posts">-->
-<!--          <p class="text-center ma-2" v-show="PostStore.PostInfo.length < 1">Постів немає</p>-->
-<!--          <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">-->
-<!--            <v-card elevation="0"-->
-<!--                    class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"-->
-<!--                    id="parentGrid">-->
-
-<!--              <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">-->
-<!--                <ion-row v-for="(post, indexRow) in mapPosts()">-->
-<!--                  <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"-->
-<!--                           :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color, outline: switchMode === true ? outlineNone : outlinePost}">-->
-<!--                    {{ getPostByCords(indexRow + 1, indexCol)?.id }}-->
-<!--                  </ion-col>-->
-<!--                </ion-row>-->
-
-<!--                <ion-row v-show="switchMode === false">-->
-<!--                  <ion-col class="ion-col-post" @click="createNewPost(indexCol), sheet_parent = !sheet_parent"-->
-<!--                           v-for="(indexCol, index) in 5"></ion-col>-->
-<!--                </ion-row>-->
-
-<!--              </ion-grid>-->
-
-
-<!--            </v-card>-->
-<!--          </v-layout>-->
-<!--        </v-window-item>-->
-        <v-window-item value="groups">
           <p v-show="CourseStore.groupsInCourse.length < 1" class="text-center">Групи не прив'язані</p>
 
           <v-layout>
-            <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="0">
+            <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="5">
               <v-list class="list_groups_in_course">
                 <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course" @click="$router.push('/tape/tape'), GroupStore.idGroup = i.id"></v-list-item>
               </v-list>
             </v-card>
           </v-layout>
-        </v-window-item>
-      </v-window>
-
     </ion-content>
 
 
@@ -947,5 +900,16 @@ ion-col {
   width: 90%;
 }
 
+.groups_tab{
+  height: 50px;
+  background: #c9fffb;
+  color: #010101;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  border-radius: 10px;
+  border-bottom: 2px solid cyan;
+}
 
 </style>
