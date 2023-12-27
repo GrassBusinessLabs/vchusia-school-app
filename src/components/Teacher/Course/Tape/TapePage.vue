@@ -15,9 +15,13 @@ const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
 
+const pagination = {
+  page: 1,
+  count: 10
+}
 
 async function getFeed() {
-  await PostStore.getPosts(GroupStore.groupId, CourseStore.courseId);
+  await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
 }
 
 onIonViewWillEnter(() => {
