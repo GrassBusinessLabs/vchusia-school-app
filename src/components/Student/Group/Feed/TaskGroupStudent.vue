@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {IonHeader, IonPage, IonContent, IonCol, IonGrid, IonRow, onIonViewWillEnter} from "@ionic/vue";
+import {IonHeader, IonPage, IonContent, IonCol, IonGrid, IonRow, onIonViewWillEnter, IonFooter} from "@ionic/vue";
+import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
 import {ref} from "vue";
-import Post from "@/http/modules/post";
-import logger from "api/dist/cli/logger";
 
+const readPost = ref(false)
 const CourseStore = course()
 const PostStore = post()
 const GroupStore = group()
@@ -19,17 +19,6 @@ const switchMode = ref(true)
 const getPostByCords = (row: any, column: any) => {
   return PostStore.feedPosts.find(post => post.row === row && post.column === column)
 }
-// const mapPosts = () => {
-//   const rows = PostStore.PostInfo.map(post => post.row)
-//   const uniqueSet = Array.from(new Set(rows))
-//   const mappedUniqueSet = uniqueSet.map(row => {
-//     return {
-//       row: row,
-//       groups: PostStore.feedPosts.filter(item => item.row === row)
-//     }
-//   })
-//   return mappedUniqueSet
-// }
 
 const maxRow = () => {
   const arrMaxRow = PostStore.feedPosts.map(post => post.row);
@@ -50,6 +39,7 @@ const handlePost = (row : any, column : any) => {
 
       for (let i of PostStore.feedPosts) {
         if (row + 1 === i.row && column === i.column) {
+          readPost.value = true
 
           console.log(i.id)
           idPost = i.id
@@ -60,7 +50,6 @@ const handlePost = (row : any, column : any) => {
     } else {
       GroupStore.allGroups = []
       GroupStore.getCreatedGroupsList()
-
       console.log('edit create')
       for (let i of PostStore.feedPosts) {
         if (row + 1 === i.row && column === i.column) {
@@ -82,8 +71,6 @@ const handlePost = (row : any, column : any) => {
     }
     r = row + 1;
     c = column
-    console.log(row + 1, column)
-    console.log('create')
 
   }
   return idPost, r, c, items
@@ -96,7 +83,8 @@ const handlePost = (row : any, column : any) => {
 
 <template>
 <ion-page>
-  <ion-header>
+
+  <ion-content>
     <div v-for="course of CourseStore.courseInGroup" class="course_parent_block">
       <div v-if="CourseStore.courseId === course.id" class="course">
         <p>Назва курсу: {{course.name}}</p>
@@ -106,9 +94,6 @@ const handlePost = (row : any, column : any) => {
         <p>Вік до: {{ course.yearsTo }}</p>
       </div>
     </div>
-  </ion-header>
-
-  <ion-content>
     <v-layout class="mt-4" v-show="PostStore.feedPosts.length > 0">
       <v-card elevation="0"
               class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
@@ -127,6 +112,46 @@ const handlePost = (row : any, column : any) => {
     </v-layout>
   </ion-content>
 
+  <ion-footer>
+    <div class="text-center">
+      <v-bottom-sheet v-model="readPost">
+        <v-card height="650">
+          <div class="d-flex flex-column justify-center align-center mt-9">
+            <div class="container">
+              <div class="d-flex justify-space-between">
+                <div class="pa-2">
+                  <v-card-subtitle class="pa-2">{{ PostStore.info.id }}</v-card-subtitle>
+                  <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read"></div>
+                </div>
+
+                <div>
+                  <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
+                  <v-card-subtitle>Виконати до: {{PostStore.info.deadline}}</v-card-subtitle>
+                  <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
+                </div>
+              </div>
+
+              <v-card-text class="description-post">
+                <p>{{ PostStore.info.description }}</p>
+              </v-card-text>
+
+            </div>
+
+          </div>
+
+          <div class="fileInputBlock">
+            <v-file-input label="Прикріпіть файли до завдання" multiple variant="outlined"></v-file-input>
+          </div>
+
+          <div class="acceptTaskBlock">
+            <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
+          </div>
+
+        </v-card>
+      </v-bottom-sheet>
+    </div>
+  </ion-footer>
+
 
 </ion-page>
 </template>
@@ -140,10 +165,17 @@ const handlePost = (row : any, column : any) => {
   flex-direction: column;
   outline: 1px solid #6a64ff;
   padding: 10px;
+  justify-content: center;
   border-radius: 15px;
   background: #62ceff;
+  height: 20vh;
 }
-
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
 ion-col{
   background-color: #fff;
   outline: 1px solid grey;
@@ -156,5 +188,35 @@ ion-col{
   width: 48.5px;
   margin: 5px;
   outline: none;
+}
+
+.color_post_read {
+  width: 20px;
+  height: 20px;
+  margin: 10px 15px;
+  border-radius: 50px;
+}
+.fileInputBlock, .acceptTaskBlock{
+  width: 90%;
+  margin: 20px auto 0 auto;
+}
+
+.acceptTaskBlock{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.btnAcceptTask{
+  width: 90%;
+  background: #4CAF50;
+  color: #fff;
+}
+
+.description-post{
+  outline: 1px solid #dbdbdb;
+  width: 90%;
+  border-radius: 15px;
+  min-height: 20vh;
+  margin: 10px auto;
 }
 </style>
