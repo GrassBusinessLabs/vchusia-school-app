@@ -18,7 +18,7 @@ function findPostWithRow() {
 }
 
 function findPostWithRowGroupCourse() {
-    const courseId = course().thisCourse.id
+    const courseId = course().courseId
     return axios.get(`/courses/${courseId}/post`)
 
 }
