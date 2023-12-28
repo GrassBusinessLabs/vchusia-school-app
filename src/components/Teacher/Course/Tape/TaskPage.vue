@@ -24,6 +24,7 @@ let r, c;
 const switchMode = ref(true)
 const postShared = ref(false)
 allIdPosts = []
+const shared = ref(true)
 const checkboxes = ref({})
 
 async function getUsersInGroup() {
@@ -144,10 +145,21 @@ const nextPost = (id: any) => {
 
 }
 
+checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+
 
 
 const selectAll = () => {
-  checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+  for (let i in checkboxes.value){
+    if(checkboxes.value[i] === true){
+      checkboxes.value[i] = false
+      shared.value = false
+    }
+    else{
+      checkboxes.value[i] = true
+      shared.value = true
+    }
+  }
 };
 
 
@@ -259,7 +271,7 @@ const selectAll = () => {
           </ion-content>
 
           <v-btn class="mx-6" color="blue" @click="selectAll()">
-            Вибрати всі
+            {{shared === true ? "Зняти всі": "Вибрати всі" }}
           </v-btn >
           <v-btn  prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
                  @click="sharePostOpenSheet()">
