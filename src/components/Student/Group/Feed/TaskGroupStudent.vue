@@ -106,12 +106,37 @@ function isFutureDate(targetDate) {
   <ion-content>
     <div v-for="course of CourseStore.courseInGroup" class="course_parent_block">
       <div v-if="CourseStore.courseId === course.id" class="course">
-        <p>Назва курсу: {{course.name}}</p>
-        <p>Дисципліна: {{course.discipline}}</p>
-        <p>Клас: {{ course.grade }}</p>
-        <p>Вік від: {{ course.yearsFrom }}</p>
-        <p>Вік до: {{ course.yearsTo }}</p>
+        <div class="description_course">
+          <span class="content_text_course title_course">{{course.name}}</span>
+          <span class="content_text_course title_discipline">{{course.discipline}}</span>
+          <div class="years d-flex justify-space-between align-center">
+            <div class="years-from">
+              <span class="content_text_course">{{ course.yearsFrom }}</span>
+            </div>
+            -
+            <div class="years-to">
+              <span class="content_text_course">{{ course.yearsTo }}</span>
+            </div>
+          </div>
+          <p class="years_text_label">років</p>
+
+        </div>
+
+
+        <div class="d-flex justify-center align-center">
+          <div class="d-flex align-center flex-column justify-center">
+            <div class="grade_text">
+              <p>{{ course.grade }}</p>
+              <small>клас</small>
+            </div>
+
+
+          </div>
+        </div>
+
+
       </div>
+
     </div>
     <v-layout class="mt-4" v-show="PostStore.feedPosts.length > 0">
       <v-card elevation="0"
@@ -146,7 +171,7 @@ function isFutureDate(targetDate) {
                 <div>
                   <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
                   <v-card-subtitle>Виконати до: {{formatDate(PostStore.info.deadline)}}</v-card-subtitle>
-                  <v-card-subtitle class="missingDate" v-if="isFutureDate(PostStore.info.deadline) === false">Пропущено термін здачі</v-card-subtitle>
+                  <v-card-subtitle class="missingDate" v-if="isFutureDate(PostStore.info.deadline) === false"> Пропущено термін здачі </v-card-subtitle>
                   <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
                 </div>
               </div>
@@ -182,10 +207,10 @@ function isFutureDate(targetDate) {
 }
 .course{
   display: flex;
-  flex-direction: column;
+  align-items: start;
   outline: 1px solid #6a64ff;
-  padding: 10px;
-  justify-content: center;
+  padding: 15px 15px 0 15px;
+  justify-content: space-around;
   border-radius: 15px;
   background: #62ceff;
   height: 20vh;
@@ -241,8 +266,62 @@ ion-col{
   margin: 10px auto;
 }
 
+.content_text_course{
+  font-family: 'Single Day', cursive;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.grade_text{
+  outline: 1px solid #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50% 20% / 10% 40%;
+  background: rgb(98,230,255);
+  background: linear-gradient(96deg, rgba(98,230,255,1) 0%, rgba(255,250,204,1) 100%);
+  flex-direction: column;
+  font-family: 'Single Day', cursive;
+  font-weight: 700;
+  color: #878787;
+}
+
 .missingDate{
   color: red;
   font-weight: 900;
+  text-align: right;
+}
+
+.years{
+  margin-top: 10px;
+}
+
+.years-from{
+  background: #fff;
+  border-radius: 30%;
+  padding: 5px;
+}
+.years-to{
+  background: #fff;
+  border-radius: 30%;
+  padding: 5px;
+}
+.years_text_label{
+  color: #fff;
+  flex-direction: column;
+  font-family: 'Single Day', cursive;
+  text-transform: uppercase;
+
+}
+.description_course{
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.title_course{
+  font-size: 35px;
+  color: lightcoral;
+
 }
 </style>

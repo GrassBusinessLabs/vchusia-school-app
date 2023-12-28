@@ -32,6 +32,7 @@
 
       </v-list>
 
+
     </ion-content>
 
 
@@ -102,11 +103,18 @@ import {group} from "@/stores/group"
 import router from "@/router";
 import { useToast } from 'vue-toastification';
 import {course} from "@/stores/course";
+import {useInfiniteScroll, useVirtualList} from "@vueuse/core/index";
 const toast = useToast();
 const CourseStore = course()
 let sheet = ref(false)
 const GroupStore = group()
 const sheet_del_group = ref(false)
+
+const pagination = {
+  page: 1,
+  count: 15
+}
+
 
 let nameGroup = reactive({
   name: ""
@@ -148,7 +156,7 @@ async function copyIdentifier(identifier) {
 
 function getAllGroups ()  {
   GroupStore.allGroups = []
-  GroupStore.getCreatedGroupsList()
+  GroupStore.getCreatedGroupsList(pagination)
 }
 onMounted(() => {getAllGroups()})
 
@@ -157,7 +165,7 @@ async function deleteGroup  (id) {
   console.log(id)
   triggerToast()
   await GroupStore.deleteGroup(id)
-  GroupStore.getCreatedGroupsList()
+  GroupStore.getCreatedGroupsList(pagination)
 }
 
 function triggerToast() {

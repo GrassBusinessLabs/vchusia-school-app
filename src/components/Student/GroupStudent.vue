@@ -76,9 +76,11 @@ onMounted(() => {myGroupsList()})
 
   <ion-footer>
     <div class="text-center">
-      <v-btn class="btn-join-group mb-1" size="large" @click="sheet = !sheet">
+
+      <v-btn class="btn-join-group mb-6" size="large" @click="sheet = !sheet">
         <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
       </v-btn>
+
       <v-bottom-sheet v-model="sheet">
         <v-card class="text-center" height="300">
           <v-card-text>

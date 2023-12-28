@@ -53,7 +53,7 @@ onMounted(() => {coursesByGroupId()})
           </div>
 
           <template v-slot:append>
-            <p>Test</p>
+            <v-icon>mdi-arrow-right</v-icon>
           </template>
 
 
@@ -84,6 +84,7 @@ onMounted(() => {coursesByGroupId()})
   outline: 1px solid grey;
 
 }
+
 
 .list_courses{
   outline: 1px solid #c2fff1;

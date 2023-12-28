@@ -73,13 +73,13 @@ export const group = defineStore('group', {
             }
         },
 
-        async getCreatedGroupsList(): Promise <void>{
+        async getCreatedGroupsList(page?: any): Promise <void>{
             try {
                 this.allGroups = []
-                const response: any = await GroupApi.getCreatedGroupsList()
+                const response: any = await GroupApi.getCreatedGroupsList(page)
                 this.allGroups.push(response.items)
-                const page = {page: 1, count: 10}
-                const allCourseResponse = await CourseApi.getAllCourse(page)
+                const pagination = {page: 1, count: 10}
+                const allCourseResponse = await CourseApi.getAllCourse(pagination)
                 this.allCourses = allCourseResponse.items
                 localStorage.setItem('allGroups', JSON.stringify(response.items))
                 console.log(response)

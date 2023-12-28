@@ -16,8 +16,12 @@ function updateGroup(id: any, body: Group) {
     return axios.put(`/group/${id}`, body)
 }
 
-function getCreatedGroupsList() {
-    return axios.get(`/groups?page=1&count=10`)
+function getCreatedGroupsList(page?:{page: number, count: number}) {
+    if(page){
+        return axios.get(`/groups?page=${page.page}&count=${page.count}`)
+    } else{
+        return axios.get(`/groups?page=1&count=10`)
+    }
 }
 
 function myGroupsList() {
@@ -33,11 +37,11 @@ function getUsersInGroup(id: any) {
 }
 
 function addCourseToGroup(groupId: any, courseId: any) {
-    return axios.post(`/group/${groupId}/course/${courseId}?page=1&count=10`)
+    return axios.post(`/group/${groupId}/course/${courseId}`)
 }
 
 function removeCourseFromGroup(groupId: any, courseId: any) {
-    return axios.delete(`/group/${groupId}/course/${courseId}?page=1&count=10`)
+    return axios.delete(`/group/${groupId}/course/${courseId}`)
 }
 
 

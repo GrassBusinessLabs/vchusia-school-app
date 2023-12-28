@@ -58,9 +58,11 @@ export const auth = defineStore('auth', {
                 if(e.response.data.error == "upper: no more rows in this result set"){
                     this.errorLogin("Ви ввелі невірні дані")
                 }
+                if (e.response.data.error == "invalid credentials"){
+                    this.errorLogin("Ви ввелі невірні дані")
+                }
                 else{
                     this.errorLogin("Введіть пошту та пароль!")
-
                 }
 
                 console.log(e.response.data)

@@ -9,6 +9,7 @@ import {onMounted, reactive, ref} from "vue";
 import {Group, JoinGroup} from "@/models/Group";
 import {add} from "ionicons/icons";
 import {course} from "@/stores/course";
+import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 
 let sheet_change = ref(false);
 let sheet_del = ref(false);
@@ -142,17 +143,7 @@ async function deleteCourseFromGroup(courseId: any) {
   CourseStore.coursesByGroupId(groupId)
 }
 
-// let totalCourses = CourseStore.total
-// let courses: any[]
-// const loadCourses = () => {
-//   courses = []
-//   CourseStore.getAllCourse({page: 1, count: totalCourses})
-//   for(let i of CourseStore.items){
-//     courses.push({id: i.id, name: i.name})
-//   }
-//   console.log(courses)
-// }
-// loadCourses();
+
 onMounted(() => {
   GroupStore.getCreatedGroupsList()
 })
@@ -181,6 +172,7 @@ onMounted(() => {
           <v-btn icon="mdi-delete-outline" size="large" @click="sheet_del = !sheet_del" color="red-accent-2"></v-btn>
         </div>
       </div>
+
 
       <v-layout class="mt-4" v-show="CourseStore.courseInGroup.length > 0">
         <v-card class="content_courses" elevation="4">
