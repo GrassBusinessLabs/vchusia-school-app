@@ -77,7 +77,26 @@ const handlePost = (row : any, column : any) => {
 
 }
 
+const formatDate = (dateString) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false, // 24-hour format
+  };
 
+  const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
+  return formattedDate;
+};
+
+function isFutureDate(targetDate) {
+  const currentDate = new Date();
+  const targetDateTime = new Date(targetDate);
+
+  return targetDateTime > currentDate;
+}
 
 </script>
 
@@ -120,13 +139,14 @@ const handlePost = (row : any, column : any) => {
             <div class="container">
               <div class="d-flex justify-space-between">
                 <div class="pa-2">
-                  <v-card-subtitle class="pa-2">{{ PostStore.info.id }}</v-card-subtitle>
+                  <v-card-subtitle class="pa-2 d-flex flex-column justify-center align-center">{{ PostStore.info.id }}</v-card-subtitle>
                   <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read"></div>
                 </div>
 
                 <div>
                   <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
-                  <v-card-subtitle>Виконати до: {{PostStore.info.deadline}}</v-card-subtitle>
+                  <v-card-subtitle>Виконати до: {{formatDate(PostStore.info.deadline)}}</v-card-subtitle>
+                  <v-card-subtitle class="missingDate" v-if="isFutureDate(formatDate(PostStore.info.deadline)) === false">Пропущено термін здачі</v-card-subtitle>
                   <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
                 </div>
               </div>
@@ -173,8 +193,9 @@ const handlePost = (row : any, column : any) => {
 .container{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: self-start;
   text-align: left;
+  width: 90%;
 }
 ion-col{
   background-color: #fff;
@@ -218,5 +239,10 @@ ion-col{
   border-radius: 15px;
   min-height: 20vh;
   margin: 10px auto;
+}
+
+.missingDate{
+  color: red;
+  font-weight: 900;
 }
 </style>

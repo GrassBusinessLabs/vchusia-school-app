@@ -19,6 +19,29 @@ async function getSharedPost () {
   await PostStore.getPosts(pagination, GroupStore.idGroup, CourseStore.courseId)
 }
 
+const formatDate = (dateString) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  };
+
+  const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
+  return formattedDate;
+};
+
+function isFutureDate(targetDate) {
+  const currentDate = new Date();
+  const targetDateTime = new Date(targetDate);
+
+  return targetDateTime > currentDate;
+}
+
+
+
 onIonViewWillEnter(() => {getSharedPost()})
 
 </script>
@@ -32,8 +55,8 @@ onIonViewWillEnter(() => {getSharedPost()})
           {{i.title}}
         </v-list-item-title>
 
-        <v-list-item-subtitle>
-          {{i.deadline}}
+        <v-list-item-subtitle class="deadline-text">
+          {{formatDate(i.deadline)}}
         </v-list-item-subtitle>
       </v-list-item>
     </v-list>
@@ -47,13 +70,14 @@ onIonViewWillEnter(() => {getSharedPost()})
             <div class="container">
               <div class="d-flex justify-space-between">
                 <div class="pa-2">
-                  <v-card-subtitle class="pa-2">{{ PostStore.info.id }}</v-card-subtitle>
+                  <v-card-subtitle class="pa-2 d-flex flex-column justify-center align-center">{{ PostStore.info.id }}</v-card-subtitle>
                   <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read"></div>
                 </div>
 
                 <div>
                   <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
-                  <v-card-subtitle>Виконати до: {{PostStore.info.deadline}}</v-card-subtitle>
+                  <v-card-subtitle>Виконати до: {{formatDate(PostStore.info.deadline)}}</v-card-subtitle>
+                  <v-card-subtitle class="missingDate" v-if="isFutureDate(formatDate(PostStore.info.deadline)) === false">Пропущено термін здачі</v-card-subtitle>
                   <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
                 </div>
               </div>
@@ -85,8 +109,11 @@ onIonViewWillEnter(() => {getSharedPost()})
 .itemListFeed{
   height: 50px;
   outline: 1px ridge cyan;
-  border-radius: 20px;
+  border-radius: 15px;
   margin: 15px;
+  color: grey;
+  background: rgb(98,230,255);
+  background: linear-gradient(96deg, rgba(98,230,255,1) 0%, rgba(220,249,255,1) 100%);
 }
 .color_post_read {
   width: 20px;
@@ -111,8 +138,9 @@ onIonViewWillEnter(() => {getSharedPost()})
 .container{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: self-start;
   text-align: left;
+  width: 90%;
 }
 
 .description-post{
@@ -121,5 +149,14 @@ onIonViewWillEnter(() => {getSharedPost()})
   border-radius: 15px;
   min-height: 20vh;
   margin: 15px auto;
+}
+
+.deadline-text{
+  color: #555;
+}
+
+.missingDate{
+  color: red;
+  font-weight: 900;
 }
 </style>

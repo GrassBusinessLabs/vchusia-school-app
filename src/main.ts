@@ -28,7 +28,7 @@ import Toast from "vue-toastification";
 import 'vue-toastification/dist/index.css'
 /* Theme variables */
 import './theme/variables.css';
-
+import './assets/style.css'
 const vuetify = createVuetify({
   components,
   directives,
