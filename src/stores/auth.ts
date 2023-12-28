@@ -2,7 +2,9 @@ import {defineStore} from "pinia";
 import AuthApi from "../http/modules/auth"
 import {Auth, changeMe, changePassword, Signup} from "@/models/Auth";
 import router from '../router/index'
+import { useToast } from "vue-toastification";
 
+const toast = useToast()
 interface State {
     user: any,
     token: string | null
@@ -15,6 +17,22 @@ export const auth = defineStore('auth', {
         token: null
     }),
     actions: {
+        errorLogin(text){
+            toast.error(text, {
+                position: "top-right",
+                timeout: 3048,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+            });
+        },
 
         async login(body: Auth) {
             try {
@@ -31,7 +49,21 @@ export const auth = defineStore('auth', {
                 }
                 console.log(response)
             } catch (e) {
-                console.log(e)
+                if(e.response.data.error == "Key: 'AuthRequest.Email' Error:Field validation for 'Email' failed on the 'required' tag"){
+                    this.errorLogin("Введіть пошту!")
+                }
+                if (e.response.data.error == "Key: 'AuthRequest.Password' Error:Field validation for 'Password' failed on the 'required' tag"){
+                    this.errorLogin("Введіть пароль!")
+                }
+                if(e.response.data.error == "upper: no more rows in this result set"){
+                    this.errorLogin("Ви ввелі невірні дані")
+                }
+                else{
+                    this.errorLogin("Введіть пошту та пароль!")
+
+                }
+
+                console.log(e.response.data)
             }
         },
 
@@ -62,7 +94,10 @@ export const auth = defineStore('auth', {
 
                 }
             } catch (e) {
-                console.log("Error")
+                if (e.response.data.error == "invalid credentials"){
+                    this.errorLogin('Такий обліковий запис уже зареєстровано!')
+                }
+                console.log(e)
             }
         },
 

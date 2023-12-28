@@ -30,9 +30,7 @@ const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
 
 const virtualList = useVirtualList(feedPosts, { itemSize: 50 })
-for (let i in virtualList){
-  console.log(i)
-}
+
 
 function isFutureDate(targetDate) {
   const currentDate = new Date();
