@@ -42,6 +42,7 @@ function isFutureDate(targetDate) {
 
 
 
+
 onIonViewWillEnter(() => {getSharedPost()})
 
 </script>
@@ -77,7 +78,7 @@ onIonViewWillEnter(() => {getSharedPost()})
                 <div>
                   <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
                   <v-card-subtitle>Виконати до: {{formatDate(PostStore.info.deadline)}}</v-card-subtitle>
-                  <v-card-subtitle class="missingDate" v-if="isFutureDate(formatDate(PostStore.info.deadline)) === false">Пропущено термін здачі</v-card-subtitle>
+                  <v-card-subtitle class="missingDate" v-if="isFutureDate(PostStore.info.deadline) == false">Пропущено термін здачі</v-card-subtitle>
                   <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
                 </div>
               </div>
