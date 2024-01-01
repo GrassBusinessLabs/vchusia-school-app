@@ -675,6 +675,7 @@ const sharePost = () => {
 // }
 
 const loadCourse = () => {
+  CourseStore.thisCourse = []
   console.log(CourseStore.findCourseById())
 }
 

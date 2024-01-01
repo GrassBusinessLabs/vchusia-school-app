@@ -38,7 +38,7 @@
 
     <ion-footer>
       <div class="text-center">
-        <v-btn class="btn-add-group mb-1" size="large" @click="sheet = !sheet">
+        <v-btn class="btn-add-group mb-6" size="large" @click="sheet = !sheet">
           <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
         </v-btn>
 

@@ -145,7 +145,10 @@ const nextPost = (id: any) => {
 
 }
 
-checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+if (GroupStore.usersInGroup[0].length > 0){
+  checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+}
+
 
 
 

@@ -117,14 +117,14 @@ function replaceGroup(){
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.push('/main/groups-student')">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.push('/main/groups-student')">
             <template v-slot:append>
               <v-icon icon="mdi-arrow-left" class="icon-course"/>
             </template>
           </v-btn>
 
 
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.push('/group-info-student/feed-group-student'), title = 'Стрічка'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.push('/group-info-student/feed-group-student'), title = 'Стрічка'">
             <v-icon icon="mdi-tooltip-check-outline" class="icon-course"/>
             <span>Стрічка</span>
 

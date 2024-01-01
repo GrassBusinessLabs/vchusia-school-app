@@ -207,6 +207,7 @@ const confirm = () => {
 
 };
 
+CourseStore.groupsInCourse = []
 
 </script>
 

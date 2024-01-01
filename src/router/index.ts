@@ -196,17 +196,10 @@ const routes: Array<RouteRecordRaw> = [
         name: 'GroupStudentPage',
         component: GroupStudentPage,
         meta: { role: 'STUDENT'}
-
       }
-
-
-
     ],
   },
-
-
 ]
-
 
 
 const router = createRouter({
