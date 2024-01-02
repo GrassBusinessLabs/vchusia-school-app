@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import {IonPage, IonHeader, IonContent} from "@ionic/vue";
+import {IonPage, IonHeader, IonContent,  IonList, IonItem, IonLabel, IonIcon} from "@ionic/vue";
 import {group} from "@/stores/group";
 import {course} from "@/stores/course";
 import {onMounted} from "vue";
 import router from "@/router";
+import {ref} from "vue";
+import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 
 const GroupStore = group()
 const CourseStore = course()
-
+const pagination = ref({
+  page: 1,
+  count: CourseStore.totalCoursesInGroup
+})
 const coursesByGroupId = () => {
   CourseStore.courseInGroup = []
-  CourseStore.coursesByGroupId(GroupStore.idGroup)
+  CourseStore.coursesByGroupId(pagination, GroupStore.idGroup)
 }
 
 const redirectToCourseForGroup = (idCourse) => {
@@ -19,7 +24,13 @@ const redirectToCourseForGroup = (idCourse) => {
   console.log(idCourse)
 }
 
+
+
+
+
+
 onMounted(() => {coursesByGroupId()})
+
 </script>
 
 <template>
@@ -34,8 +45,10 @@ onMounted(() => {coursesByGroupId()})
     </div>
   </ion-header>
 
+
   <ion-content>
-    <v-list class="list_courses">
+
+        <v-list class="list_courses">
        <p class="text-center">Мої курси</p>
         <v-list-item v-for="i of CourseStore.courseInGroup" class="item_course_group" @click="redirectToCourseForGroup(i.id)">
           <div>
@@ -61,7 +74,10 @@ onMounted(() => {coursesByGroupId()})
 
     </v-list>
 
+
   </ion-content>
+
+
 </ion-page>
 </template>
 
