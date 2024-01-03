@@ -19,15 +19,10 @@ const coursesByGroupId = () => {
 }
 
 const redirectToCourseForGroup = (idCourse) => {
-  router.push('/group-info-student/feed-group-student')
+  router.replace('/group-info-student/feed-group-student')
   CourseStore.courseId = idCourse
   console.log(idCourse)
 }
-
-
-
-
-
 
 onMounted(() => {coursesByGroupId()})
 

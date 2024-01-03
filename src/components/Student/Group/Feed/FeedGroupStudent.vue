@@ -67,17 +67,6 @@ function isFutureDate(targetDate) {
 <template>
 <ion-page>
   <ion-content>
-<!--    <v-list>-->
-<!--      <v-list-item v-for="i of PostStore.feedPosts" class="itemListFeed" @click="readPost = !readPost, PostStore.info = i">-->
-<!--        <v-list-item-title>-->
-<!--          {{i.title}}-->
-<!--        </v-list-item-title>-->
-
-<!--        <v-list-item-subtitle class="deadline-text">-->
-<!--          {{formatDate(i.deadline)}}-->
-<!--        </v-list-item-subtitle>-->
-<!--      </v-list-item>-->
-<!--    </v-list>-->
     <div ref="el">
       <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item">
         <div class="title_post_div">

@@ -58,7 +58,7 @@
       </ion-header>
       <ion-content class="ion-padding">
 
-        <ion-router-outlet/>
+        <ion-router-outlet />
 
       </ion-content>
 
@@ -69,7 +69,7 @@
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), activePage='Стрічка'" v-if="this.user.role !== 'TEACHER'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), activePage='Стрічка'" v-if="this.user.role !== 'TEACHER' ">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Стрічка</span>
           </v-btn>

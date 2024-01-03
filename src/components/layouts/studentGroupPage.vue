@@ -46,6 +46,8 @@ function replaceGroup(){
     router.replace('/main/groups-student')
   }
 }
+
+
 </script>
 
 <template>
@@ -124,13 +126,13 @@ function replaceGroup(){
           </v-btn>
 
 
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.push('/group-info-student/feed-group-student'), title = 'Стрічка'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/group-info-student/feed-group-student'), title = 'Стрічка'">
             <v-icon icon="mdi-tooltip-check-outline" class="icon-course"/>
             <span>Стрічка</span>
 
           </v-btn>
 
-          <v-btn class="btn-bottom-nav" @click="router.push('/group-info-student/task-group-student'), title = 'Завдання'">
+          <v-btn class="btn-bottom-nav" @click="$router.replace('/group-info-student/task-group-student'), title = 'Завдання'">
             <v-icon icon="mdi-calendar-check-outline"></v-icon>
             <span>Завдання</span>
 
