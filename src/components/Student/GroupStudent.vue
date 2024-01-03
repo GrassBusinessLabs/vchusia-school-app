@@ -45,9 +45,7 @@ onMounted(() => {myGroupsList()})
 
 <template>
 <ion-page>
-<header>
 
-</header>
 
   <ion-content>
     <div class="mt-4">

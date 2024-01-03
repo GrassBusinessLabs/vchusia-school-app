@@ -4,7 +4,8 @@ import {group} from "@/stores/group";
 import {course} from "@/stores/course"
 import {post} from "@/stores/post";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 
 const readPost = ref(false)
 const GroupStore = group()
@@ -12,12 +13,30 @@ const CourseStore = course()
 const PostStore = post()
 const pagination = {
   page: 1,
-  count: 10
+  count: 5
 }
-async function getSharedPost () {
-  PostStore.feedPosts = []
-  await PostStore.getPosts(pagination, GroupStore.idGroup, CourseStore.courseId)
+
+const feedPosts = ref([])
+let hasMore = true
+PostStore.feedPosts = []
+
+async function getPostsOnFeed() {
+  if (!hasMore) return
+  const newPosts = await PostStore.getPosts(pagination, GroupStore.idGroup, CourseStore.courseId)
+  if (newPosts.length < pagination.count) {
+    hasMore = false
+  }
+  feedPosts.value.push(...newPosts)
+  pagination.page += 1
 }
+
+PostStore.postsInTask = feedPosts.value
+console.log(feedPosts)
+const el = ref<HTMLElement | null>(null)
+useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
+
+const virtualList = useVirtualList(feedPosts, { itemSize: 50 })
+
 
 const formatDate = (dateString) => {
   const options = {
@@ -43,24 +62,30 @@ function isFutureDate(targetDate) {
 
 
 
-onIonViewWillEnter(() => {getSharedPost()})
-
 </script>
 
 <template>
 <ion-page>
   <ion-content>
-    <v-list>
-      <v-list-item v-for="i of PostStore.feedPosts" class="itemListFeed" @click="readPost = !readPost, PostStore.info = i">
-        <v-list-item-title>
-          {{i.title}}
-        </v-list-item-title>
+<!--    <v-list>-->
+<!--      <v-list-item v-for="i of PostStore.feedPosts" class="itemListFeed" @click="readPost = !readPost, PostStore.info = i">-->
+<!--        <v-list-item-title>-->
+<!--          {{i.title}}-->
+<!--        </v-list-item-title>-->
 
-        <v-list-item-subtitle class="deadline-text">
-          {{formatDate(i.deadline)}}
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
+<!--        <v-list-item-subtitle class="deadline-text">-->
+<!--          {{formatDate(i.deadline)}}-->
+<!--        </v-list-item-subtitle>-->
+<!--      </v-list-item>-->
+<!--    </v-list>-->
+    <div ref="el">
+      <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item">
+        <div class="title_post_div">
+          {{item.title}}
+          <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
+        </div>
+      </div>
+    </div>
   </ion-content>
 
   <ion-footer>
@@ -107,15 +132,7 @@ onIonViewWillEnter(() => {getSharedPost()})
 </template>
 
 <style scoped>
-.itemListFeed{
-  height: 50px;
-  outline: 1px ridge cyan;
-  border-radius: 15px;
-  margin: 15px;
-  color: grey;
-  background: rgb(98,230,255);
-  background: linear-gradient(96deg, rgba(98,230,255,1) 0%, rgba(220,249,255,1) 100%);
-}
+
 .color_post_read {
   width: 20px;
   height: 20px;
@@ -152,12 +169,30 @@ onIonViewWillEnter(() => {getSharedPost()})
   margin: 15px auto;
 }
 
-.deadline-text{
-  color: #555;
-}
 
 .missingDate{
   color: red;
   font-weight: 900;
 }
+.itemListFeed {
+  height: 50px;
+  outline: 1px ridge cyan;
+  border-radius: 15px;
+  margin: 15px;
+  display: flex;
+  padding: 5px;
+  color: grey;
+  background: rgb(180,252,255);
+  background: linear-gradient(96deg, rgba(180,252,255,1) 55%, rgba(0,212,255,1) 100%);
+  align-items: center;
+}
+.title_post_div{
+  padding-left: 10px;
+}
+.subtitle_post{
+  color: #555;
+  font-size: 13px;
+}
 </style>
+
+

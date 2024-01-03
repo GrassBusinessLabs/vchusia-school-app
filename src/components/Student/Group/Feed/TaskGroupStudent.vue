@@ -17,11 +17,12 @@ let r, c;
 const switchMode = ref(true)
 
 const getPostByCords = (row: any, column: any) => {
-  return PostStore.feedPosts.find(post => post.row === row && post.column === column)
+  console.log(PostStore.postsInTask.find(post => post.row === row && post.column === column))
+  return PostStore.postsInTask.find(post => post.row === row && post.column === column)
 }
 
 const maxRow = () => {
-  const arrMaxRow = PostStore.feedPosts.map(post => post.row);
+  const arrMaxRow = PostStore.postsInTask.map(post => post.row);
   PostStore.rows = Math.max(...arrMaxRow);
 }
 onIonViewWillEnter(() => {
@@ -37,7 +38,7 @@ const handlePost = (row : any, column : any) => {
     if (switchMode.value === true) {
       sheet_read.value = true
 
-      for (let i of PostStore.feedPosts) {
+      for (let i of PostStore.postsInTask) {
         if (row + 1 === i.row && column === i.column) {
           readPost.value = true
 
@@ -51,7 +52,7 @@ const handlePost = (row : any, column : any) => {
       GroupStore.allGroups = []
       GroupStore.getCreatedGroupsList()
       console.log('edit create')
-      for (let i of PostStore.feedPosts) {
+      for (let i of PostStore.postsInTask) {
         if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
@@ -138,7 +139,7 @@ function isFutureDate(targetDate) {
       </div>
 
     </div>
-    <v-layout class="mt-4" v-show="PostStore.feedPosts.length > 0">
+    <v-layout class="mt-4">
       <v-card elevation="0"
               class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
               id="parentGrid">

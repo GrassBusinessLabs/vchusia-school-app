@@ -117,7 +117,7 @@ function replaceGroup(){
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.push('/main/groups-student')">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/main/groups-student')">
             <template v-slot:append>
               <v-icon icon="mdi-arrow-left" class="icon-course"/>
             </template>

@@ -15,7 +15,8 @@ interface State {
     total: number,
     info: any,
     feedPosts: any,
-    rows: number
+    rows: number,
+    postsInTask: any
 }
 
 
@@ -27,7 +28,8 @@ export const post = defineStore('post', {
         total: 0,
         info: [],
         feedPosts: [],
-        rows: 0
+        rows: 0,
+        postsInTask: []
     }),
 
     getters: {

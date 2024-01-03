@@ -40,6 +40,9 @@ function sharePost(body: sharePost) {
 
 function getPosts(page?: {page: number, count: number}, groupId?: any, courseId?: any) {
     if(groupId && courseId !== undefined){
+        if(page){
+            return axios.get(`/post/getPosts?page=${page?.page}&count=${page?.count}&groupId=${groupId}&courseId=${courseId}`)
+        }
         return axios.get(`/post/getPosts?page=1&count=10&groupId=${groupId}&courseId=${courseId}`)
     }
     else{
