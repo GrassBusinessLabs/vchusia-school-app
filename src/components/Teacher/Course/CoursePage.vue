@@ -36,7 +36,7 @@
           <p v-show="CourseStore.groupsInCourse.length < 1" class="text-center">Групи не прив'язані</p>
 
           <v-layout>
-            <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="5">
+            <v-card class="card_groups mx-auto d-flex justify-center align-center" elevation="0">
               <v-list class="list_groups_in_course">
                 <v-list-item v-for="i of CourseStore.groupsInCourse" :title="i.name" class="item_group_in_course" @click="$router.replace('/tape/tape'), GroupStore.idGroup = i.id"></v-list-item>
               </v-list>

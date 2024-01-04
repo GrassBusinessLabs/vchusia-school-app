@@ -6,10 +6,13 @@ import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 const readPost = ref(false)
 const PostStore = post()
+const attachImage = ref(false)
 const pagination = {
   page: 1,
   count: 10
 }
+
+const image = ref()
 
 const feedPosts = ref([])
 let hasMore = true
@@ -51,6 +54,10 @@ const formatDate = (dateString) => {
   const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
   return formattedDate;
 };
+
+const handleFileInput = () => {
+  console.log(image.value)
+}
 
 </script>
 
@@ -97,12 +104,35 @@ const formatDate = (dateString) => {
             </div>
 
             <div class="fileInputBlock">
-              <v-file-input label="Прикріпіть файли до завдання" multiple variant="outlined"></v-file-input>
+              <v-btn class="btn-pin-task" @click="attachImage = !attachImage"><v-icon>mdi-plus</v-icon></v-btn>
             </div>
 
             <div class="acceptTaskBlock">
               <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
             </div>
+
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
+      <div class="text-center">
+        <v-bottom-sheet v-model="attachImage">
+          <v-card height="500" class="d-flex align-center">
+            <div class="container_add">
+
+              <div class="add_image">
+                <v-btn class="btns-nav-vbtn" color="red" @click="attachImage = !attachImagФ"><v-icon>mdi-close</v-icon></v-btn>
+                <label for="fileInput" class="custom-file-input">
+                  Завантажити файл
+                </label>
+                <v-file-input id="fileInput" @change="handleFileInput" v-model="image" multiple style="display: none;"/>
+              <v-btn @click="attachImage = !attachImage" class="btns-nav-vbtn" color="green"><v-icon>mdi-check</v-icon></v-btn>
+              </div>
+
+              <span class="hr"></span>
+
+            </div>
+
 
           </v-card>
         </v-bottom-sheet>
@@ -143,9 +173,14 @@ const formatDate = (dateString) => {
   width: 90%;
   margin: 20px auto 0 auto;
 }
+.fileInputBlock{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .acceptTaskBlock{
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 }
 .btnAcceptTask{
@@ -172,6 +207,61 @@ const formatDate = (dateString) => {
 .missingDate{
   color: red;
   font-weight: 900;
+}
+.btn-pin-task{
+  background: cornflowerblue;
+  width: 90%;
+  color: #fff;
+  display: flex;
+}
+
+.add_image {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+}
+
+
+
+.container_add{
+  padding: 15px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.hr{
+  width: 100%;
+  height: 1px;
+  background: #000;
+  margin: 15px;
+  opacity: 0.15;
+}
+
+
+
+.custom-file-input {
+  display: inline-block;
+  padding: 10px 15px;
+  cursor: pointer;
+  background-color: #007BFF;
+  color: #fff;
+  border: 1px solid #007BFF;
+  border-radius: 5px;
+}
+
+.custom-file-input:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btns-nav-vbtn{
+  border-radius: 30px;
 }
 </style>
 
