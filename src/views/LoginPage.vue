@@ -76,7 +76,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import {auth} from "../stores/auth";
 import {
   IonPage,

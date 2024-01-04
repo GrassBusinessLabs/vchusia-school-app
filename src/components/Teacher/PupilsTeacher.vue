@@ -2,10 +2,8 @@
 <h1>Pupils</h1>
 </template>
 
-<script>
-export default {
-  name: "PupilsTeacher"
-}
+<script lang="ts" setup>
+
 </script>
 
 <style scoped>

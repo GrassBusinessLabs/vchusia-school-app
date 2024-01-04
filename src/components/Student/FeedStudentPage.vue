@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useInfiniteScroll, useVirtualList } from '@vueuse/core'
-import {post} from "@/stores/post";
+import {useInfiniteScroll, useVirtualList, UseVirtualListReturn} from '@vueuse/core'
+import {post} from "/src/stores/post";
 import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 const readPost = ref(false)
@@ -32,7 +32,8 @@ getPostsOnFeed()
 const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
 
-const virtualList = useVirtualList(feedPosts, { itemSize: 50 })
+let virtualList: UseVirtualListReturn<any>;
+virtualList = useVirtualList(feedPosts, {itemSize: 50});
 
 
 function isFutureDate(targetDate) {

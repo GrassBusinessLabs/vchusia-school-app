@@ -112,7 +112,7 @@ function isFutureDate(targetDate) {
           <span class="content_text_course title_discipline">{{course.discipline}}</span>
           <div class="years d-flex justify-space-between align-center">
             <div class="years-from">
-              <span class="content_text_course">{{ course.yearsFrom }}</span>
+              <span class="content_text_course">{{ course.yearsFrom }}</span>io
             </div>
             -
             <div class="years-to">

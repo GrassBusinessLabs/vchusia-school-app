@@ -7,7 +7,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {IonApp, IonRouterOutlet, IonPage } from '@ionic/vue';
 
 </script>

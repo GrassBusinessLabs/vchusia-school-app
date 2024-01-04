@@ -97,7 +97,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent} from 'vue';
 import AccountTeacher from "@/components/Teacher/AccountTeacher.vue";
 import CourseTeacher from "@/components/Teacher/CourseTeacher.vue"
