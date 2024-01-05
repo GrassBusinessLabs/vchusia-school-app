@@ -1,9 +1,9 @@
 <template>
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-item>
-        <ion-searchbar animated="animated" placeholder="Пошук по курсах"></ion-searchbar>
+        <ion-searchbar mode="ios" animated="animated" placeholder="Пошук по курсах"></ion-searchbar>
       </ion-item>
     </ion-header>
 

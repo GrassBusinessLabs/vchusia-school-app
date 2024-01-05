@@ -6,9 +6,9 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/auth/start" text="Назад"></ion-back-button>
+          <ion-back-button mode="ios" default-href="/auth/start" text="Назад"></ion-back-button>
         </ion-buttons>
-        <ion-title>Реєстрація</ion-title>
+        <ion-title class="ml-4">Реєстрація</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

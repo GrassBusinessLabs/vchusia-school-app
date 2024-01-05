@@ -54,7 +54,7 @@ function replaceGroup(){
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <ion-menu content-id="main-content" class="menu" side="end">
-      <ion-header>
+      <ion-header class="ion-no-border">
         <v-toolbar
             dark
             prominent
@@ -94,7 +94,7 @@ function replaceGroup(){
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header>
+      <ion-header class="ion-no-border">
         <div>
           <v-toolbar
               dark

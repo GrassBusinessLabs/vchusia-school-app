@@ -2,10 +2,11 @@
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <ion-menu content-id="main-content" class="menu" side="end">
-      <ion-header>
+      <ion-header class="ion-no-border">
         <v-toolbar
             dark
             prominent
+            mode="ios"
             image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
         >
 
@@ -42,11 +43,13 @@
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
+      <ion-header v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'" class="ion-no-border">
         <div>
           <v-toolbar
               dark
+
               prominent
+              :elevation="0"
               image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
           >
 
@@ -86,8 +89,7 @@
           </v-btn>
 
           <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content">
-            <ion-menu-button color="dark" ></ion-menu-button>
-            <span>Меню</span>
+            <ion-menu-button color="dark" class="pa-0"></ion-menu-button>
           </v-btn>
         </v-bottom-navigation>
       </v-layout>

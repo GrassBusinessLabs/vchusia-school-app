@@ -30,7 +30,7 @@ onMounted(() => {coursesByGroupId()})
 
 <template>
 <ion-page>
-  <ion-header>
+  <ion-header class="ion-no-border">
     <div class="groupActive d-flex justify-center align-center">
       <div v-for="i of GroupStore.myGroups">
         <div v-if="i.id === GroupStore.idGroup">

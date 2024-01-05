@@ -225,7 +225,7 @@ onMounted(() => {
 
     </ion-content>
 
-    <ion-footer>
+    <ion-footer class="ion-no-border">
 
 
       <div class="text-center">

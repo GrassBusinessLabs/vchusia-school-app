@@ -36,7 +36,7 @@
     </ion-content>
 
 
-    <ion-footer>
+    <ion-footer class="ion-no-border">
       <div class="text-center">
         <v-btn class="btn-add-group mb-6" size="large" @click="sheet = !sheet">
           <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>

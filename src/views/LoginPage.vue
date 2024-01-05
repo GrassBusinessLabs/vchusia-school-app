@@ -2,12 +2,12 @@
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
-    <ion-header>
+    <ion-header >
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/auth/start" text="Назад"></ion-back-button>
+        <ion-buttons slot="start" >
+          <ion-back-button default-href="/auth/start" text="Назад" mode="ios"></ion-back-button>
         </ion-buttons>
-        <ion-title>Вхід</ion-title>
+        <ion-title class="ml-4">Вхід</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-list>

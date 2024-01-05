@@ -72,7 +72,7 @@ onMounted(() => {myGroupsList()})
     </div>
   </ion-content>
 
-  <ion-footer>
+  <ion-footer class="ion-no-border">
     <div class="text-center">
 
       <v-btn class="btn-join-group mb-6" size="large" @click="sheet = !sheet">

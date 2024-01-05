@@ -56,7 +56,7 @@ onIonViewWillEnter(() => {
 
   </ion-content>
 
-  <ion-footer>
+  <ion-footer class="ion-no-border">
 
 
 <!--    <v-btn icon="mdi-plus" @click="sheet_comment = !sheet_comment" class="d-flex justify-center align-center mb-2 mx-auto"></v-btn>-->

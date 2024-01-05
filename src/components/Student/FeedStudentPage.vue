@@ -65,7 +65,7 @@ const handleFileInput = () => {
 <template>
   <ion-page>
     <ion-content>
-      <div ref="el">
+      <div ref="el" class="el">
         <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item">
           <div class="title_post_div">
             {{item.title}}
@@ -154,6 +154,10 @@ const handleFileInput = () => {
   background: rgb(180,252,255);
   background: linear-gradient(96deg, rgba(180,252,255,1) 55%, rgba(0,212,255,1) 100%);
   align-items: center;
+}
+.el{
+  border-radius: 15px;
+
 }
 .title_post_div{
   padding-left: 10px;

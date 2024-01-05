@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
+    <ion-header class="ion-no-border">
       <v-img
           class="mx-auto my-12"
           max-width="228"
