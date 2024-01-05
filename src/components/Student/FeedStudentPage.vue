@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {reactive, ref} from 'vue'
 import {useInfiniteScroll, useVirtualList, UseVirtualListReturn} from '@vueuse/core'
 import {post} from "/src/stores/post";
 import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
+import { Cropper } from 'vue-advanced-cropper'
+import HomePage from "@/components/parts/CropperComponent.vue";
+
+
 const readPost = ref(false)
 const PostStore = post()
 const attachImage = ref(false)
@@ -60,6 +64,12 @@ const handleFileInput = () => {
   console.log(image.value)
 }
 
+function change({ coordinates, canvas }) {
+  console.log(coordinates, canvas)
+}
+
+
+
 </script>
 
 <template>
@@ -74,12 +84,14 @@ const handleFileInput = () => {
         </div>
       </div>
 
+
+
     </ion-content>
 
     <ion-footer>
       <div class="text-center">
         <v-bottom-sheet v-model="readPost">
-          <v-card height="650" >
+          <v-card height="900" >
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
@@ -104,8 +116,10 @@ const handleFileInput = () => {
 
             </div>
 
-            <div class="fileInputBlock">
-              <v-btn class="btn-pin-task" @click="attachImage = !attachImage"><v-icon>mdi-plus</v-icon></v-btn>
+
+
+            <div class="add_image">
+              <HomePage/>
             </div>
 
             <div class="acceptTaskBlock">
@@ -116,29 +130,17 @@ const handleFileInput = () => {
         </v-bottom-sheet>
       </div>
 
-      <div class="text-center">
-        <v-bottom-sheet v-model="attachImage">
-          <v-card height="500" class="d-flex align-center">
-            <div class="container_add">
 
-              <div class="add_image">
-                <v-btn class="btns-nav-vbtn" color="red" @click="attachImage = !attachImagФ"><v-icon>mdi-close</v-icon></v-btn>
-                <label for="fileInput" class="custom-file-input">
-                  Завантажити файл
-                </label>
-                <v-file-input id="fileInput" @change="handleFileInput" v-model="image" multiple style="display: none;"/>
-              <v-btn @click="attachImage = !attachImage" class="btns-nav-vbtn" color="green"><v-icon>mdi-check</v-icon></v-btn>
-              </div>
-
-              <span class="hr"></span>
-
-            </div>
-
-
-          </v-card>
-        </v-bottom-sheet>
-      </div>
     </ion-footer>
+
+    <div class="text-center">
+      <v-dialog>
+        <v-card>
+
+
+        </v-card>
+      </v-dialog>
+    </div>
   </ion-page>
 </template>
 
@@ -174,15 +176,11 @@ const handleFileInput = () => {
   margin: 10px 15px;
   border-radius: 50px;
 }
-.fileInputBlock, .acceptTaskBlock{
+.acceptTaskBlock{
   width: 90%;
   margin: 20px auto 0 auto;
 }
-.fileInputBlock{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 .acceptTaskBlock{
   display: flex;
   justify-content: center;
@@ -213,18 +211,13 @@ const handleFileInput = () => {
   color: red;
   font-weight: 900;
 }
-.btn-pin-task{
-  background: cornflowerblue;
-  width: 90%;
-  color: #fff;
-  display: flex;
-}
+
 
 .add_image {
   position: relative;
   overflow: hidden;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
 
@@ -268,5 +261,6 @@ const handleFileInput = () => {
 .btns-nav-vbtn{
   border-radius: 30px;
 }
+
 </style>
 
