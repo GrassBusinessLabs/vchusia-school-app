@@ -5,6 +5,7 @@ import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
 import {ref} from "vue";
+import CropperComponent from "@/components/parts/CropperComponent.vue";
 
 const readPost = ref(false)
 const CourseStore = course()
@@ -17,7 +18,6 @@ let r, c;
 const switchMode = ref(true)
 
 const getPostByCords = (row: any, column: any) => {
-  console.log(PostStore.postsInTask.find(post => post.row === row && post.column === column))
   return PostStore.postsInTask.find(post => post.row === row && post.column === column)
 }
 
@@ -186,7 +186,7 @@ function isFutureDate(targetDate) {
           </div>
 
           <div class="fileInputBlock">
-            <v-file-input label="Прикріпіть файли до завдання" multiple variant="outlined"></v-file-input>
+            <CropperComponent/>
           </div>
 
           <div class="acceptTaskBlock">
@@ -244,17 +244,17 @@ ion-col{
   border-radius: 50px;
 }
 .fileInputBlock, .acceptTaskBlock{
-  width: 90%;
+  width: 100%;
   margin: 20px auto 0 auto;
 }
 
 .acceptTaskBlock{
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 }
 .btnAcceptTask{
-  width: 90%;
+  width: 80%;
   background: #4CAF50;
   color: #fff;
 }

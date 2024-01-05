@@ -6,6 +6,7 @@ import {post} from "@/stores/post";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {onMounted, ref} from "vue";
 import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
+import CropperComponent from "@/components/parts/CropperComponent.vue";
 
 const readPost = ref(false)
 const GroupStore = group()
@@ -31,7 +32,6 @@ async function getPostsOnFeed() {
 }
 
 PostStore.postsInTask = feedPosts.value
-console.log(feedPosts)
 const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
 
@@ -106,7 +106,7 @@ function isFutureDate(targetDate) {
           </div>
 
           <div class="fileInputBlock">
-            <v-file-input label="Прикріпіть файли до завдання" multiple variant="outlined"></v-file-input>
+            <CropperComponent/>
           </div>
 
           <div class="acceptTaskBlock">
@@ -128,17 +128,17 @@ function isFutureDate(targetDate) {
   margin: 10px 15px;
   border-radius: 50px;
 }
-.fileInputBlock, .acceptTaskBlock{
-  width: 90%;
+.acceptTaskBlock{
+  width: 100%;
   margin: 20px auto 0 auto;
 }
 .acceptTaskBlock{
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 }
 .btnAcceptTask{
-  width: 90%;
+  width: 80%;
   background: #4CAF50;
   color: #fff;
 }

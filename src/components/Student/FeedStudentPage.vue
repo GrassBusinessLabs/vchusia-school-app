@@ -4,8 +4,7 @@ import {useInfiniteScroll, useVirtualList, UseVirtualListReturn} from '@vueuse/c
 import {post} from "/src/stores/post";
 import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import { Cropper } from 'vue-advanced-cropper'
-import HomePage from "@/components/parts/CropperComponent.vue";
+import CropperComponent from "@/components/parts/CropperComponent.vue";
 
 
 const readPost = ref(false)
@@ -89,9 +88,9 @@ function change({ coordinates, canvas }) {
     </ion-content>
 
     <ion-footer>
-      <div class="text-center">
+      <div class="text-center" >
         <v-bottom-sheet v-model="readPost">
-          <v-card height="900" >
+          <v-card height="700">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
@@ -119,7 +118,7 @@ function change({ coordinates, canvas }) {
 
 
             <div class="add_image">
-              <HomePage/>
+              <CropperComponent/>
             </div>
 
             <div class="acceptTaskBlock">
@@ -223,44 +222,6 @@ function change({ coordinates, canvas }) {
 
 }
 
-
-
-.container_add{
-  padding: 15px;
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.hr{
-  width: 100%;
-  height: 1px;
-  background: #000;
-  margin: 15px;
-  opacity: 0.15;
-}
-
-
-
-.custom-file-input {
-  display: inline-block;
-  padding: 10px 15px;
-  cursor: pointer;
-  background-color: #007BFF;
-  color: #fff;
-  border: 1px solid #007BFF;
-  border-radius: 5px;
-}
-
-.custom-file-input:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.btns-nav-vbtn{
-  border-radius: 30px;
-}
 
 </style>
 

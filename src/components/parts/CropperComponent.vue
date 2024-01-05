@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex flex-column justify-center align-center fill-height w-100">
 
-      
+
       <input
         ref="filePickerField"
         type="file" accept="image/*"
@@ -33,7 +33,7 @@
 <script>
 import ImageCropperDialog from './ImageCropperDialog.vue';
 export default {
-  name: 'HomePage',
+  name: 'CropperComponent',
   components: {
     ImageCropperDialog,
   },
