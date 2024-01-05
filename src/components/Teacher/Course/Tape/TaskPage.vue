@@ -50,6 +50,11 @@ for (let i of PostStore.PostInfo){
 }
 console.log(allIdPosts)
 const getPostByCords = (row: any, column: any) => {
+  if(PostStore.feedPosts.find(post => post.row === row && post.column === column) !== undefined){
+    if(PostStore.feedPosts.find(post => post.row === row && post.column === column).id == PostStore.PostInfo.find(post => post.row === row && post.column === column).id){
+      PostStore.PostInfo.find(post => post.row === row && post.column === column).color = 'grey'
+    }
+  }
   return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
 
@@ -111,13 +116,14 @@ const sharePostOpenSheet = () => {
   userSharePost.value = false
 
 }
-const sharePost = () => {
+const sharePost = async () => {
   const body: sharePost = {
     groups: [GroupStore.idGroup],
     comment: sharePostBody.comment,
     deadline: new Date(sharePostBody.deadline).toISOString()
   }
-  PostStore.sharePost(body)
+  await PostStore.sharePost(body)
+  getFeed()
   dialog.value = false
 }
 
@@ -145,10 +151,22 @@ const nextPost = (id: any) => {
 
 }
 
-if (GroupStore.usersInGroup[0].length > 0){
-  checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+if(GroupStore.usersInGroup[0] !== undefined){
+  if (GroupStore.usersInGroup[0].length > 0){
+    checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+  }
+}else{
+  console.log(checkboxes.value = Array(GroupStore.usersInGroup[0]).fill(true));
 }
 
+const pagination = {
+  page: 1,
+  count: 10
+}
+
+async function getFeed() {
+  await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
+}
 
 
 
