@@ -40,6 +40,7 @@
             <v-card-text>
 
               <v-text-field
+                  prepend-icon="mdi-lock-outline"
                 v-model="oldPassword"
                 ref="input"
                 type="password"
@@ -52,6 +53,8 @@
 
 
                 <v-text-field
+                    prepend-icon="mdi-lock-outline"
+
                     v-model="newPassword"
                     type="password"
                     ref="input"
@@ -64,7 +67,7 @@
 
 
               <v-btn variant="tonal" color="indigo" @click="confirm()"
-                     class="d-flex mx-auto btn-confirm" width="85%">
+                     class="d-flex mx-auto btn-confirm" width="85%" prepend-icon="mdi-key-variant">
                 Змінити пароль
               </v-btn>
             </v-card-text>
@@ -85,11 +88,12 @@
                   color="primary"
                   label="Ваше ім'я"
                   placeholder="Михайло"
+                  prepend-icon="mdi-account-box-outline"
                   variant="outlined"
                   class="input-password"
               ></v-text-field>
               <v-btn variant="tonal" color="indigo" @click="confirmMe()"
-                     class="d-flex mx-auto btn-confirm" width="85%">
+                     class="d-flex mx-auto btn-confirm" prepend-icon="mdi-pencil-outline" width="85%">
                 Редагувати
               </v-btn>
             </v-card-text>
@@ -210,7 +214,7 @@ ion-header {
   margin: 10px;
 }
 .btn-confirm{
-  border-radius: 20px;
-  padding: 5px 10px;
+  border-radius: 15px;
+  padding: 10px 10px;
 }
 </style>
