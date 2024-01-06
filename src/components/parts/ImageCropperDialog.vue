@@ -35,6 +35,7 @@
 <script>
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import {solution} from "@/stores/solution";
 
 export default {
     name: "ImageCropperDialog",
@@ -50,6 +51,7 @@ export default {
         return {
             showCropper: false,
             imageFileType: null,
+            SolutionStore: solution()
         }
     },
     methods: {
@@ -66,6 +68,12 @@ export default {
         },
 
         async cropChosenImage(){
+          const canvas = this.$refs.cropper.getCroppedCanvas();
+          const dataURL = canvas.toDataURL(this.imageFileType);
+          const blob = await fetch(dataURL).then(res => res.blob());
+          const croppedFile = new File([blob], `cropped_image.${this.imageFileType.split('/')[1]}`);
+          this.SolutionStore.file = croppedFile
+          console.log(croppedFile)
             this.$emit('onCrop', this.$refs.cropper.getCroppedCanvas().toDataURL(this.imageFileType));
             this.resetCropper();
         },

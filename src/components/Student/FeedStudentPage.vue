@@ -67,6 +67,9 @@ const solutionDescription = reactive({
 const saveSolution = () => {
   SolutionStore.saveSolution(solutionDescription)
 }
+const attachImageFunc = () => {
+  SolutionStore.attachImage()
+}
 
 </script>
 
@@ -116,13 +119,11 @@ const saveSolution = () => {
 
 
             <div class="solution">
-              <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description">
-
-              </v-text-field>
+              <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
+            </div>
+            <div class="solution-btn">
               <v-btn class="btn-send-solution" @click="saveSolution()">
-                <v-icon>
-                  mdi-plus
-                </v-icon>
+                Відправити рішення
               </v-btn>
             </div>
 
@@ -226,8 +227,16 @@ const saveSolution = () => {
 
 }
 .btn-send-solution{
-  height: 100%;
-
+  width: 100%;
+  background: darkslategray;
+  color: #fff;
+}
+.solution-btn{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 </style>
