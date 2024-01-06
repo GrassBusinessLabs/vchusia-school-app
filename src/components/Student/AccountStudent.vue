@@ -77,7 +77,6 @@
         </v-bottom-sheet>
       </div>
 
-
       <div>
         <v-bottom-sheet v-model="sheet_change_me">
           <v-card height="300">
