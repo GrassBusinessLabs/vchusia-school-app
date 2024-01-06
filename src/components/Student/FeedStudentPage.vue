@@ -5,10 +5,12 @@ import {post} from "/src/stores/post";
 import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
+import {solution} from "@/stores/solution";
 
 
 const readPost = ref(false)
 const PostStore = post()
+const SolutionStore = solution()
 const attachImage = ref(false)
 const pagination = {
   page: 1,
@@ -59,15 +61,12 @@ const formatDate = (dateString) => {
   return formattedDate;
 };
 
-const handleFileInput = () => {
-  console.log(image.value)
+const solutionDescription = reactive({
+  description: ''
+})
+const saveSolution = () => {
+  SolutionStore.saveSolution(solutionDescription)
 }
-
-function change({ coordinates, canvas }) {
-  console.log(coordinates, canvas)
-}
-
-
 
 </script>
 
@@ -75,7 +74,7 @@ function change({ coordinates, canvas }) {
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item">
+        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId">
           <div class="title_post_div">
             {{item.title}}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -116,12 +115,22 @@ function change({ coordinates, canvas }) {
             </div>
 
 
+            <div class="solution">
+              <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description">
+
+              </v-text-field>
+              <v-btn class="btn-send-solution" @click="saveSolution()">
+                <v-icon>
+                  mdi-plus
+                </v-icon>
+              </v-btn>
+            </div>
 
             <div class="add_image">
               <CropperComponent/>
             </div>
 
-            <div class="acceptTaskBlock">
+            <div class="acceptTaskBlock" >
               <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
             </div>
 
@@ -129,17 +138,8 @@ function change({ coordinates, canvas }) {
         </v-bottom-sheet>
       </div>
 
-
     </ion-footer>
 
-    <div class="text-center">
-      <v-dialog>
-        <v-card>
-
-
-        </v-card>
-      </v-dialog>
-    </div>
   </ion-page>
 </template>
 
@@ -210,7 +210,11 @@ function change({ coordinates, canvas }) {
   color: red;
   font-weight: 900;
 }
-
+.solution{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+}
 
 .add_image {
   position: relative;
@@ -221,7 +225,10 @@ function change({ coordinates, canvas }) {
   width: 100%;
 
 }
+.btn-send-solution{
+  height: 100%;
 
+}
 
 </style>
 
