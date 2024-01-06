@@ -1,6 +1,6 @@
 <template>
   <div class="crop-image-dialog">
-    <v-dialog v-model="showCropper" max-width="500" persistent>
+    <v-bottom-sheet v-model="showCropper" max-width="500" persistent>
       <v-card class="pt-6 pb-3">
         <v-card-text class="pb-3">
           <vue-cropper
@@ -28,7 +28,7 @@
           > Готово </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-bottom-sheet>
   </div>
 </template>
 
@@ -36,11 +36,13 @@
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import {solution} from "@/stores/solution";
+import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 
 export default {
     name: "ImageCropperDialog",
     components: {
         VueCropper,
+      VBottomSheet
     },
     props: {
         chosenImage: {

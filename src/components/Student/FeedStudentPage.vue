@@ -92,7 +92,7 @@ const attachImageFunc = () => {
     <ion-footer>
       <div class="text-center" >
         <v-bottom-sheet v-model="readPost">
-          <v-card height="700">
+          <v-card height="750" class="card_readPost">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
@@ -134,7 +134,6 @@ const attachImageFunc = () => {
             <div class="acceptTaskBlock" >
               <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
             </div>
-
           </v-card>
         </v-bottom-sheet>
       </div>
