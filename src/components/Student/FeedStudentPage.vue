@@ -64,6 +64,8 @@ const formatDate = (dateString) => {
 const solutionDescription = reactive({
   description: ''
 })
+
+//Solution requests
 const saveSolution = () => {
   SolutionStore.saveSolution(solutionDescription)
 }
@@ -71,6 +73,25 @@ const attachImageFunc = () => {
   SolutionStore.attachImage()
 }
 
+const updateStatus = () => {
+  SolutionStore.updateStatus(2)
+}
+const updateSolution = () => {
+  const body = {
+    description: "222"
+  }
+  SolutionStore.updateSolution(body, 2)
+}
+const deleteSolution = () => {
+  SolutionStore.deleteSolution(2)
+}
+const deleteImage = () => {
+  SolutionStore.deleteImage(2)
+}
+
+const findSolutionById = () => {
+  SolutionStore.findSolutionById(2)
+}
 </script>
 
 <template>
@@ -120,11 +141,13 @@ const attachImageFunc = () => {
 
             <div class="solution">
               <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
+              <v-btn icon="mdi-content-save-outline" @click="saveSolution()"></v-btn>
             </div>
             <div class="solution-btn">
-              <v-btn class="btn-send-solution" @click="saveSolution()">
+              <v-btn class="btn-send-solution" @click="updateStatus()">
                 Відправити рішення
               </v-btn>
+              <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
             </div>
 
             <div class="add_image">
@@ -214,6 +237,7 @@ const attachImageFunc = () => {
   width: 80%;
   margin: 0 auto;
   display: flex;
+  align-items: center;
 }
 
 .add_image {
