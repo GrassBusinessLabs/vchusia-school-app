@@ -4,14 +4,16 @@ import {group} from "@/stores/group";
 import {course} from "@/stores/course"
 import {post} from "@/stores/post";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {onMounted, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
+import {solution} from "@/stores/solution";
 
 const readPost = ref(false)
 const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
+const SolutionStore = solution()
 const pagination = {
   page: 1,
   count: 5
@@ -38,7 +40,7 @@ useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
 const virtualList = useVirtualList(feedPosts, { itemSize: 50 })
 
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: any) => {
   const options = {
     day: '2-digit',
     month: '2-digit',
@@ -52,13 +54,44 @@ const formatDate = (dateString) => {
   return formattedDate;
 };
 
-function isFutureDate(targetDate) {
+function isFutureDate(targetDate: any) {
   const currentDate = new Date();
   const targetDateTime = new Date(targetDate);
 
   return targetDateTime > currentDate;
 }
 
+const solutionDescription = reactive({
+  description: ''
+})
+
+//Solution requests
+const saveSolution = () => {
+  SolutionStore.saveSolution(solutionDescription)
+}
+const attachImageFunc = () => {
+  SolutionStore.attachImage()
+}
+
+const updateStatus = () => {
+  SolutionStore.updateStatus(2)
+}
+const updateSolution = () => {
+  const body = {
+    description: "222"
+  }
+  SolutionStore.updateSolution(body, 2)
+}
+const deleteSolution = () => {
+  SolutionStore.deleteSolution(2)
+}
+const deleteImage = () => {
+  SolutionStore.deleteImage(2)
+}
+
+const findSolutionById = () => {
+  SolutionStore.findSolutionById(2)
+}
 
 
 
@@ -68,7 +101,7 @@ function isFutureDate(targetDate) {
 <ion-page>
   <ion-content>
     <div ref="el">
-      <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item">
+      <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId">
         <div class="title_post_div">
           {{item.title}}
           <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -80,7 +113,7 @@ function isFutureDate(targetDate) {
   <ion-footer>
     <div class="text-center">
       <v-bottom-sheet v-model="readPost">
-        <v-card height="650" >
+        <v-card height="750" >
           <div class="d-flex flex-column justify-center align-center mt-9">
             <div class="container">
               <div class="d-flex justify-space-between">
@@ -103,6 +136,16 @@ function isFutureDate(targetDate) {
 
             </div>
 
+          </div>
+          <div class="solution">
+            <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
+            <v-btn icon="mdi-content-save-outline" @click="saveSolution()"></v-btn>
+          </div>
+          <div class="solution-btn">
+            <v-btn class="btn-send-solution" @click="updateStatus()">
+              Відправити рішення
+            </v-btn>
+            <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
           </div>
 
           <div class="fileInputBlock">
@@ -181,6 +224,24 @@ function isFutureDate(targetDate) {
 .subtitle_post{
   color: #555;
   font-size: 13px;
+}
+.solution{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.solution-btn{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.btn-send-solution{
+  width: 100%;
+  background: darkslategray;
+  color: #fff;
 }
 </style>
 

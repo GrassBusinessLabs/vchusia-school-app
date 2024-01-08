@@ -4,13 +4,15 @@ import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
+import {solution} from "@/stores/solution";
 
 const readPost = ref(false)
 const CourseStore = course()
 const PostStore = post()
 const GroupStore = group()
+const SolutionStore = solution()
 const sheet_read = ref(false)
 const courseInfo = CourseStore.thisCourse
 let items = []
@@ -41,7 +43,7 @@ const handlePost = (row : any, column : any) => {
       for (let i of PostStore.postsInTask) {
         if (row + 1 === i.row && column === i.column) {
           readPost.value = true
-
+          SolutionStore.gpId = i.sharedPostId
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
@@ -78,7 +80,7 @@ const handlePost = (row : any, column : any) => {
 
 }
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: any) => {
   const options = {
     day: '2-digit',
     month: '2-digit',
@@ -92,11 +94,43 @@ const formatDate = (dateString) => {
   return formattedDate;
 };
 
-function isFutureDate(targetDate) {
+function isFutureDate(targetDate: any) {
   const currentDate = new Date();
   const targetDateTime = new Date(targetDate);
 
   return targetDateTime > currentDate;
+}
+
+const solutionDescription = reactive({
+  description: ''
+})
+
+//Solution requests
+const saveSolution = () => {
+  SolutionStore.saveSolution(solutionDescription)
+}
+const attachImageFunc = () => {
+  SolutionStore.attachImage()
+}
+
+const updateStatus = () => {
+  SolutionStore.updateStatus(2)
+}
+const updateSolution = () => {
+  const body = {
+    description: "222"
+  }
+  SolutionStore.updateSolution(body, 2)
+}
+const deleteSolution = () => {
+  SolutionStore.deleteSolution(2)
+}
+const deleteImage = () => {
+  SolutionStore.deleteImage(2)
+}
+
+const findSolutionById = () => {
+  SolutionStore.findSolutionById(2)
 }
 
 </script>
@@ -160,7 +194,7 @@ function isFutureDate(targetDate) {
   <ion-footer>
     <div class="text-center">
       <v-bottom-sheet v-model="readPost">
-        <v-card height="650">
+        <v-card height="750">
           <div class="d-flex flex-column justify-center align-center mt-9">
             <div class="container">
               <div class="d-flex justify-space-between">
@@ -183,6 +217,17 @@ function isFutureDate(targetDate) {
 
             </div>
 
+          </div>
+
+          <div class="solution">
+            <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
+            <v-btn icon="mdi-content-save-outline" @click="saveSolution()"></v-btn>
+          </div>
+          <div class="solution-btn">
+            <v-btn class="btn-send-solution" @click="updateStatus()">
+              Відправити рішення
+            </v-btn>
+            <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
           </div>
 
           <div class="fileInputBlock">
@@ -324,5 +369,24 @@ ion-col{
   font-size: 35px;
   color: lightcoral;
 
+}
+/*Solutions*/
+.solution{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.btn-send-solution{
+  width: 100%;
+  background: darkslategray;
+  color: #fff;
+}
+.solution-btn{
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 </style>

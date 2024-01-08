@@ -233,12 +233,7 @@ const findSolutionById = () => {
   color: red;
   font-weight: 900;
 }
-.solution{
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-}
+
 
 .add_image {
   position: relative;
