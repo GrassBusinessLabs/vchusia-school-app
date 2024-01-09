@@ -141,12 +141,7 @@ const findSolutionById = () => {
             <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
 
           </div>
-          <div class="solution-btn">
-            <v-btn class="btn-send-solution" @click="updateStatus()">
-              Відправити рішення
-            </v-btn>
-            <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
-          </div>
+
 
           <div class="fileInputBlock">
             <CropperComponent/>

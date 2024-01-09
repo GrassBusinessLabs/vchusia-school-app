@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
+import {onBeforeUnmount, onMounted, reactive, ref} from 'vue'
 import {useInfiniteScroll, useVirtualList, UseVirtualListReturn} from '@vueuse/core'
 import {post} from "/src/stores/post";
 import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
-
 
 const readPost = ref(false)
 const PostStore = post()
@@ -90,8 +89,19 @@ const deleteImage = () => {
 }
 
 const findSolutionById = () => {
-  SolutionStore.findSolutionById(2)
+  SolutionStore.findSolutionById(1)
 }
+
+function watchSaveSolution(){
+  setTimeout(() => {
+    if(readPost.value === false){
+      saveSolution()
+    } else{
+      console.log(true)
+    }
+  }, 10)
+}
+
 
 </script>
 
@@ -110,10 +120,9 @@ const findSolutionById = () => {
 
 
     </ion-content>
-
-    <ion-footer >
-      <div class="text-center">
-        <v-bottom-sheet v-model="readPost">
+    <ion-footer>
+      <div class="text-center" >
+        <v-bottom-sheet v-model="readPost" @click="watchSaveSolution">
           <v-card height="750" class="card_readPost">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
@@ -141,10 +150,7 @@ const findSolutionById = () => {
 
 
             <div class="solution">
-              <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
-            </div>
-            <div class="solution-btn">
-              <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
+              <v-text-field variant="outlined"  label="Рішення" v-model="solutionDescription.description"></v-text-field>
             </div>
 
             <div class="add_image">
