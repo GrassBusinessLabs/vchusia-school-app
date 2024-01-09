@@ -22,7 +22,7 @@
             text color="red"
           > Відмінити </v-btn>
           <v-spacer></v-spacer>
-          <v-btn 
+          <v-btn
             @click="cropChosenImage"
             text color="blue"
           > Готово </v-btn>
@@ -57,6 +57,9 @@ export default {
         }
     },
     methods: {
+      attachImage(){
+        this.SolutionStore.attachImage()
+      },
         async initCropper(imageFileType) {
             this.showCropper = true;
             this.imageFileType = imageFileType;
@@ -76,6 +79,7 @@ export default {
           const croppedFile = new File([blob], `cropped_image.${this.imageFileType.split('/')[1]}`);
           this.SolutionStore.file = croppedFile
           console.log(croppedFile)
+            this.attachImage()
             this.$emit('onCrop', this.$refs.cropper.getCroppedCanvas().toDataURL(this.imageFileType));
             this.resetCropper();
         },

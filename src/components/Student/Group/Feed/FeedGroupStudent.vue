@@ -139,7 +139,7 @@ const findSolutionById = () => {
           </div>
           <div class="solution">
             <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
-            <v-btn icon="mdi-content-save-outline" @click="saveSolution()"></v-btn>
+
           </div>
           <div class="solution-btn">
             <v-btn class="btn-send-solution" @click="updateStatus()">
@@ -243,6 +243,7 @@ const findSolutionById = () => {
   background: darkslategray;
   color: #fff;
 }
+
 </style>
 
 
