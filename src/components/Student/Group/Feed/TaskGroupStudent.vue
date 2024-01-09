@@ -4,7 +4,7 @@ import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
 
@@ -19,42 +19,53 @@ let items = []
 let r, c;
 const switchMode = ref(true)
 
+const mapPosts = () => {
+  const rows = PostStore.PostInfo.map(post => post.row)
+  const uniqueSet = Array.from(new Set(rows))
+  const mappedUniqueSet = uniqueSet.map(row => {
+    return {
+      row: row,
+      groups: PostStore.PostInfo.filter(item => item.row === row)
+    }
+  })
+  return mappedUniqueSet
+}
+
 const getPostByCords = (row: any, column: any) => {
-  return PostStore.postsInTask.find(post => post.row === row && post.column === column)
+  return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
 
-const maxRow = () => {
-  const arrMaxRow = PostStore.postsInTask.map(post => post.row);
-  PostStore.rows = Math.max(...arrMaxRow);
-}
-onIonViewWillEnter(() => {
-  maxRow()
-})
+const postShared = ref(false)
 
-
-const handlePost = (row : any, column : any) => {
+const handlePost = (row: any, column: any) => {
 
   let idPost
   if (getPostByCords(row + 1, column)) {
 
     if (switchMode.value === true) {
-      sheet_read.value = true
+      readPost.value = true
 
-      for (let i of PostStore.postsInTask) {
+      for (let i of PostStore.PostInfo) {
         if (row + 1 === i.row && column === i.column) {
-          readPost.value = true
-          SolutionStore.gpId = i.sharedPostId
+          postShared.value = false
           console.log(i.id)
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
+        }
+      }
+      for (const j of PostStore.feedPosts){
+        if(j.id === idPost){
+          postShared.value = true
+          console.log(true)
         }
       }
     } else {
       GroupStore.allGroups = []
       GroupStore.getCreatedGroupsList()
+
       console.log('edit create')
-      for (let i of PostStore.postsInTask) {
+      for (let i of PostStore.PostInfo) {
         if (row + 1 === i.row && column === i.column) {
           console.log(i.id)
           idPost = i.id
@@ -64,18 +75,8 @@ const handlePost = (row : any, column : any) => {
       }
     }
 
-
-  } else {
-    items = []
-    for (let i of PostStore.PostInfo) {
-      if (i.row === row) {
-        items.push(i.id)
-      }
-    }
-    r = row + 1;
-    c = column
-
   }
+
   return idPost, r, c, items
 
 }
@@ -133,6 +134,7 @@ const findSolutionById = () => {
   SolutionStore.findSolutionById(2)
 }
 
+onMounted(() => {PostStore.findPostWithRow()})
 </script>
 
 <template>
@@ -179,7 +181,7 @@ const findSolutionById = () => {
               id="parentGrid">
 
         <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">
-          <ion-row v-for="(post, indexRow) in PostStore.rows">
+          <ion-row v-for="(post, indexRow) in mapPosts()">
             <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"
                      :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color}">
               {{ getPostByCords(indexRow + 1, indexCol)?.id }}
@@ -194,7 +196,7 @@ const findSolutionById = () => {
   <ion-footer>
     <div class="text-center">
       <v-bottom-sheet v-model="readPost">
-        <v-card height="750">
+        <v-card height="550">
           <div class="d-flex flex-column justify-center align-center mt-9">
             <div class="container">
               <div class="d-flex justify-space-between">
@@ -219,24 +221,7 @@ const findSolutionById = () => {
 
           </div>
 
-          <div class="solution">
-            <v-text-field variant="outlined" label="Рішення" v-model="solutionDescription.description"></v-text-field>
-            <v-btn icon="mdi-content-save-outline" @click="saveSolution()"></v-btn>
-          </div>
-          <div class="solution-btn">
-            <v-btn class="btn-send-solution" @click="updateStatus()">
-              Відправити рішення
-            </v-btn>
-            <v-btn @click="deleteSolution()">Видалити рішення</v-btn>
-          </div>
 
-          <div class="fileInputBlock">
-            <CropperComponent/>
-          </div>
-
-          <div class="acceptTaskBlock">
-            <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
-          </div>
 
         </v-card>
       </v-bottom-sheet>
