@@ -32,7 +32,6 @@ async function getPostsOnFeed() {
   pagination.page += 1
 }
 
-getPostsOnFeed()
 
 const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
