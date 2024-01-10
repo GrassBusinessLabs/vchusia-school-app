@@ -18,6 +18,7 @@
             </div>
             <div class="image_content">
               <v-img :src="image"></v-img>
+
             </div>
           </div>
 
