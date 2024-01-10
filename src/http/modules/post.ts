@@ -13,7 +13,7 @@ function createPost(body: Post) {
 }
 
 function findPostWithRow() {
-    let courseId: string | null = localStorage.getItem('courseId')
+    let courseId: number | null = course().courseId
     return axios.get(`/courses/${courseId}/post`)
 }
 

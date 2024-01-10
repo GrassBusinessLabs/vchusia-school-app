@@ -6,6 +6,7 @@ import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
+import Solution from "@/http/modules/solution";
 
 const readPost = ref(false)
 const PostStore = post()
@@ -60,26 +61,20 @@ const formatDate = (dateString) => {
   return formattedDate;
 };
 
-const solutionDescription = reactive({
-  description: ''
-})
 
 //Solution requests
 const saveSolution = () => {
-  SolutionStore.saveSolution(solutionDescription)
-}
-const attachImageFunc = () => {
-  SolutionStore.attachImage()
+  SolutionStore.saveSolution({description: SolutionStore.solutionInfo.description })
 }
 
 const updateStatus = () => {
-  SolutionStore.updateStatus(2)
+  SolutionStore.updateStatus(SolutionStore.gpId)
 }
 const updateSolution = () => {
   const body = {
-    description: "222"
+    description: SolutionStore.solutionInfo.description
   }
-  SolutionStore.updateSolution(body, 2)
+  SolutionStore.updateSolution(body, SolutionStore.gpId)
 }
 const deleteSolution = () => {
   SolutionStore.deleteSolution(2)
@@ -92,10 +87,13 @@ const findSolutionById = () => {
   SolutionStore.findSolutionById(1)
 }
 
+const findSolutionBySharedPostId = () => {
+  SolutionStore.findSolutionBySharedPostId(SolutionStore.gpId)
+}
 function watchSaveSolution(){
   setTimeout(() => {
     if(readPost.value === false){
-      saveSolution()
+      updateSolution()
     }
   }, 10)
 }
@@ -107,7 +105,7 @@ function watchSaveSolution(){
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId">
+        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId, findSolutionBySharedPostId()">
           <div class="title_post_div">
             {{item.title}}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -148,7 +146,7 @@ function watchSaveSolution(){
 
 
             <div class="solution">
-              <v-text-field variant="outlined"  label="Рішення" v-model="solutionDescription.description"></v-text-field>
+              <v-text-field variant="outlined"  label="Рішення" v-model="SolutionStore.solutionInfo.description"></v-text-field>
             </div>
 
             <div class="add_image">

@@ -4,14 +4,16 @@ import SolutionApi from "@/http/modules/solution"
 interface State {
     gpId: number,
     file: any,
-    solutionId: number
+    solutionId: number,
+    solutionInfo: any
 }
 
 export const solution = defineStore('solution', {
     state: (): State => ({
         gpId: 0,
         file: null,
-        solutionId: 0
+        solutionId: 0,
+        solutionInfo: []
     }),
 
     actions: {
@@ -28,6 +30,7 @@ export const solution = defineStore('solution', {
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
+                this.findSolutionBySharedPostId(this.gpId)
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -73,6 +76,16 @@ export const solution = defineStore('solution', {
         async findSolutionById(solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.findSolutionById(solutionId)
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async findSolutionBySharedPostId(gpId: number): Promise <void>{
+            try {
+                const response = await SolutionApi.findSolutionBySharedPostId(gpId)
+                this.solutionInfo = response
                 console.log(response)
             } catch (e) {
                 console.log(e)

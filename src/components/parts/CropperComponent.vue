@@ -10,6 +10,7 @@
       />
 
       <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">
+
         <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="(image, index) in gallery" :key="index">
           <div class="image_block">
             <div class="delete_image">
@@ -19,6 +20,7 @@
               <v-img :src="image"></v-img>
             </div>
           </div>
+
         </v-avatar>
       </div>
 

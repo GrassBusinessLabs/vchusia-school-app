@@ -10,7 +10,7 @@ function saveSolution(body: SaveSolution) {
 }
 
 function attachImage() {
-    let solutionId = solution().solutionId
+    let solutionId = solution().gpId
     return axios.post(`/solution/${solutionId}/addImage`, solution().file)
 }
 
@@ -31,6 +31,9 @@ function deleteImage(imgId: number) {
 function findSolutionById(solutionId: number) {
     return axios.get(`/solution/${solutionId}`)
 }
+function findSolutionBySharedPostId(gpId: number) {
+    return axios.get(`/solution/${gpId}`)
+}
 export default {
     saveSolution,
     attachImage,
@@ -38,5 +41,6 @@ export default {
     updateSolution,
     deleteSolution,
     deleteImage,
-    findSolutionById
+    findSolutionById,
+    findSolutionBySharedPostId
 }

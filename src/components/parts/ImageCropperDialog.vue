@@ -57,8 +57,8 @@ export default {
         }
     },
     methods: {
-      attachImage(){
-        this.SolutionStore.attachImage()
+      async attachImage(){
+        await this.SolutionStore.attachImage()
       },
         async initCropper(imageFileType) {
             this.showCropper = true;
