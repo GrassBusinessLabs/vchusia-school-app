@@ -3,19 +3,22 @@ import {SaveSolution, UpdateSolution} from "@/models/Solution";
 import SolutionApi from "@/http/modules/solution"
 interface State {
     gpId: number,
-    file: any
+    file: any,
+    solutionId: number
 }
 
 export const solution = defineStore('solution', {
     state: (): State => ({
         gpId: 0,
-        file: null
+        file: null,
+        solutionId: 0
     }),
 
     actions: {
         async saveSolution(body: SaveSolution): Promise <void> {
             try {
                 const response = await SolutionApi.saveSolution(body)
+                this.solutionId = response.id
                 console.log(response)
             } catch (e) {
                 console.log(e)

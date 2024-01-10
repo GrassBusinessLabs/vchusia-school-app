@@ -57,6 +57,7 @@ pinia.use((context) => {
     })
 })
 
+
 const app = createApp(App)
     .use(IonicVue)
     .use(vuetify)

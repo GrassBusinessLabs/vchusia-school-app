@@ -9,19 +9,19 @@
         hidden
       />
 
-      <div>
-        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="i in this.gallery.length">
+      <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">
+        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="(image, index) in gallery" :key="index">
           <div class="image_block">
             <div class="delete_image">
-              <v-btn @click="this.deleteImage()" size="x-small" rounded="0" color="red" class="delete-btn" icon="mdi-delete"></v-btn>
+              <v-btn @click="deleteImage(index)" size="x-small" rounded="0" color="red" class="delete-btn" icon="mdi-delete"></v-btn>
             </div>
             <div class="image_content">
-              <v-img :src="gallery[i-1]"></v-img>
+              <v-img :src="image"></v-img>
             </div>
           </div>
-
         </v-avatar>
       </div>
+
 
       <v-btn class="mt-5 btn-upload" color="blue"
         @click="$refs.filePickerField.click()"
@@ -96,4 +96,5 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
 </style>

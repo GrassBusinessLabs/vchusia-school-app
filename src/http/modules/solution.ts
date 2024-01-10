@@ -10,7 +10,8 @@ function saveSolution(body: SaveSolution) {
 }
 
 function attachImage() {
-    return axios.post(`/solution/1/addImage`, solution().file)
+    let solutionId = solution().solutionId
+    return axios.post(`/solution/${solutionId}/addImage`, solution().file)
 }
 
 function updateStatus(solutionId: number) {
@@ -21,6 +22,7 @@ function updateSolution(body: UpdateSolution, solutionId: number) {
     return axios.put(`/solution/${solutionId}`, body)
 }
 function deleteSolution(solutionId: number){
+
     return axios.delete(`/solution/${solutionId}`)
 }
 function deleteImage(imgId: number) {

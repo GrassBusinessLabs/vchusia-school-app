@@ -96,8 +96,6 @@ function watchSaveSolution(){
   setTimeout(() => {
     if(readPost.value === false){
       saveSolution()
-    } else{
-      console.log(true)
     }
   }, 10)
 }
@@ -123,7 +121,7 @@ function watchSaveSolution(){
     <ion-footer>
       <div class="text-center" >
         <v-bottom-sheet v-model="readPost" @click="watchSaveSolution">
-          <v-card height="750" class="card_readPost">
+          <v-card height="680" class="card_readPost">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
@@ -158,7 +156,7 @@ function watchSaveSolution(){
             </div>
 
             <div class="acceptTaskBlock" >
-              <v-btn class="btnAcceptTask" @click="readPost = !readPost">Здати завдання</v-btn>
+              <v-btn class="btnAcceptTask" @click="readPost = !readPost, updateStatus()">Здати завдання</v-btn>
             </div>
           </v-card>
         </v-bottom-sheet>
