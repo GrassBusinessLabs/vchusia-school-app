@@ -1,7 +1,5 @@
 # Vchusia school app
-***
 ## Recomended IDE Setup
-***
 * WebStorm
 * VS Code
 ***
