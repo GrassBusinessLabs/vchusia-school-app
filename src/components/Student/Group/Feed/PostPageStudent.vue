@@ -14,8 +14,8 @@ let descriptionSolution: SaveSolution = reactive({
   description: ''
 })
 
-const errorHandle = async () => {
-  await SolutionStore.findSolutionBySharedPostId(PostStore.info.sharedPostId).then((res) => {
+const errorHandle = () => {
+  SolutionStore.findSolutionBySharedPostId(PostStore.info.sharedPostId).then((res) => {
     if(res === true) {
       check.value = true
       descriptionSolution.description = SolutionStore.solutionInfo.description
@@ -37,7 +37,7 @@ const checkSolutionAndSave = () => {
 }
 
 const updateStatus = () => {
-  SolutionStore.updateStatus()
+  SolutionStore.updateStatus(SolutionStore.solutionInfo.id)
 }
 const updateSolution = () => {
   SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionId)
@@ -90,7 +90,7 @@ const saveSolution = () => {
       </div>
 
       <div class="accept_task">
-        <v-btn class="btnAcceptTask">
+        <v-btn class="btnAcceptTask" @click="updateStatus()">
           Здати завдання
         </v-btn>
       </div>

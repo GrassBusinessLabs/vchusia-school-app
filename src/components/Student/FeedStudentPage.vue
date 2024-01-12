@@ -115,7 +115,7 @@ function watchSaveSolution(){
     <ion-footer>
       <div class="text-center" >
         <v-bottom-sheet v-model="readPost" @click="watchSaveSolution">
-          <v-card height="680" class="card_readPost">
+          <v-card height="500" class="card_readPost">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
@@ -141,17 +141,8 @@ function watchSaveSolution(){
             </div>
 
 
-            <div class="solution">
-              <v-text-field variant="outlined"  label="Рішення" v-model="SolutionStore.solutionInfo.description"></v-text-field>
-            </div>
 
-            <div class="add_image">
-              <CropperComponent/>
-            </div>
 
-            <div class="acceptTaskBlock" >
-              <v-btn class="btnAcceptTask" @click="readPost = !readPost, updateStatus()">Здати завдання</v-btn>
-            </div>
             <div class="replaceToTask">
               <v-btn class="btnReplaceToTask" @click="$router.replace('/group-info-student/post')">Перейти до завдання</v-btn>
             </div>

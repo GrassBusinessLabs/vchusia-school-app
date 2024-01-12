@@ -31,9 +31,18 @@ const mapPosts = () => {
   return mappedUniqueSet
 }
 
-const getPostByCords = (row: any, column: any) => {
-  return PostStore.PostInfo.find(post => post.row === row && post.column === column)
-}
+
+const getPostByCords = (row, column) => {
+  const postInTask = PostStore.postsInTask.find(post => post.row === row && post.column === column);
+  const postInfo = PostStore.PostInfo.find(post => post.row === row && post.column === column);
+
+  if (postInTask && postInfo && postInTask.id === postInfo.id) {
+    postInfo.color = 'grey';
+  }
+
+  return postInfo;
+};
+
 
 const postShared = ref(false)
 

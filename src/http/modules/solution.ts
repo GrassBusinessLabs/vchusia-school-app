@@ -10,7 +10,7 @@ function saveSolution(body: SaveSolution) {
 }
 
 function attachImage() {
-    let solutionId = solution().gpId
+    let solutionId = solution().solutionInfo.id
     return axios.post(`/solution/${solutionId}/addImage`, solution().file)
 }
 

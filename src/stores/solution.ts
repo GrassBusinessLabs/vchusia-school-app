@@ -31,7 +31,7 @@ export const solution = defineStore('solution', {
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
-                this.findSolutionBySharedPostId(this.gpId)
+                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
                 console.log(response)
             } catch (e) {
                 console.log(e)
