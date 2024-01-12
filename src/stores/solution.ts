@@ -20,6 +20,7 @@ export const solution = defineStore('solution', {
         async saveSolution(body: SaveSolution): Promise <void> {
             try {
                 const response = await SolutionApi.saveSolution(body)
+                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
                 this.solutionId = response.id
                 console.log(response)
             } catch (e) {
@@ -49,6 +50,7 @@ export const solution = defineStore('solution', {
         async updateSolution(body: UpdateSolution, solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.updateSolution(body, solutionId)
+                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -82,13 +84,15 @@ export const solution = defineStore('solution', {
             }
         },
 
-        async findSolutionBySharedPostId(gpId: number): Promise <void>{
+        async findSolutionBySharedPostId(spId: number): Promise <void>{
             try {
-                const response = await SolutionApi.findSolutionBySharedPostId(gpId)
+                const response = await SolutionApi.findSolutionBySharedPostId(spId)
                 this.solutionInfo = response
                 console.log(response)
+                return true
             } catch (e) {
                 console.log(e)
+                return false
             }
         }
     }

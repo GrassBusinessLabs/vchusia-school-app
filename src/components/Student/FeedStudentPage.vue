@@ -86,9 +86,6 @@ const findSolutionById = () => {
   SolutionStore.findSolutionById(1)
 }
 
-const findSolutionBySharedPostId = () => {
-  SolutionStore.findSolutionBySharedPostId(SolutionStore.gpId)
-}
 function watchSaveSolution(){
   setTimeout(() => {
     if(readPost.value === false){
@@ -104,7 +101,7 @@ function watchSaveSolution(){
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId, findSolutionBySharedPostId()">
+        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId">
           <div class="title_post_div">
             {{item.title}}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -154,6 +151,9 @@ function watchSaveSolution(){
 
             <div class="acceptTaskBlock" >
               <v-btn class="btnAcceptTask" @click="readPost = !readPost, updateStatus()">Здати завдання</v-btn>
+            </div>
+            <div class="replaceToTask">
+              <v-btn class="btnReplaceToTask" @click="$router.replace('/group-info-student/post')">Перейти до завдання</v-btn>
             </div>
           </v-card>
         </v-bottom-sheet>
@@ -260,6 +260,17 @@ function watchSaveSolution(){
   display: flex;
   align-items: center;
 }
-
+.replaceToTask{
+  width: 90%;
+  margin: 20px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btnReplaceToTask{
+  width: 90%;
+  background: cornflowerblue;
+  color: #fff;
+}
 </style>
 
