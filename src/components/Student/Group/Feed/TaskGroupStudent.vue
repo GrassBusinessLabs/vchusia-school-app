@@ -18,7 +18,7 @@ const courseInfo = CourseStore.thisCourse
 let items = []
 let r, c;
 const switchMode = ref(true)
-
+const sharedValue = ref(false)
 const mapPosts = () => {
   const rows = PostStore.PostInfo.map(post => post.row)
   const uniqueSet = Array.from(new Set(rows))
@@ -38,6 +38,7 @@ const getPostByCords = (row, column) => {
 
   if (postInTask && postInfo && postInTask.id === postInfo.id) {
     postInfo.color = 'grey';
+
   }
 
   return postInfo;
@@ -53,11 +54,20 @@ const handlePost = (row: any, column: any) => {
 
     if (switchMode.value === true) {
       readPost.value = true
-
       for (let i of PostStore.PostInfo) {
         if (row + 1 === i.row && column === i.column) {
           postShared.value = false
           console.log(i.id)
+          if (i.color === 'grey'){
+            sharedValue.value = true
+            for(let k of PostStore.postsInTask){
+              if(k.id === i.id){
+                PostStore.sharedPostInfo = k
+              }
+            }
+          } else{
+            sharedValue.value = false
+          }
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
@@ -226,6 +236,16 @@ onMounted(() => {PostStore.findPostWithRow()})
                 <p>{{ PostStore.info.description }}</p>
               </v-card-text>
 
+
+
+            </div>
+            <div class="buttons_post_card">
+              <v-btn class="btn_share" v-if="sharedValue === false">
+                Поширити завдання
+              </v-btn>
+              <v-btn class="btn_replace" v-else-if="sharedValue === true" @click="$router.replace('/group-info-student/post')">
+                Перейти до завдання
+              </v-btn>
             </div>
 
           </div>
@@ -364,23 +384,22 @@ ion-col{
   color: lightcoral;
 
 }
-/*Solutions*/
-.solution{
-  width: 80%;
-  margin: 0 auto;
+.buttons_post_card{
   display: flex;
-  align-items: center;
-}
-.btn-send-solution{
-  width: 100%;
-  background: darkslategray;
-  color: #fff;
-}
-.solution-btn{
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+}
+.btn_share, .btn_replace{
+  width: 90%;
+  margin: 10px auto;
+}
+.btn_share{
+  background: aliceblue;
+}
+.btn_replace{
+  background: antiquewhite;
 }
 </style>

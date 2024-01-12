@@ -34,7 +34,7 @@ async function getPostsOnFeed() {
 
 
 const el = ref<HTMLElement | null>(null)
-useInfiniteScroll(el, getPostsOnFeed, { distance: 10 })
+useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
 
 let virtualList: UseVirtualListReturn<any>;
 virtualList = useVirtualList(feedPosts, {itemSize: 50});
@@ -46,6 +46,7 @@ function isFutureDate(targetDate) {
 
   return targetDateTime > currentDate;
 }
+
 const formatDate = (dateString) => {
   const options = {
     day: '2-digit',
@@ -61,79 +62,50 @@ const formatDate = (dateString) => {
 };
 
 
-//Solution requests
-const saveSolution = () => {
-  SolutionStore.saveSolution({description: SolutionStore.solutionInfo.description })
-}
-
-const updateStatus = () => {
-  SolutionStore.updateStatus(SolutionStore.gpId)
-}
-const updateSolution = () => {
-  const body = {
-    description: SolutionStore.solutionInfo.description
-  }
-  SolutionStore.updateSolution(body, SolutionStore.gpId)
-}
-const deleteSolution = () => {
-  SolutionStore.deleteSolution(2)
-}
-const deleteImage = () => {
-  SolutionStore.deleteImage(2)
-}
-
-const findSolutionById = () => {
-  SolutionStore.findSolutionById(1)
-}
-
-function watchSaveSolution(){
-  setTimeout(() => {
-    if(readPost.value === false){
-      updateSolution()
-    }
-  }, 10)
-}
-
-
 </script>
 
 <template>
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="readPost = !readPost, PostStore.info = item, SolutionStore.gpId = item.sharedPostId">
+        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
+             @click="readPost = !readPost, PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId">
           <div class="title_post_div">
-            {{item.title}}
+            {{ item.title }}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
           </div>
         </div>
       </div>
 
 
-
     </ion-content>
     <ion-footer>
-      <div class="text-center" >
-        <v-bottom-sheet v-model="readPost" @click="watchSaveSolution">
+      <div class="text-center">
+        <v-bottom-sheet v-model="readPost">
           <v-card height="500" class="card_readPost">
             <div class="d-flex flex-column justify-center align-center mt-9">
               <div class="container">
                 <div class="d-flex justify-space-between">
                   <div class="pa-2">
-                    <v-card-subtitle class="pa-2 d-flex flex-column justify-center align-center">{{ PostStore.info.id }}</v-card-subtitle>
-                    <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read"></div>
+                    <v-card-subtitle class="pa-2 d-flex flex-column justify-center align-center">
+                      {{ PostStore.sharedPostInfo.id }}
+                    </v-card-subtitle>
+                    <div :style="{backgroundColor: PostStore.sharedPostInfo.color}" class="color_post_read"></div>
                   </div>
 
                   <div>
-                    <v-card-title class="font-weight-bold">{{ PostStore.info.title }}</v-card-title>
-                    <v-card-subtitle>Виконати до: {{formatDate(PostStore.info.deadline)}}</v-card-subtitle>
-                    <v-card-subtitle class="missingDate" v-if="isFutureDate(PostStore.info.deadline) === false">Пропущено термін здачі</v-card-subtitle>
-                    <v-card-subtitle>Оцінка за завдання {{ PostStore.info.points }}</v-card-subtitle>
+                    <v-card-title class="font-weight-bold">{{ PostStore.sharedPostInfo.title }}</v-card-title>
+                    <v-card-subtitle>Виконати до: {{ formatDate(PostStore.sharedPostInfo.deadline) }}</v-card-subtitle>
+                    <v-card-subtitle class="missingDate"
+                                     v-if="isFutureDate(PostStore.sharedPostInfo.deadline) === false">Пропущено термін
+                      здачі
+                    </v-card-subtitle>
+                    <v-card-subtitle>Оцінка за завдання {{ PostStore.sharedPostInfo.points }}</v-card-subtitle>
                   </div>
                 </div>
 
                 <v-card-text class="description-post">
-                  <p>{{ PostStore.info.description }}</p>
+                  <p>{{ PostStore.sharedPostInfo.description }}</p>
                 </v-card-text>
 
               </div>
@@ -141,10 +113,9 @@ function watchSaveSolution(){
             </div>
 
 
-
-
             <div class="replaceToTask">
-              <v-btn class="btnReplaceToTask" @click="$router.replace('/group-info-student/post')">Перейти до завдання</v-btn>
+              <v-btn class="btnReplaceToTask" @click="$router.replace('/group-info-student/post')">Перейти до завдання
+              </v-btn>
             </div>
           </v-card>
         </v-bottom-sheet>
@@ -164,19 +135,21 @@ function watchSaveSolution(){
   display: flex;
   padding: 5px;
   color: grey;
-  background: rgb(180,252,255);
-  background: linear-gradient(96deg, rgba(180,252,255,1) 55%, rgba(0,212,255,1) 100%);
+  background: rgb(180, 252, 255);
+  background: linear-gradient(96deg, rgba(180, 252, 255, 1) 55%, rgba(0, 212, 255, 1) 100%);
   align-items: center;
 }
-.el{
+
+.el {
   border-radius: 15px;
 
 }
-.title_post_div{
+
+.title_post_div {
   padding-left: 10px;
 }
 
-.subtitle_post{
+.subtitle_post {
   color: #555;
   font-size: 13px;
 }
@@ -187,22 +160,25 @@ function watchSaveSolution(){
   margin: 10px 15px;
   border-radius: 50px;
 }
-.acceptTaskBlock{
+
+.acceptTaskBlock {
   width: 90%;
   margin: 20px auto 0 auto;
 }
 
-.acceptTaskBlock{
+.acceptTaskBlock {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.btnAcceptTask{
+
+.btnAcceptTask {
   width: 90%;
   background: #4CAF50;
   color: #fff;
 }
-.container{
+
+.container {
   display: flex;
   flex-direction: column;
   align-items: self-start;
@@ -210,7 +186,7 @@ function watchSaveSolution(){
   width: 90%;
 }
 
-.description-post{
+.description-post {
   outline: 1px solid #dbdbdb;
   width: 90%;
   border-radius: 15px;
@@ -218,7 +194,7 @@ function watchSaveSolution(){
   margin: 15px auto;
 }
 
-.missingDate{
+.missingDate {
   color: red;
   font-weight: 900;
 }
@@ -233,32 +209,37 @@ function watchSaveSolution(){
   width: 100%;
 
 }
-.btn-send-solution{
+
+.btn-send-solution {
   width: 100%;
   background: darkslategray;
   color: #fff;
 }
-.solution-btn{
+
+.solution-btn {
   width: 80%;
   margin: 0 auto;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
-.solution{
+
+.solution {
   width: 80%;
   margin: 0 auto;
   display: flex;
   align-items: center;
 }
-.replaceToTask{
+
+.replaceToTask {
   width: 90%;
   margin: 20px auto 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.btnReplaceToTask{
+
+.btnReplaceToTask {
   width: 90%;
   background: cornflowerblue;
   color: #fff;

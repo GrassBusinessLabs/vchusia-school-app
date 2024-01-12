@@ -15,7 +15,7 @@ let descriptionSolution: SaveSolution = reactive({
 })
 
 const errorHandle = () => {
-  SolutionStore.findSolutionBySharedPostId(PostStore.info.sharedPostId).then((res) => {
+  SolutionStore.findSolutionBySharedPostId(PostStore.sharedPostInfo.sharedPostId).then((res) => {
     if(res === true) {
       check.value = true
       descriptionSolution.description = SolutionStore.solutionInfo.description
@@ -60,16 +60,16 @@ const saveSolution = () => {
       <div class="infoPost">
 
         <div class="title_post">
-          <h1>{{PostStore.info.title}}</h1>
-          <p style="color:grey">Оцінка за завдання {{PostStore.info.points}}</p>
+          <h1>{{PostStore.sharedPostInfo.title}}</h1>
+          <p style="color:grey">Оцінка за завдання {{PostStore.sharedPostInfo.points}}</p>
         </div>
 
         <div class="deadline_points">
-          <p>Виконати до: {{PostStore.info.deadline}}</p>
+          <p>Виконати до: {{PostStore.sharedPostInfo.deadline}}</p>
         </div>
 
         <div class="description_task">
-          <p>{{PostStore.info.description}}</p>
+          <p>{{PostStore.sharedPostInfo.description}}</p>
         </div>
 
       </div>
