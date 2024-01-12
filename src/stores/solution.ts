@@ -69,6 +69,7 @@ export const solution = defineStore('solution', {
         async deleteImage(imgId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteImage(imgId)
+                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
                 console.log(response)
             } catch (e) {
                 console.log(e)

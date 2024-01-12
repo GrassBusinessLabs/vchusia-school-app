@@ -14,6 +14,27 @@ let descriptionSolution: SaveSolution = reactive({
   description: ''
 })
 
+const formatDate = (dateString: any) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  };
+
+  const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
+  return formattedDate;
+};
+
+function isFutureDate(targetDate: any) {
+  const currentDate = new Date();
+  const targetDateTime = new Date(targetDate);
+
+  return targetDateTime > currentDate;
+}
+
 const errorHandle = () => {
   SolutionStore.findSolutionBySharedPostId(PostStore.sharedPostInfo.sharedPostId).then((res) => {
     if(res === true) {
@@ -65,7 +86,8 @@ const saveSolution = () => {
         </div>
 
         <div class="deadline_points">
-          <p>Виконати до: {{PostStore.sharedPostInfo.deadline}}</p>
+          <p class="missingDate" v-if="isFutureDate(PostStore.sharedPostInfo.deadline) == false">Пропущено термін здачі</p>
+          <p>Виконати до {{formatDate(PostStore.sharedPostInfo.deadline)}}</p>
         </div>
 
         <div class="description_task">
@@ -116,7 +138,12 @@ const saveSolution = () => {
   margin: 10px 0;
   display: flex;
   font-size: 14px;
+  flex-direction: column;
   color: grey;
+}
+.missingDate {
+  color: red;
+  font-weight: 900;
 }
 .accept_task{
   width: 90%;

@@ -11,18 +11,31 @@
 
       <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">
 
-        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="(image, index) in gallery" :key="index">
-          <div class="image_block">
+        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="i of SolutionStore.solutionInfo.images">
+          <div class="image_block">-->
             <div class="delete_image">
-              <v-btn @click="deleteImage(index)" size="x-small" rounded="0" color="red" class="delete-btn" icon="mdi-delete"></v-btn>
+              <v-btn @click="deleteImage(i.id)" size="x-small" rounded="0" color="red" class="delete-btn"
+                     icon="mdi-delete"></v-btn>
             </div>
-            <div class="image_content">
-              <v-img :src="image"></v-img>
-
+            <div class="image_content" >
+              <v-img :src="urlData+i.name"></v-img>
             </div>
           </div>
-
         </v-avatar>
+
+<!--        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="(image, index) in gallery" :key="index">-->
+
+<!--          <div class="image_block">-->
+<!--            <div class="delete_image">-->
+<!--              <v-btn @click="deleteImage(index)" size="x-small" rounded="0" color="red" class="delete-btn" icon="mdi-delete"></v-btn>-->
+<!--            </div>-->
+<!--            <div class="image_content">-->
+<!--              <v-img :src="image"></v-img>-->
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </v-avatar>-->
+
       </div>
 
 
@@ -54,7 +67,8 @@ export default {
       avatarImage: null,
       chosenImage: null,
       gallery: [],
-      SolutionStore: solution()
+      SolutionStore: solution(),
+      urlData: 'https://vchusia.grassbusinesslabs.tk/static/'
     }
   },
   methods: {
@@ -74,8 +88,8 @@ export default {
       });
     },
 
-    async deleteImage(){
-      await this.SolutionStore.deleteImage(12)
+    async deleteImage(id){
+      await this.SolutionStore.deleteImage(id)
     }
   }
 }
