@@ -12,7 +12,7 @@
       <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">
 
         <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="i of SolutionStore.solutionInfo.images">
-          <div class="image_block">-->
+          <div class="image_block">
             <div class="delete_image">
               <v-btn @click="deleteImage(i.id)" size="x-small" rounded="0" color="red" class="delete-btn"
                      icon="mdi-delete"></v-btn>

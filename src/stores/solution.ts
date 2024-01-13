@@ -5,7 +5,8 @@ interface State {
     gpId: number,
     file: any,
     solutionId: number,
-    solutionInfo: any
+    solutionInfo: any,
+    spId: number
 }
 
 export const solution = defineStore('solution', {
@@ -13,14 +14,15 @@ export const solution = defineStore('solution', {
         gpId: 0,
         file: null,
         solutionId: 0,
-        solutionInfo: []
+        solutionInfo: [],
+        spId: 0
     }),
 
     actions: {
         async saveSolution(body: SaveSolution): Promise <void> {
             try {
                 const response = await SolutionApi.saveSolution(body)
-                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
+                this.findSolutionBySharedPostId()
                 this.solutionId = response.id
                 console.log(response)
             } catch (e) {
@@ -31,7 +33,7 @@ export const solution = defineStore('solution', {
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
-                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
+                this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -50,7 +52,7 @@ export const solution = defineStore('solution', {
         async updateSolution(body: UpdateSolution, solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.updateSolution(body, solutionId)
-                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
+                this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -69,7 +71,7 @@ export const solution = defineStore('solution', {
         async deleteImage(imgId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteImage(imgId)
-                this.findSolutionBySharedPostId(this.solutionInfo.groupPostId)
+                this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -85,9 +87,9 @@ export const solution = defineStore('solution', {
             }
         },
 
-        async findSolutionBySharedPostId(spId: number): Promise <void>{
+        async findSolutionBySharedPostId(): Promise <void>{
             try {
-                const response = await SolutionApi.findSolutionBySharedPostId(spId)
+                const response = await SolutionApi.findSolutionBySharedPostId()
                 this.solutionInfo = response
                 console.log(response)
                 return true

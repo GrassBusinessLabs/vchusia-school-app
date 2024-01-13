@@ -101,7 +101,7 @@ const findSolutionById = () => {
     <ion-content>
       <div ref="el">
         <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
-             @click="readPost = !readPost, PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId">
+             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, $router.replace('/group-info-student/post')">
           <div class="title_post_div">
             {{ item.title }}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -110,84 +110,10 @@ const findSolutionById = () => {
       </div>
     </ion-content>
 
-    <ion-footer>
-      <div class="text-center">
-        <v-bottom-sheet v-model="readPost">
-          <v-card height="500">
-            <div class="d-flex flex-column justify-center align-center mt-9">
-              <div class="container">
-                <div class="d-flex justify-space-between">
-                  <div class="pa-2">
-                    <v-card-subtitle class="pa-2 d-flex flex-column justify-center align-center">
-                      {{ PostStore.sharedPostInfo.id }}
-                    </v-card-subtitle>
-                    <div :style="{backgroundColor: PostStore.sharedPostInfo.color}" class="color_post_read"></div>
-                  </div>
-
-                  <div>
-                    <v-card-title class="font-weight-bold">{{ PostStore.sharedPostInfo.title }}</v-card-title>
-                    <v-card-subtitle>Виконати до: {{ formatDate(PostStore.sharedPostInfo.deadline) }}</v-card-subtitle>
-                    <v-card-subtitle class="missingDate"
-                                     v-if="isFutureDate(PostStore.sharedPostInfo.deadline) == false">Пропущено термін
-                      здачі
-                    </v-card-subtitle>
-                    <v-card-subtitle>Оцінка за завдання {{ PostStore.sharedPostInfo.points }}</v-card-subtitle>
-                  </div>
-                </div>
-
-                <v-card-text class="description-post">
-                  <p>{{ PostStore.sharedPostInfo.description }}</p>
-                </v-card-text>
-
-              </div>
-
-              <div class="replaceToTask">
-                <v-btn class="btnReplaceToTask" @click="$router.replace('/group-info-student/post')">Перейти до
-                  завдання
-                </v-btn>
-              </div>
-
-            </div>
-
-
-          </v-card>
-        </v-bottom-sheet>
-      </div>
-    </ion-footer>
   </ion-page>
 </template>
 
 <style scoped>
-
-.color_post_read {
-  width: 20px;
-  height: 20px;
-  margin: 10px 15px;
-  border-radius: 50px;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: self-start;
-  text-align: left;
-  width: 90%;
-}
-
-.description-post {
-  outline: 1px solid #dbdbdb;
-  width: 90%;
-  border-radius: 15px;
-  min-height: 20vh;
-  margin: 15px auto;
-}
-
-
-.missingDate {
-  color: red;
-  font-weight: 900;
-}
-
 .itemListFeed {
   height: 50px;
   outline: 1px ridge cyan;
@@ -210,19 +136,6 @@ const findSolutionById = () => {
   font-size: 13px;
 }
 
-.replaceToTask {
-  width: 90%;
-  margin: 20px auto 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btnReplaceToTask {
-  width: 90%;
-  background: cornflowerblue;
-  color: #fff;
-}
 </style>
 
 

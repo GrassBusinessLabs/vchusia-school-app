@@ -31,7 +31,8 @@ function deleteImage(imgId: number) {
 function findSolutionById(solutionId: number) {
     return axios.get(`/solution/${solutionId}`)
 }
-function findSolutionBySharedPostId(spId: number) {
+function findSolutionBySharedPostId() {
+    let spId: number = solution().spId
     return axios.get(`/solution/sharedPost/${spId}`)
 }
 export default {

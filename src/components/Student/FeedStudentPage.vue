@@ -69,7 +69,7 @@ const formatDate = (dateString) => {
     <ion-content>
       <div ref="el" class="el">
         <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
-             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, $router.replace('/group-info-student/post')">
+             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
           <div class="title_post_div">
             {{ item.title }}
             <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
@@ -103,106 +103,13 @@ const formatDate = (dateString) => {
   border-radius: 15px;
 
 }
-
 .title_post_div {
   padding-left: 10px;
 }
-
 .subtitle_post {
   color: #555;
   font-size: 13px;
 }
 
-.color_post_read {
-  width: 20px;
-  height: 20px;
-  margin: 10px 15px;
-  border-radius: 50px;
-}
-
-.acceptTaskBlock {
-  width: 90%;
-  margin: 20px auto 0 auto;
-}
-
-.acceptTaskBlock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btnAcceptTask {
-  width: 90%;
-  background: #4CAF50;
-  color: #fff;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: self-start;
-  text-align: left;
-  width: 90%;
-}
-
-.description-post {
-  outline: 1px solid #dbdbdb;
-  width: 90%;
-  border-radius: 15px;
-  min-height: 20vh;
-  margin: 15px auto;
-}
-
-.missingDate {
-  color: red;
-  font-weight: 900;
-}
-
-
-.add_image {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-
-}
-
-
-.btn-send-solution {
-  width: 100%;
-  background: darkslategray;
-  color: #fff;
-}
-
-.solution-btn {
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.solution {
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-}
-
-.replaceToTask {
-  width: 90%;
-  margin: 20px auto 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btnReplaceToTask {
-  width: 90%;
-  background: cornflowerblue;
-  color: #fff;
-}
 </style>
 

@@ -302,22 +302,6 @@ ion-col{
   margin: 10px 15px;
   border-radius: 50px;
 }
-.fileInputBlock, .acceptTaskBlock{
-  width: 100%;
-  margin: 20px auto 0 auto;
-}
-
-.acceptTaskBlock{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.btnAcceptTask{
-  width: 80%;
-  background: #4CAF50;
-  color: #fff;
-}
-
 .description-post{
   outline: 1px solid #dbdbdb;
   width: 90%;

@@ -3,7 +3,7 @@ import {IonPage, IonContent, IonFooter} from "@ionic/vue";
 import {solution} from "@/stores/solution";
 import {post} from "@/stores/post"
 import CropperComponent from "@/components/parts/CropperComponent.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import {SaveSolution, UpdateSolution} from "@/models/Solution";
 
 const PostStore = post()
@@ -36,12 +36,14 @@ function isFutureDate(targetDate: any) {
 }
 
 const errorHandle = () => {
-  SolutionStore.findSolutionBySharedPostId(PostStore.sharedPostInfo.sharedPostId).then((res) => {
+  console.log(PostStore.sharedPostInfo.sharedPostId)
+  SolutionStore.findSolutionBySharedPostId().then((res) => {
     if(res === true) {
       check.value = true
       descriptionSolution.description = SolutionStore.solutionInfo.description
     } else{
       check.value = false
+      SolutionStore.solutionInfo = []
     }
   })
 }
@@ -49,7 +51,11 @@ const errorHandle = () => {
 errorHandle()
 
 
+
+
 const checkSolutionAndSave = () => {
+  console.log(check.value)
+
     if(check.value === true){
       updateSolution()
     } else{
@@ -62,7 +68,8 @@ const updateStatus = () => {
 }
 const updateSolution = () => {
   SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionInfo.id)
-  errorHandle()
+  descriptionSolution.description = SolutionStore.solutionInfo.description
+   errorHandle()
 }
 const saveSolution = () => {
   SolutionStore.saveSolution(descriptionSolution)
