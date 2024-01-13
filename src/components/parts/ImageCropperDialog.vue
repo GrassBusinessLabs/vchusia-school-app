@@ -6,15 +6,20 @@
           <vue-cropper
             ref="cropper"
             class="image-container"
-            :aspect-ratio="1 / 1"
+            :aspect-ratio="null"
             :guides="true"
             :background="false"
-            :view-mode="3"
+            :view-mode="0"
             drag-mode="move"
             :src="chosenImage"
             alt="Image not available"
           >
           </vue-cropper>
+          <div class="rotate_btns">
+            <v-btn @click="rotateLeft" icon="mdi-rotate-left" class="rotate-left"></v-btn>
+            <v-btn @click="rotateRight" icon="mdi-rotate-right" class="rotate-right"></v-btn>
+          </div>
+
         </v-card-text>
         <v-card-actions class="py-0 mx-10">
           <v-btn
@@ -66,6 +71,12 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 50));
             this.$refs.cropper.replace(this.chosenImage);
         },
+      rotateLeft() {
+        this.$refs.cropper.rotate(-90);
+      },
+      rotateRight() {
+        this.$refs.cropper.rotate(90);
+      },
 
         async resetCropper(){
           this.$emit('onReset');
@@ -95,5 +106,16 @@ export default {
 .image-container img {
   /* This is important */
   width: 100%;
+}
+.rotate_btns{
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+.rotate-left{
+  margin: 10px;
+}
+.rotate-right{
+  margin: 10px;
 }
 </style>

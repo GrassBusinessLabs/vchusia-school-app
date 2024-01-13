@@ -61,7 +61,7 @@ const updateStatus = () => {
   SolutionStore.updateStatus(SolutionStore.solutionInfo.id)
 }
 const updateSolution = () => {
-  SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionId)
+  SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionInfo.id)
   errorHandle()
 }
 const saveSolution = () => {
