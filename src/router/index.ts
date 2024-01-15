@@ -27,6 +27,7 @@ import studentGroupPage from "@/components/layouts/studentGroupPage.vue";
 import FeedGroupStudent from "@/components/Student/Group/Feed/FeedGroupStudent.vue";
 import TaskGroupStudent from "@/components/Student/Group/Feed/TaskGroupStudent.vue";
 import PostPageStudent from "@/components/Student/Group/Feed/PostPageStudent.vue";
+import FeedTeacher from "@/components/Teacher/FeedTeacher.vue";
 
 const getUserAndRole = () => {
   return new Promise((resolve) => {
@@ -150,6 +151,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'course',
         name: 'Course',
         component: CoursePage,
+        meta: { role: 'TEACHER' }
+      },
+      {
+        path: 'feed',
+        name: 'Feed',
+        component: FeedTeacher,
         meta: { role: 'TEACHER' }
       },
 

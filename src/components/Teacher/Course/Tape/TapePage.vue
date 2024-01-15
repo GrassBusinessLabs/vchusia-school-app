@@ -57,32 +57,10 @@ onIonViewWillEnter(() => {
   </ion-content>
 
   <ion-footer class="ion-no-border">
-
-
-<!--    <v-btn icon="mdi-plus" @click="sheet_comment = !sheet_comment" class="d-flex justify-center align-center mb-2 mx-auto"></v-btn>-->
-
-    <div class="text-center">
-      <v-btn class="btn-add-course mb-1" size="large" @click="sheet_comment = !sheet_comment">
-        <ion-icon :icon="add" color="danger" id="open-modal" ></ion-icon>
-      </v-btn>
-      <v-bottom-sheet v-model="sheet_comment">
-        <v-card height="250" >
-          <v-card-text>
-            <v-textarea
-              variant="outlined"
-              density="compact"
-              v-model="comment"
-            ></v-textarea>
-
-            <v-btn class="d-flex justify-center align-center mx-auto" color="purple" @click="sheet_comment = !sheet_comment">
-              Коментувати
-            </v-btn>
-          </v-card-text>
-        </v-card>
-      </v-bottom-sheet>
+    <div class="container-footer">
+      <v-text-field variant="outlined" label="Коментар" class="text-from-teacher"></v-text-field>
+      <v-btn elevation="0" icon="mdi-send" class="btn-send-comment"></v-btn>
     </div>
-
-
   </ion-footer>
 </ion-page>
 
@@ -101,9 +79,19 @@ onIonViewWillEnter(() => {
   background: linear-gradient(207deg, rgba(85,255,216,1) 16%, rgba(214,255,255,1) 100%);
   color: grey;
 }
-.btn-add-course {
-  min-width: 30px;
-  border-radius: 50px;
-  margin-top: 10px;
+.container-footer{
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+.text-from-teacher{
+  width: 90%;
+  margin: 20px auto 0 auto;
+  box-sizing: border-box;
+}
+.btn-send-comment{
+  margin: 0 10px;
 }
 </style>
