@@ -37,7 +37,7 @@ const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
 
 let virtualList: UseVirtualListReturn<any>;
-virtualList = useVirtualList(feedPosts, {itemSize: 50});
+virtualList = useVirtualList(feedPosts, {itemSize: 70});
 
 
 function isFutureDate(targetDate) {
@@ -68,13 +68,38 @@ const formatDate = (dateString) => {
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
-             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div class="title_post_div">
-            {{ item.title }}
-            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
+        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
+          <div>
+            <v-list-item  class="list_item">
+
+              <v-list-item-title >
+                {{ item.title }}
+              </v-list-item-title>
+
+              <v-list-item-subtitle class="subtitle_post">
+                {{ formatDate(item.deadline) }}
+              </v-list-item-subtitle>
+
+            </v-list-item>
           </div>
-        </div>
+
+          <div class="description_block">
+            <p class="description">{{item.description}}</p>
+          </div>
+
+        </v-list>
+<!--        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"-->
+<!--             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
+<!--          <div class="title_post_div">-->
+<!--            {{ item.title }}-->
+<!--            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>-->
+<!--          </div>-->
+
+<!--          <div class="description">-->
+<!--            <p >{{item.description}}</p>-->
+<!--          </div>-->
+
+<!--        </div>-->
       </div>
 
 
@@ -85,11 +110,10 @@ const formatDate = (dateString) => {
 
 <style scoped>
 .itemListFeed {
-  height: 50px;
+  height: 70px;
   outline: 1px ridge cyan;
   border-radius: 15px;
   margin: 15px;
-  display: flex;
   padding: 5px;
   color: grey;
   background: rgb(180, 252, 255);
@@ -97,6 +121,7 @@ const formatDate = (dateString) => {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 .el {
@@ -109,6 +134,21 @@ const formatDate = (dateString) => {
 .subtitle_post {
   color: #555;
   font-size: 13px;
+}
+.description{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.description_block{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 35%;
+  height: 60px;
+  padding-right: 15px;
+
 }
 
 </style>

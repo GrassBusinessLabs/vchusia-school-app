@@ -37,7 +37,7 @@ PostStore.postsInTask = feedPosts.value
 const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
 
-const virtualList = useVirtualList(feedPosts, {itemSize: 50})
+const virtualList = useVirtualList(feedPosts, {itemSize: 70})
 
 
 const formatDate = (dateString: any) => {
@@ -100,13 +100,34 @@ const findSolutionById = () => {
   <ion-page>
     <ion-content>
       <div ref="el">
-        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
-             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div class="title_post_div">
-            {{ item.title }}
-            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>
+<!--        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"-->
+<!--             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
+<!--          <div class="title_post_div">-->
+<!--            {{ item.title }}-->
+<!--            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
+          <div>
+            <v-list-item  class="list_item">
+
+              <v-list-item-title >
+                {{ item.title }}
+              </v-list-item-title>
+
+              <v-list-item-subtitle class="subtitle_post">
+                {{ formatDate(item.deadline) }}
+              </v-list-item-subtitle>
+
+            </v-list-item>
           </div>
-        </div>
+
+          <div class="description_block">
+            <p class="description">{{item.description}}</p>
+          </div>
+
+        </v-list>
       </div>
     </ion-content>
 
@@ -115,16 +136,18 @@ const findSolutionById = () => {
 
 <style scoped>
 .itemListFeed {
-  height: 50px;
+  height: 70px;
   outline: 1px ridge cyan;
   border-radius: 15px;
   margin: 15px;
-  display: flex;
   padding: 5px;
   color: grey;
   background: rgb(180, 252, 255);
   background: linear-gradient(96deg, rgba(180, 252, 255, 1) 55%, rgba(0, 212, 255, 1) 100%);
   align-items: center;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
 }
 
 .title_post_div {
@@ -136,6 +159,21 @@ const findSolutionById = () => {
   font-size: 13px;
 }
 
+.description{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.description_block{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 35%;
+  height: 60px;
+  padding-right: 15px;
+
+}
 </style>
 
 
