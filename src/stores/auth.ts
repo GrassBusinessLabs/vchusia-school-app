@@ -81,6 +81,15 @@ export const auth = defineStore('auth', {
             }
 
         },
+        async getMe(){
+          try {
+              const response = await AuthApi.getMe()
+              this.user.user = response
+              console.log(response)
+          }  catch (e) {
+              console.log(e)
+          }
+        },
 
         async signup(body: Signup) {
             try {

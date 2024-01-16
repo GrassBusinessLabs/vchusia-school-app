@@ -139,7 +139,7 @@ import {
   IonFooter
 } from "@ionic/vue";
 import {auth} from "@/stores/auth";
-import {ref} from 'vue';
+import {ref, reactive} from 'vue';
 import {VBottomSheet} from 'vuetify/labs/VBottomSheet'
 import axios from "axios";
 
@@ -153,12 +153,15 @@ const dialogDelAccount = ref(false);
 const sheetChangeUser = ref(false);
 let oldPassword = "";
 let newPassword = "";
-let nameMe = "";
+let nameMe = auth().user.user.name;
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 const cancelMe = () => modalMe.value.$el.dismiss(null, 'cancel');
 
-const user = JSON.parse(localStorage.getItem('user'))
+const user = reactive({
+  name: auth().user.user.name,
+  email: auth().user.user.email
+})
 const token = localStorage.getItem('token')
 
 const confirm = () => {
@@ -169,11 +172,16 @@ const confirm = () => {
   oldPassword = "";
   newPassword = "";
 
-
 }
-const confirmMe = () => {
-  auth().changeMe({"name": nameMe})
+
+
+const confirmMe = async () => {
+  await auth().changeMe({"name": nameMe})
+  sheetChangeUser.value = false
   nameMe = ""
+  await auth().getMe()
+  user.name = auth().user.user.name
+  user.email = auth().user.user.email
 }
 
 const deleteAccount = () => {

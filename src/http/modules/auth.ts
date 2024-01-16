@@ -12,6 +12,9 @@ function logout (){
     return axios.post('auth/logout')
 }
 
+function getMe() {
+    return axios.get('/users')
+}
 function changePassword(body: changePassword) {
     return axios.post('auth/change-pwd', body)
 }
@@ -29,5 +32,6 @@ export default {
     logout,
     changePassword,
     changeMe,
-    deleteAccount
+    deleteAccount,
+    getMe
 }
