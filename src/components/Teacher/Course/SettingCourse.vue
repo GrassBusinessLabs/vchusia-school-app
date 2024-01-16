@@ -186,7 +186,6 @@ const updatePost = () => {
     description: PostStore.info.description,
     answer: PostStore.info.answer,
     points: +PostStore.info.points,
-    deadline: new Date(task$.deadline).toISOString(),
     requiredPoints: PostStore.info.requiredPoints,
     type: PostStore.info.type,
     color: PostStore.info.color

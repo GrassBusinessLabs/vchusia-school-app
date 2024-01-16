@@ -28,7 +28,7 @@ function updateCourse(body: Course){
     return axios.put(`/courses/${courseId}`, body)
 }
 
-function coursesByGroupId(page?: {page: number, count: number}, groupId: any) {
+function coursesByGroupId(groupId: any, page?: {page: number, count: number}) {
     if(page){
         return axios.get(`courses/byGroup/${groupId}?page=${page.value.page}&count=${page.value.count}`)
     }

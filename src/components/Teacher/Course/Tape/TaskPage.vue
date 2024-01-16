@@ -118,7 +118,8 @@ const sharePostOpenSheet = () => {
 }
 const sharePost = async () => {
   const body: sharePost = {
-    groups: [GroupStore.idGroup],
+    users: [29],
+    groupId: GroupStore.idGroup,
     comment: sharePostBody.comment,
     deadline: new Date(sharePostBody.deadline).toISOString()
   }

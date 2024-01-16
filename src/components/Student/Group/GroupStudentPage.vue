@@ -15,10 +15,10 @@ const pagination = ref({
 })
 const coursesByGroupId = () => {
   CourseStore.courseInGroup = []
-  CourseStore.coursesByGroupId(pagination, GroupStore.idGroup)
+  CourseStore.coursesByGroupId(GroupStore.idGroup)
 }
 
-const redirectToCourseForGroup = (idCourse) => {
+const redirectToCourseForGroup = (idCourse: any) => {
   router.replace('/group-info-student/feed-group-student')
   CourseStore.courseId = idCourse
   console.log(idCourse)

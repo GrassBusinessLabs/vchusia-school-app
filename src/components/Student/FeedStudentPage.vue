@@ -69,37 +69,28 @@ const formatDate = (dateString) => {
     <ion-content>
       <div ref="el" class="el">
         <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div>
+          <div class="main_content_item">
             <v-list-item  class="list_item">
 
-              <v-list-item-title >
+              <v-list-item-title>
                 {{ item.title }}
               </v-list-item-title>
 
               <v-list-item-subtitle class="subtitle_post">
-                {{ formatDate(item.deadline) }}
+                <p class="description">{{item.description}}</p>
               </v-list-item-subtitle>
 
             </v-list-item>
           </div>
 
           <div class="description_block">
-            <p class="description">{{item.description}}</p>
+            <v-card-subtitle>
+              {{ formatDate(item.deadline) }}
+            </v-card-subtitle>
+
           </div>
-
         </v-list>
-<!--        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"-->
-<!--             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
-<!--          <div class="title_post_div">-->
-<!--            {{ item.title }}-->
-<!--            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>-->
-<!--          </div>-->
 
-<!--          <div class="description">-->
-<!--            <p >{{item.description}}</p>-->
-<!--          </div>-->
-
-<!--        </div>-->
       </div>
 
 
@@ -128,9 +119,7 @@ const formatDate = (dateString) => {
   border-radius: 15px;
 
 }
-.title_post_div {
-  padding-left: 10px;
-}
+
 .subtitle_post {
   color: #555;
   font-size: 13px;
@@ -140,16 +129,26 @@ const formatDate = (dateString) => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
 }
 .description_block{
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   width: 35%;
   height: 60px;
   padding-right: 15px;
 
+
 }
+.main_content_item{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 80px;
+  padding-right: 15px;
+}
+
 
 </style>
 

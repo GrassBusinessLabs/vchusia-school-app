@@ -43,6 +43,10 @@ console.log(GroupStore.idGroup)
 
 loadGroup()
 
+const pagination = {
+  page: 1,
+  count: 10
+}
 let groupInfo = reactive({
   name: groupName
 });

@@ -89,9 +89,9 @@ export const course = defineStore('course', {
             }
         },
 
-        async coursesByGroupId(page?: {page: number, count: number}, groupId: any){
+        async coursesByGroupId( groupId: any, page?: {page: number, count: number}){
             try {
-                const response = await CourseApi.coursesByGroupId(page, groupId)
+                const response = await CourseApi.coursesByGroupId(groupId, page)
                 this.courseInGroup = response.items
                 this.totalCoursesInGroup = response.total
                 console.log(response)

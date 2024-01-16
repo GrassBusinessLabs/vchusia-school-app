@@ -21,7 +21,8 @@ export interface UpdatePost{
 }
 
 export interface sharePost {
-    groups: any,
+    users: number[],
+    groupId: any,
     comment: string,
     deadline: string,
 }
