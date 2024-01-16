@@ -109,24 +109,26 @@ const findSolutionById = () => {
 <!--        </div>-->
 
         <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div>
+          <div class="main_content_item">
             <v-list-item  class="list_item">
 
-              <v-list-item-title >
+              <v-list-item-title>
                 {{ item.title }}
               </v-list-item-title>
 
               <v-list-item-subtitle class="subtitle_post">
-                {{ formatDate(item.deadline) }}
+                <p class="description">{{item.description}}</p>
               </v-list-item-subtitle>
 
             </v-list-item>
           </div>
 
           <div class="description_block">
-            <p class="description">{{item.description}}</p>
-          </div>
+            <v-card-subtitle>
+              {{ formatDate(item.deadline) }}
+            </v-card-subtitle>
 
+          </div>
         </v-list>
       </div>
     </ion-content>
@@ -136,19 +138,19 @@ const findSolutionById = () => {
 
 <style scoped>
 .itemListFeed {
-  height: 70px;
-  outline: 1px ridge cyan;
-  border-radius: 15px;
-  margin: 15px;
-  padding: 5px;
-  color: grey;
-  background: rgb(180, 252, 255);
-  background: linear-gradient(96deg, rgba(180, 252, 255, 1) 55%, rgba(0, 212, 255, 1) 100%);
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  overflow: hidden;
-}
+    height: 70px;
+    outline: 1px ridge cyan;
+    border-radius: 15px;
+    margin: 15px;
+    padding: 5px;
+    color: grey;
+    background: rgb(180, 252, 255);
+    background: linear-gradient(96deg, rgba(180, 252, 255, 1) 55%, rgba(0, 212, 255, 1) 100%);
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+  }
 
 .title_post_div {
   padding-left: 10px;
@@ -164,15 +166,25 @@ const findSolutionById = () => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
 }
 .description_block{
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   width: 35%;
   height: 60px;
   padding-right: 15px;
 
+
+}
+
+.main_content_item{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 80px;
+  padding-right: 15px;
 }
 </style>
 

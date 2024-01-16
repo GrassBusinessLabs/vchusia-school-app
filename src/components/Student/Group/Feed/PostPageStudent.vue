@@ -35,47 +35,47 @@ function isFutureDate(targetDate: any) {
   return targetDateTime > currentDate;
 }
 
-const errorHandle = () => {
-  console.log(PostStore.sharedPostInfo.sharedPostId)
-  SolutionStore.findSolutionBySharedPostId().then((res) => {
-    if(res === true) {
-      check.value = true
-      descriptionSolution.description = SolutionStore.solutionInfo.description
-    } else{
-      check.value = false
-      SolutionStore.solutionInfo = []
+const errorHandle = async () => {
+  console.log(PostStore.sharedPostInfo.sharedPostId);
+  try {
+    const res = await SolutionStore.findSolutionBySharedPostId();
+
+    if (res === true) {
+      check.value = true;
+      descriptionSolution.description = SolutionStore.solutionInfo.description;
+    } else {
+      check.value = false;
+      await saveSolution();
     }
-  })
-}
+  } catch (error) {
+    console.error('Error fetching solution:', error);
+    await saveSolution();
+  }
+};
 
-errorHandle()
+onMounted(() => {
+  errorHandle();
+})
 
+const updateStatus = async () => {
+  await SolutionStore.updateStatus(SolutionStore.solutionInfo.id);
+};
 
+const updateSolution = async () => {
+  try {
+    await SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionInfo.id);
+    descriptionSolution.description = SolutionStore.solutionInfo.description;
+    await errorHandle()
+  } catch (error) {
+    console.error('Error updating solution:', error);
+    await saveSolution();
+  }
+};
 
-
-const checkSolutionAndSave = () => {
-  console.log(check.value)
-
-    if(check.value === true){
-      updateSolution()
-    } else{
-      saveSolution()
-    }
-}
-
-const updateStatus = () => {
-  SolutionStore.updateStatus(SolutionStore.solutionInfo.id)
-}
-const updateSolution = () => {
-  SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionInfo.id)
-  descriptionSolution.description = SolutionStore.solutionInfo.description
-   errorHandle()
-}
-const saveSolution = () => {
-  SolutionStore.saveSolution(descriptionSolution)
-  errorHandle()
-}
-
+const saveSolution = async () => {
+  await SolutionStore.saveSolution(descriptionSolution);
+  await errorHandle();
+};
 
 
 </script>
@@ -111,7 +111,7 @@ const saveSolution = () => {
   <ion-footer>
     <div class="text-center">
 
-      <v-text-field class="description_text" @change="checkSolutionAndSave()" variant="outlined" label="Рішення" v-model="descriptionSolution.description"></v-text-field>
+      <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Рішення" v-model="descriptionSolution.description"></v-text-field>
 
 
       <div class="pin_image">
