@@ -113,14 +113,14 @@ const formatDate = (dateString) => {
 </template>
 
 <style scoped>
+
 .itemListFeed {
-  outline: 1px ridge cyan;
   border-radius: 15px;
   margin: 15px;
   padding: 5px;
   color: grey;
-  background: rgb(180, 252, 255);
-  background: linear-gradient(96deg, rgba(180, 252, 255, 1) 55%, rgba(0, 212, 255, 1) 100%);
+  background: rgb(255,251,98);
+  background: linear-gradient(96deg, rgba(255,251,98,0.4206057422969187) 0%, rgba(255,243,186,1) 100%);
   align-items: center;
   display: flex;
   justify-content: space-between;

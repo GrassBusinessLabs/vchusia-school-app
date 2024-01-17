@@ -236,6 +236,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 .footerMenu {
   display: flex;
   justify-content: center;
