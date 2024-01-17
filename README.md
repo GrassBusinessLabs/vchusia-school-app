@@ -8,4 +8,3 @@
 * ```ionic serve```
 * Go to ```localhost:8100/auth/start```
 ### Welcome!
-***
