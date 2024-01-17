@@ -69,26 +69,39 @@ const formatDate = (dateString) => {
     <ion-content>
       <div ref="el" class="el">
         <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div class="main_content_item">
-            <v-list-item  class="list_item">
+          <div class="content_task">
+            <div class="info_user">
+              <v-avatar>
+                <v-img src="https://w7.pngwing.com/pngs/44/624/png-transparent-avatar-people-person-business-user-man-character-set-icon-portrait.png"></v-img>
+              </v-avatar>
 
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
+              <div class="user">
+                <p>Username</p>
+                <p>Course</p>
+              </div>
+            </div>
 
-              <v-list-item-subtitle class="subtitle_post">
-                <p class="description">{{item.description}}</p>
-              </v-list-item-subtitle>
+            <div class="main_content_item">
+              <v-list-item  class="list_item">
 
-            </v-list-item>
+
+
+              </v-list-item>
+            </div>
+
+            <div class="description_block">
+              <v-card-subtitle>
+                {{ formatDate(item.deadline) }}
+              </v-card-subtitle>
+
+            </div>
           </div>
 
           <div class="description_block">
-            <v-card-subtitle>
-              {{ formatDate(item.deadline) }}
-            </v-card-subtitle>
-
+            <p>{{item.description}}</p>
           </div>
+
+
         </v-list>
 
       </div>
@@ -101,7 +114,6 @@ const formatDate = (dateString) => {
 
 <style scoped>
 .itemListFeed {
-  height: 70px;
   outline: 1px ridge cyan;
   border-radius: 15px;
   margin: 15px;
@@ -113,33 +125,24 @@ const formatDate = (dateString) => {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+  flex-direction: column;
+}
+
+.content_task{
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
 }
 
 .el {
   border-radius: 15px;
-
 }
 
-.subtitle_post {
-  color: #555;
-  font-size: 13px;
-}
-.description{
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
-}
 .description_block{
   display: flex;
+  width: 90%;
   justify-content: flex-start;
-  align-items: flex-start;
-  width: 35%;
-  height: 60px;
-  padding-right: 15px;
-
-
+  padding-bottom: 5px;
 }
 .main_content_item{
   display: flex;
@@ -149,6 +152,15 @@ const formatDate = (dateString) => {
   padding-right: 15px;
 }
 
-
+.info_user{
+  display: flex;
+  align-items: center
+}
+.user{
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 </style>
 
