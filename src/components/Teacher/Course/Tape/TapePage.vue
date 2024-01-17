@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter} from "@ionic/vue";
+import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter, IonInput, IonItem} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {onBeforeMount, onMounted, onUpdated, ref} from "vue";
 import {add} from "ionicons/icons";
@@ -56,11 +56,18 @@ onIonViewWillEnter(() => {
 
   </ion-content>
 
-  <ion-footer class="ion-no-border">
-    <div class="container-footer">
-      <v-text-field variant="outlined" label="Коментар" class="text-from-teacher"></v-text-field>
-      <v-btn elevation="0" icon="mdi-send" class="btn-send-comment"></v-btn>
-    </div>
+  <ion-footer class="d-flex align-center">
+    <ion-item class="w-100">
+      <ion-input
+          label-placement="stacked"
+          placeholder="Напишіть коментар"
+      >
+      </ion-input>
+
+    </ion-item>
+    <v-btn icon="mdi-send" elevation="0"></v-btn>
+
+
   </ion-footer>
 </ion-page>
 

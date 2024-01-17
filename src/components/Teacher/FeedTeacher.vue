@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IonPage, IonContent, IonFooter} from "@ionic/vue";
+import {IonPage, IonContent, IonFooter, IonInput, IonItem} from "@ionic/vue";
 </script>
 
 <template>
@@ -8,18 +8,16 @@ import {IonPage, IonContent, IonFooter} from "@ionic/vue";
     стрічка
   </ion-content>
 
-  <ion-footer>
+  <ion-footer class="d-flex align-center">
+    <ion-item class="w-100">
+      <ion-input
+          label-placement="stacked"
+          placeholder="Напишіть коментар"
+      >
+      </ion-input>
 
-
-        <div class="container-footer">
-          <v-text-field
-              label="Коментар"
-              class="text-from-teacher"
-              variant="plain"
-          >
-          </v-text-field>
-          <v-btn elevation="0" icon="mdi-send" class="btn-send-comment"></v-btn>
-        </div>
+    </ion-item>
+    <v-btn icon="mdi-send" elevation="0"></v-btn>
 
 
   </ion-footer>

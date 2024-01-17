@@ -225,7 +225,7 @@ ion-item:hover {
 
 
 .layout-footer {
-  max-height: 10vh;
+  max-height: 7vh;
   width: 100%;
 
 }
@@ -256,7 +256,7 @@ ion-menu-button{
 
 
                    .custom {
-                     min-height: 67px;
+                     min-height: 7vh;
                    }
 
 span {
@@ -267,7 +267,7 @@ span {
   z-index: 1;
 }
 
-..footerMenu {
+.footerMenu {
   display: flex;
   justify-content: center;
   margin-top: 30px;
@@ -297,11 +297,6 @@ ion-item:hover {
   margin-top: 30%;
 }
 
-.layout-footer {
-  max-height: 10vh;
-  width: 100%;
-
-}
 
 .bottom-nav {
   display: flex;
