@@ -26,13 +26,26 @@ const postShared = ref(false)
 allIdPosts = []
 const shared = ref(true)
 const checkboxes = ref({})
+let forUsersSharedPost = ref([])
+forUsersSharedPost.value = GroupStore.usersInGroup[0]
 
 async function getUsersInGroup() {
   GroupStore.usersInGroup = []
   await GroupStore.getUsersInGroup(GroupStore.idGroup)
+  if(GroupStore.usersInGroup[0] !== undefined){
+    if (GroupStore.usersInGroup[0].length > 0){
+      checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
+    }
+  }else{
+    console.log(checkboxes.value = Array(GroupStore.usersInGroup[0]).fill(true));
+  }
 }
 
-onIonViewWillEnter(() => {getUsersInGroup()})
+onIonViewWillEnter(() => {
+  getUsersInGroup()
+  PostStore.findPostWithRow()
+  getFeed()
+})
 const mapPosts = () => {
   const rows = PostStore.PostInfo.map(post => post.row)
   const uniqueSet = Array.from(new Set(rows))
@@ -152,13 +165,7 @@ const nextPost = (id: any) => {
 
 }
 
-if(GroupStore.usersInGroup[0] !== undefined){
-  if (GroupStore.usersInGroup[0].length > 0){
-    checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
-  }
-}else{
-  console.log(checkboxes.value = Array(GroupStore.usersInGroup[0]).fill(true));
-}
+
 
 const pagination = {
   page: 1,
@@ -176,15 +183,24 @@ const selectAll = () => {
     if(checkboxes.value[i] === true){
       checkboxes.value[i] = false
       shared.value = false
+
     }
     else{
+      forUsersSharedPost.value = GroupStore.usersInGroup
       checkboxes.value[i] = true
       shared.value = true
     }
   }
+  console.log(forUsersSharedPost.value)
+
 };
 
+const isSelectedUser = (infoUser: any, index: number) => {
+  console.log(checkboxes.value[index])
+  console.log(infoUser)
+}
 
+console.log(forUsersSharedPost.value)
 </script>
 
 <template>
@@ -283,7 +299,7 @@ const selectAll = () => {
                       </v-list-item-subtitle>
                     </div>
                     <template v-slot:append >
-                      <v-checkbox v-model="checkboxes[index]"></v-checkbox>
+                      <v-checkbox v-model="checkboxes[index]" @click="isSelectedUser(j, index)"></v-checkbox>
                     </template>
 
                   </v-list-item>
@@ -293,7 +309,7 @@ const selectAll = () => {
           </ion-content>
 
           <v-btn class="mx-6" color="blue" @click="selectAll()">
-            {{shared === true ? "Зняти всі": "Вибрати всі" }}
+            {{shared === true ? "Зняти всі" : "Вибрати всі" }}
           </v-btn >
           <v-btn  prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
                  @click="sharePostOpenSheet()">

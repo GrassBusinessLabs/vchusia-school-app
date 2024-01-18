@@ -17,6 +17,8 @@ const pagination = {
   count: 10
 }
 
+const URL_IMG = 'https://vchusia.grassbusinesslabs.tk/static/'
+
 const image = ref()
 
 const feedPosts = ref([])
@@ -72,22 +74,16 @@ const formatDate = (dateString) => {
           <div class="content_task">
             <div class="info_user">
               <v-avatar>
-                <v-img src="https://w7.pngwing.com/pngs/44/624/png-transparent-avatar-people-person-business-user-man-character-set-icon-portrait.png"></v-img>
+                <v-img :src="URL_IMG+item.authorAvatar"></v-img>
               </v-avatar>
 
               <div class="user">
-                <p>Username</p>
-                <p>Course</p>
+                <p>{{ item.authorName }}</p>
+                <p>{{ item.courseName }}</p>
               </div>
             </div>
 
-            <div class="main_content_item">
-              <v-list-item  class="list_item">
 
-
-
-              </v-list-item>
-            </div>
 
             <div class="data_block">
               <v-card-subtitle>
@@ -131,7 +127,9 @@ const formatDate = (dateString) => {
 .content_task{
   display: flex;
   width: 90%;
+  align-items: flex-start;
   justify-content: space-between;
+  padding: 10px 0;
 }
 
 .el {
@@ -139,22 +137,14 @@ const formatDate = (dateString) => {
 }
 .data_block{
   display: flex;
-  width: 90%;
   align-items: flex-start;
-  padding-top: 6%;
+  justify-content: flex-end;
 }
 .description_block{
   display: flex;
   width: 90%;
   justify-content: flex-start;
   padding-bottom: 5px;
-}
-.main_content_item{
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 80px;
-  padding-right: 15px;
 }
 
 .info_user{
@@ -165,7 +155,7 @@ const formatDate = (dateString) => {
   padding-left: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+
 
 }
 </style>

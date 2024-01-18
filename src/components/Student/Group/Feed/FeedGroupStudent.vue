@@ -38,6 +38,7 @@ const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
 
 const virtualList = useVirtualList(feedPosts, {itemSize: 70})
+const URL_IMG = 'https://vchusia.grassbusinesslabs.tk/static/'
 
 
 const formatDate = (dateString: any) => {
@@ -65,33 +66,6 @@ const solutionDescription = reactive({
   description: ''
 })
 
-//Solution requests
-const saveSolution = () => {
-  SolutionStore.saveSolution(solutionDescription)
-}
-const attachImageFunc = () => {
-  SolutionStore.attachImage()
-}
-
-const updateStatus = () => {
-  SolutionStore.updateStatus(2)
-}
-const updateSolution = () => {
-  const body = {
-    description: "222"
-  }
-  SolutionStore.updateSolution(body, 2)
-}
-const deleteSolution = () => {
-  SolutionStore.deleteSolution(2)
-}
-const deleteImage = () => {
-  SolutionStore.deleteImage(2)
-}
-
-const findSolutionById = () => {
-  SolutionStore.findSolutionById(2)
-}
 
 
 </script>
@@ -100,36 +74,22 @@ const findSolutionById = () => {
   <ion-page>
     <ion-content>
       <div ref="el">
-<!--        <div v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"-->
-<!--             @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
-<!--          <div class="title_post_div">-->
-<!--            {{ item.title }}-->
-<!--            <p class="subtitle_post">{{ formatDate(item.deadline) }}</p>-->
-<!--          </div>-->
-<!--        </div>-->
-
         <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
           <div class="content_task">
             <div class="info_user">
               <v-avatar>
-                <v-img src="https://w7.pngwing.com/pngs/44/624/png-transparent-avatar-people-person-business-user-man-character-set-icon-portrait.png"></v-img>
+                <v-img :src="URL_IMG+item.authorAvatar"></v-img>
               </v-avatar>
 
               <div class="user">
-                <p>Username</p>
-                <p>Course</p>
+                <p>{{ item.authorName }}</p>
+                <p>{{ item.courseName }}</p>
               </div>
             </div>
 
-            <div class="main_content_item">
-              <v-list-item  class="list_item">
 
 
-
-              </v-list-item>
-            </div>
-
-            <div class="description_block">
+            <div class="data_block">
               <v-card-subtitle>
                 {{ formatDate(item.deadline) }}
               </v-card-subtitle>
@@ -167,7 +127,9 @@ const findSolutionById = () => {
 .content_task{
   display: flex;
   width: 90%;
+  align-items: flex-start;
   justify-content: space-between;
+  padding: 10px 0;
 
 }
 .description_block{
@@ -178,13 +140,6 @@ const findSolutionById = () => {
 }
 
 
-.main_content_item{
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 80px;
-  padding-right: 15px;
-}
 .info_user{
   display: flex;
   align-items: center;
@@ -193,7 +148,6 @@ const findSolutionById = () => {
   padding-left: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 </style>
 

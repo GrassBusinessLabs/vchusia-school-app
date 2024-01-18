@@ -7,14 +7,16 @@ import { useToast } from "vue-toastification";
 const toast = useToast()
 interface State {
     user: any,
-    token: string | null
+    token: string | null,
+    file: any | null
 }
 
 
 export const auth = defineStore('auth', {
     state: (): State => ({
         user: null,
-        token: null
+        token: null,
+        file: null
     }),
     actions: {
         errorLogin(text){
@@ -98,9 +100,9 @@ export const auth = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(response.user))
                 console.log(response)
                 if (response.user.role === "TEACHER") {
-                    router.replace('/main/courses')
+                    await router.replace('/main/courses')
                 } else {
-                    router.replace('/main/courses')
+                    await router.replace('/main/courses')
 
                 }
             } catch (e) {
@@ -132,9 +134,19 @@ export const auth = defineStore('auth', {
             try {
                 const response = await AuthApi.deleteAccount()
                 localStorage.clear()
-                router.push('/auth/start')
+                await router.push('/auth/start')
                 console.log(response)
             }catch (e) {
+                console.log(e)
+            }
+        },
+
+        async addAvatar(){
+            try {
+                const response = await AuthApi.addAvatar()
+                await this.getMe()
+                console.log(response)
+            } catch (e) {
                 console.log(e)
             }
         }

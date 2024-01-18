@@ -3,12 +3,14 @@
     <ion-header class="ion-no-border">
       <ion-list>
 
-        <ion-avatar class="ion-avatar-account">
-          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+        <ion-avatar class="ion-avatar-account" >
+          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar">
+<!--          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>-->
         </ion-avatar>
-        <ion-buttons class="changeAvatar">
-          <ion-button>Змінити аватар</ion-button>
-        </ion-buttons>
+<!--        <ion-buttons class="changeAvatar">-->
+<!--          <ion-button @click="changeAvatar()">Змінити аватар</ion-button>-->
+<!--        </ion-buttons>-->
+        <InputAvatarDialog class="mt-4 mb-7"/>
 
         <ion-accordion-group>
           <ion-accordion>
@@ -143,6 +145,7 @@ import {auth} from "@/stores/auth";
 import axios from "axios";
 import {onMounted, ref, reactive} from 'vue'
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
+import InputAvatarDialog from "@/components/parts/InputAvatarDialog.vue";
 
 const dialog = ref(true)
 const dialog_delete_account = ref(false)
@@ -155,9 +158,13 @@ const inputMe = ref();
 
 let oldPassword = "";
 let newPassword = "";
-
+const URL_IMG = 'https://vchusia.grassbusinesslabs.tk/static/'
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 const cancelMe = () => modalMe.value.$el.dismiss(null, 'cancel');
+
+onMounted(() => {
+  auth().getMe()
+})
 
 const user = reactive({
   name: auth().user.user.name,
@@ -190,6 +197,9 @@ const deleteAccount = () => {
   auth().deleteAccount()
 }
 
+const changeAvatar = () => {
+
+}
 </script>
 
 <style scoped>

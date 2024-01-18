@@ -26,6 +26,7 @@ async function getFeed() {
 
 onIonViewWillEnter(() => {
   getFeed();
+  PostStore.findPostWithRow()
 });
 
 </script>

@@ -1,5 +1,6 @@
 import {Auth, changeMe, changePassword, Signup} from "@/models/Auth";
 import axios from "../api"
+import {auth} from "@/stores/auth";
 function login (body: Auth) {
     return axios.post('auth/login', body)
 }
@@ -26,6 +27,10 @@ function changeMe(body: changeMe) {
 function deleteAccount() {
     return axios.delete('users')
 }
+
+function addAvatar() {
+    return axios.post('/users/addAvatar', auth().file)
+}
 export default {
     login,
     signup,
@@ -33,5 +38,6 @@ export default {
     changePassword,
     changeMe,
     deleteAccount,
-    getMe
+    getMe,
+    addAvatar
 }

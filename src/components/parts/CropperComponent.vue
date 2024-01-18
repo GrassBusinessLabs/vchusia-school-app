@@ -23,18 +23,6 @@
           </div>
         </v-avatar>
 
-<!--        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="(image, index) in gallery" :key="index">-->
-
-<!--          <div class="image_block">-->
-<!--            <div class="delete_image">-->
-<!--              <v-btn @click="deleteImage(index)" size="x-small" rounded="0" color="red" class="delete-btn" icon="mdi-delete"></v-btn>-->
-<!--            </div>-->
-<!--            <div class="image_content">-->
-<!--              <v-img :src="image"></v-img>-->
-
-<!--            </div>-->
-<!--          </div>-->
-<!--        </v-avatar>-->
 
       </div>
 
