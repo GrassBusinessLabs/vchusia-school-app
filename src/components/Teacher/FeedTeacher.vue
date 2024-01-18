@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import {IonPage, IonContent, IonFooter, IonInput, IonItem} from "@ionic/vue";
+import {IonPage, IonContent, IonFooter, IonInput, IonItem, IonTextarea} from "@ionic/vue";
+import {ref} from "vue";
+
+
 </script>
 
 <template>
@@ -9,12 +12,13 @@ import {IonPage, IonContent, IonFooter, IonInput, IonItem} from "@ionic/vue";
   </ion-content>
 
   <ion-footer class="d-flex align-center">
-    <ion-item class="w-100">
-      <ion-input
-          label-placement="stacked"
+    <ion-item class="w-100" >
+      <ion-textarea
+          :rows="1"
+          :auto-grow="true"
           placeholder="Напишіть коментар"
       >
-      </ion-input>
+      </ion-textarea>
 
     </ion-item>
     <v-btn icon="mdi-send" elevation="0"></v-btn>
@@ -25,21 +29,5 @@ import {IonPage, IonContent, IonFooter, IonInput, IonItem} from "@ionic/vue";
 </template>
 
 <style scoped>
-.container-footer {
-  width: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px auto;
-}
 
-.text-from-teacher {
-  width: 90%;
-  margin: 20px auto 0 auto;
-  box-sizing: border-box;
-}
-
-.btn-send-comment {
-  margin: 0 10px;
-}
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter, IonInput, IonItem} from "@ionic/vue";
+import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter, IonInput, IonItem, IonTextarea} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {onBeforeMount, onMounted, onUpdated, ref} from "vue";
 import {add} from "ionicons/icons";
@@ -58,11 +58,12 @@ onIonViewWillEnter(() => {
 
   <ion-footer class="d-flex align-center">
     <ion-item class="w-100">
-      <ion-input
-          label-placement="stacked"
+      <ion-textarea
+          :rows="1"
+          :auto-grow="true"
           placeholder="Напишіть коментар"
       >
-      </ion-input>
+      </ion-textarea>
 
     </ion-item>
     <v-btn icon="mdi-send" elevation="0"></v-btn>
