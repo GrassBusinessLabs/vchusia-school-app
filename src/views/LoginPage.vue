@@ -4,9 +4,6 @@
 
     <ion-header >
       <ion-toolbar>
-        <ion-buttons slot="start" >
-          <ion-back-button default-href="/auth/start" text="Назад" mode="ios"></ion-back-button>
-        </ion-buttons>
         <ion-title class="ml-4">Вхід</ion-title>
       </ion-toolbar>
     </ion-header>

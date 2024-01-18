@@ -89,7 +89,7 @@ const formatDate = (dateString) => {
               </v-list-item>
             </div>
 
-            <div class="description_block">
+            <div class="data_block">
               <v-card-subtitle>
                 {{ formatDate(item.deadline) }}
               </v-card-subtitle>
@@ -137,7 +137,12 @@ const formatDate = (dateString) => {
 .el {
   border-radius: 15px;
 }
-
+.data_block{
+  display: flex;
+  width: 90%;
+  align-items: flex-start;
+  padding-top: 6%;
+}
 .description_block{
   display: flex;
   width: 90%;
@@ -161,6 +166,7 @@ const formatDate = (dateString) => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
 }
 </style>
 

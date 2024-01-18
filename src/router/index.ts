@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import StartPage from '../views/StartPage.vue'
 import TeacherCabinet from "@/components/Teacher/TeacherCabinet.vue";
 import StudentCabinet from "@/components/Student/StudentCabinet.vue";
 import CoursePage from "@/components/Teacher/Course/CoursePage.vue";
@@ -41,7 +40,7 @@ const getUserAndRole = () => {
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/auth/start'
+    redirect: '/auth/login'
   },
   {
     path: '/course',
@@ -56,11 +55,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'auth',
     children: [
 
-      {
-        path: 'start',
-        name: 'Start',
-        component: StartPage,
-      },
       {
         path: 'login',
         name: 'Login',

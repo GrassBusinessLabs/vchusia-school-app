@@ -43,9 +43,9 @@ export const auth = defineStore('auth', {
                 this.token = response.token
                 const userData = JSON.parse(localStorage.getItem('user'));
                 if (userData.role === "TEACHER") {
-                    router.replace('/main/courses')
+                    await router.replace('/main/courses')
                 } else {
-                    router.replace('/main/feed-student')
+                    await router.replace('/main/feed-student')
                 }
                 console.log(response)
             } catch (e) {
@@ -74,10 +74,9 @@ export const auth = defineStore('auth', {
                 const response = await AuthApi.logout()
                 console.log(response)
                 localStorage.clear()
-                router.replace('/auth/start')
+                await router.replace('/auth/login')
             } catch (e) {
-                localStorage.clear()
-                router.replace('/auth/start')
+                console.log(e)
             }
 
         },
