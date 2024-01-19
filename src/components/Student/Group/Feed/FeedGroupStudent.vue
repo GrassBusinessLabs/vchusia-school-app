@@ -8,6 +8,7 @@ import {onMounted, reactive, ref} from "vue";
 import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
+import Course from "@/http/modules/course";
 
 const readPost = ref(false)
 const GroupStore = group()
@@ -23,14 +24,20 @@ const feedPosts = ref([])
 let hasMore = true
 PostStore.feedPosts = []
 
+
 async function getPostsOnFeed() {
   if (!hasMore) return
-  const newPosts = await PostStore.getPosts(pagination, GroupStore.idGroup, CourseStore.courseId)
+  const newPosts = await PostStore.getPosts(pagination)
   if (newPosts.length < pagination.count) {
     hasMore = false
   }
-  feedPosts.value.push(...newPosts)
+  for (let i of newPosts){
+    if(i.courseId === CourseStore.courseId){
+      feedPosts.value.push(i)
+    }
+  }
   pagination.page += 1
+
 }
 
 console.log(feedPosts.value)
@@ -67,8 +74,16 @@ const solutionDescription = reactive({
   description: ''
 })
 
+const randomColor = () => {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
 
+const userInitials = (item?: any) => {
+  const nameParts = item.authorName.split(' ');
+  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
 
+  return initials
+}
 </script>
 
 <template>
@@ -78,8 +93,12 @@ const solutionDescription = reactive({
         <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
           <div class="content_task">
             <div class="info_user">
-              <v-avatar>
+              <v-avatar v-if='item.authorAvatar'>
                 <v-img :src="URL_IMG+item.authorAvatar"></v-img>
+              </v-avatar>
+
+              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor() }">
+                <span class="initials">{{ userInitials(item) }}</span>
               </v-avatar>
 
               <div class="user">
@@ -149,6 +168,12 @@ const solutionDescription = reactive({
   padding-left: 10px;
   display: flex;
   flex-direction: column;
+}
+
+.initials {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
 }
 </style>
 

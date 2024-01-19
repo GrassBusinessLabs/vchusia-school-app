@@ -72,11 +72,11 @@ const userInitials = (item?: any) => {
   return initials
 }
 
-
-const randomColor = () => {
+let color: any
+const randomColor = (authorName: any) => {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
-randomColor()
+
 </script>
 
 <template>
@@ -91,7 +91,7 @@ randomColor()
                 <v-img :src="URL_IMG+item.authorAvatar"></v-img>
               </v-avatar>
 
-              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor() }">
+              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor(item.authorName) }">
                 <span class="initials">{{ userInitials(item) }}</span>
               </v-avatar>
 
