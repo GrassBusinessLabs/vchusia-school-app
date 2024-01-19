@@ -149,6 +149,16 @@ export const auth = defineStore('auth', {
             } catch (e) {
                 console.log(e)
             }
+        },
+
+        async removeAvatar() {
+            try {
+                const response = await AuthApi.removeAvatar()
+                await this.getMe()
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
         }
 
 

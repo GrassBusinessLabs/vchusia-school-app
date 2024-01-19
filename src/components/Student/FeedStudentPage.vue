@@ -7,6 +7,7 @@ import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
 import Solution from "@/http/modules/solution";
+import {auth} from "@/stores/auth";
 
 const readPost = ref(false)
 const PostStore = post()
@@ -64,17 +65,34 @@ const formatDate = (dateString) => {
 };
 
 
+const userInitials = (item?: any) => {
+  const nameParts = item.authorName.split(' ');
+  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
+
+  return initials
+}
+
+
+const randomColor = () => {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
+randomColor()
 </script>
 
 <template>
   <ion-page>
     <ion-content>
       <div ref="el" class="el">
-        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
+        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
+                @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
           <div class="content_task">
             <div class="info_user">
-              <v-avatar>
+              <v-avatar v-if='item.authorAvatar'>
                 <v-img :src="URL_IMG+item.authorAvatar"></v-img>
+              </v-avatar>
+
+              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor() }">
+                <span class="initials">{{ userInitials(item) }}</span>
               </v-avatar>
 
               <div class="user">
@@ -82,7 +100,6 @@ const formatDate = (dateString) => {
                 <p>{{ item.courseName }}</p>
               </div>
             </div>
-
 
 
             <div class="data_block">
@@ -94,7 +111,7 @@ const formatDate = (dateString) => {
           </div>
 
           <div class="description_block">
-            <p>{{item.description}}</p>
+            <p>{{ item.description }}</p>
           </div>
 
 
@@ -115,8 +132,8 @@ const formatDate = (dateString) => {
   margin: 15px;
   padding: 5px;
   color: grey;
-  background: rgb(255,251,98);
-  background: linear-gradient(96deg, rgba(255,251,98,0.4206057422969187) 0%, rgba(255,243,186,1) 100%);
+  background: rgb(255, 251, 98);
+  background: linear-gradient(96deg, rgba(255, 251, 98, 0.4206057422969187) 0%, rgba(255, 243, 186, 1) 100%);
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -124,7 +141,7 @@ const formatDate = (dateString) => {
   flex-direction: column;
 }
 
-.content_task{
+.content_task {
   display: flex;
   width: 90%;
   align-items: flex-start;
@@ -135,28 +152,37 @@ const formatDate = (dateString) => {
 .el {
   border-radius: 15px;
 }
-.data_block{
+
+.data_block {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
 }
-.description_block{
+
+.description_block {
   display: flex;
   width: 90%;
   justify-content: flex-start;
   padding-bottom: 5px;
 }
 
-.info_user{
+.info_user {
   display: flex;
   align-items: center
 }
-.user{
+
+.user {
   padding-left: 10px;
   display: flex;
   flex-direction: column;
 
 
+}
+
+.initials {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
 }
 </style>
 

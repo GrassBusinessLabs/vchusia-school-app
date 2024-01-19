@@ -33,6 +33,7 @@ async function getPostsOnFeed() {
   pagination.page += 1
 }
 
+console.log(feedPosts.value)
 PostStore.postsInTask = feedPosts.value
 const el = ref<HTMLElement | null>(null)
 useInfiniteScroll(el, getPostsOnFeed, {distance: 10})

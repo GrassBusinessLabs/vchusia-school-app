@@ -31,6 +31,10 @@ function deleteAccount() {
 function addAvatar() {
     return axios.post('/users/addAvatar', auth().file)
 }
+
+function removeAvatar() {
+    return axios.delete(`/users/deleteAvatar`)
+}
 export default {
     login,
     signup,
@@ -39,5 +43,6 @@ export default {
     changeMe,
     deleteAccount,
     getMe,
-    addAvatar
+    addAvatar,
+    removeAvatar
 }

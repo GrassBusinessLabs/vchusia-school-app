@@ -2,15 +2,19 @@
   <ion-page>
     <ion-header class="ion-no-border">
       <ion-list>
-
-        <ion-avatar class="ion-avatar-account">
-          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar">
-<!--          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>-->
+        <ion-avatar class="ion-avatar-account" v-if="auth().user.user.avatar">
+          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar" >
         </ion-avatar>
-<!--        <ion-buttons class="changeAvatar">-->
-<!--          <ion-button>Змінити аватар</ion-button>-->
-<!--        </ion-buttons>-->
-        <InputAvatarDialog class="mt-4 mb-7"/>
+
+        <ion-avatar :style="{ backgroundColor: randomColor() }" class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.user.avatar">
+          <span class="initials">{{ userInitials() }}</span>
+        </ion-avatar>
+        <InputAvatarDialog class="mt-4" />
+
+
+        <ion-buttons class="text-center d-flex justify-center mb-3" v-if="auth().user.user.avatar">
+          <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
+        </ion-buttons>
 
         <ion-accordion-group>
           <ion-accordion>
@@ -192,6 +196,20 @@ const deleteAccount = () => {
   auth().deleteAccount()
 }
 
+const deleteAvatar = () => {
+  auth().removeAvatar()
+}
+
+const userInitials = () => {
+  const nameParts = auth().user.user.name.split(' ');
+  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
+  return initials
+}
+
+const randomColor = () => {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
+
 </script>
 
 <style scoped>
@@ -229,5 +247,9 @@ ion-header {
   border-radius: 20px;
   padding: 5px 10px;
 }
-
+.initials{
+  font-weight: bold;
+  font-size: 50px;
+  color: #fff;
+}
 </style>
