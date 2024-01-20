@@ -3,42 +3,45 @@
     <ion-header class="ion-no-border">
       <ion-list>
         <ion-avatar class="ion-avatar-account" v-if="auth().user.user.avatar">
-          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar" >
+          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar">
         </ion-avatar>
 
-        <ion-avatar :style="{ backgroundColor: randomColor() }" class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.user.avatar">
+        <ion-avatar :style="{ backgroundColor: randomColor() }"
+                    class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.user.avatar">
           <span class="initials">{{ userInitials() }}</span>
         </ion-avatar>
-        <InputAvatarDialog class="mt-4" />
+        <InputAvatarDialog class="mt-4"/>
 
 
         <ion-buttons class="text-center d-flex justify-center mb-3" v-if="auth().user.user.avatar">
           <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
         </ion-buttons>
 
-        <ion-accordion-group>
-          <ion-accordion>
+        <v-layout class="d-flex ma-2  justify-center">
+          <v-card class="w-100 mx-2">
             <ion-item slot="header" color="light">
               <ion-label>Мої дані</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">Ім'я: {{ user?.name }}</div>
             <div class="ion-padding" slot="content">Email: {{ user?.email }}</div>
-          </ion-accordion>
+          </v-card>
+        </v-layout>
 
-          <ion-item>
-            <ion-button class="btn-changes mr-1" id="open-modal" @click="sheetChangePass = !sheetChangePass">Змінити
-              пароль
-            </ion-button>
-            <ion-button class="btn-changes" id="open-modal-me" @click="sheetChangeUser = !sheetChangeUser">Редагувати
-              дані
-            </ion-button>
-          </ion-item>
-          <ion-item>
-            <ion-button class="btn-changes" color="warning" @click="dialogDelAccount = !dialogDelAccount">Видалити аккаунт</ion-button>
+        <ion-item>
+          <ion-button class="btn-changes mr-1" id="open-modal" @click="sheetChangePass = !sheetChangePass">Змінити
+            пароль
+          </ion-button>
+          <ion-button class="btn-changes" id="open-modal-me" @click="sheetChangeUser = !sheetChangeUser">Редагувати
+            дані
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-button class="btn-changes" color="warning" @click="dialogDelAccount = !dialogDelAccount">Видалити
+            аккаунт
+          </ion-button>
 
 
-          </ion-item>
-        </ion-accordion-group>
+        </ion-item>
 
       </ion-list>
     </ion-header>
@@ -247,7 +250,8 @@ ion-header {
   border-radius: 20px;
   padding: 5px 10px;
 }
-.initials{
+
+.initials {
   font-weight: bold;
   font-size: 50px;
   color: #fff;

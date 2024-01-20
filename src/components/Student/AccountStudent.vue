@@ -17,14 +17,16 @@
           <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
         </ion-buttons>
 
-        <ion-accordion-group>
-          <ion-accordion>
+        <v-layout class="d-flex ma-2  justify-center">
+          <v-card class="w-100 mx-2">
             <ion-item slot="header" color="light">
               <ion-label>Мої дані</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">Ім'я: {{ user?.name }}</div>
             <div class="ion-padding" slot="content">Email: {{ user?.email }}</div>
-          </ion-accordion>
+          </v-card>
+        </v-layout>
+
 
           <ion-item>
             <ion-button class="btn-changes mr-1" id="open-modal" @click="sheet_change_password = !sheet_change_password">Змінити пароль</ion-button>
@@ -35,7 +37,7 @@
             <ion-button class="btn-changes" color="warning" @click="dialog_delete_account = !dialog_delete_account">Видалити аккаунт</ion-button>
           </ion-item>
 
-        </ion-accordion-group>
+
 
       </ion-list>
     </ion-header>
