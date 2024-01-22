@@ -26,26 +26,34 @@ const postShared = ref(false)
 allIdPosts = []
 const shared = ref(true)
 const checkboxes = ref({})
-let forUsersSharedPost = ref([])
-forUsersSharedPost.value = GroupStore.usersInGroup[0]
+let allUsersInGroup = []
+let sharedStudents = []
+
+sharedStudents = allUsersInGroup
 
 async function getUsersInGroup() {
   GroupStore.usersInGroup = []
   await GroupStore.getUsersInGroup(GroupStore.idGroup)
-  if(GroupStore.usersInGroup[0] !== undefined){
-    if (GroupStore.usersInGroup[0].length > 0){
+  if (GroupStore.usersInGroup[0] !== undefined) {
+    if (GroupStore.usersInGroup[0].length > 0) {
       checkboxes.value = Array(GroupStore.usersInGroup[0].length).fill(true);
     }
-  }else{
+  } else {
     console.log(checkboxes.value = Array(GroupStore.usersInGroup[0]).fill(true));
   }
 }
 
+for (let i of GroupStore.usersInGroup[0]) {
+  allUsersInGroup.push(i.id)
+}
+
+console.log(sharedStudents)
 onIonViewWillEnter(() => {
   getUsersInGroup()
   PostStore.findPostWithRow()
   getFeed()
 })
+
 const mapPosts = () => {
   const rows = PostStore.PostInfo.map(post => post.row)
   const uniqueSet = Array.from(new Set(rows))
@@ -58,19 +66,18 @@ const mapPosts = () => {
   return mappedUniqueSet
 }
 
-for (let i of PostStore.PostInfo){
+for (let i of PostStore.PostInfo) {
   allIdPosts.push(i.id)
 }
 console.log(allIdPosts)
 const getPostByCords = (row: any, column: any) => {
-  if(PostStore.feedPosts.find(post => post.row === row && post.column === column) !== undefined){
-    if(PostStore.feedPosts.find(post => post.row === row && post.column === column).id == PostStore.PostInfo.find(post => post.row === row && post.column === column).id){
+  if (PostStore.feedPosts.find(post => post.row === row && post.column === column) !== undefined) {
+    if (PostStore.feedPosts.find(post => post.row === row && post.column === column).id == PostStore.PostInfo.find(post => post.row === row && post.column === column).id) {
       PostStore.PostInfo.find(post => post.row === row && post.column === column).color = 'grey'
     }
   }
   return PostStore.PostInfo.find(post => post.row === row && post.column === column)
 }
-
 
 
 const handlePost = (row: any, column: any) => {
@@ -90,8 +97,8 @@ const handlePost = (row: any, column: any) => {
           PostStore.info = i
         }
       }
-      for (const j of PostStore.feedPosts){
-        if(j.id === idPost){
+      for (const j of PostStore.feedPosts) {
+        if (j.id === idPost) {
           postShared.value = true
           console.log(true)
         }
@@ -131,20 +138,20 @@ const sharePostOpenSheet = () => {
 }
 const sharePost = async () => {
   const body: sharePost = {
-    users: [29],
+    users: sharedStudents,
     groupId: GroupStore.idGroup,
     comment: sharePostBody.comment,
     deadline: new Date(sharePostBody.deadline).toISOString()
   }
   await PostStore.sharePost(body)
-  getFeed()
+  await getFeed()
   dialog.value = false
 }
 
 const lastPost = (id: any) => {
-  if(allIdPosts.indexOf(id) > 0){
-    for(let i of PostStore.PostInfo){
-      if(allIdPosts[allIdPosts.indexOf(id) - 1] === i.id){
+  if (allIdPosts.indexOf(id) > 0) {
+    for (let i of PostStore.PostInfo) {
+      if (allIdPosts[allIdPosts.indexOf(id) - 1] === i.id) {
         PostStore.info = i
 
       }
@@ -155,16 +162,15 @@ const lastPost = (id: any) => {
 }
 
 const nextPost = (id: any) => {
-  if(allIdPosts.indexOf(id) !== allIdPosts.length - 1){
-    for(let i of PostStore.PostInfo){
-      if(allIdPosts[allIdPosts.indexOf(id) + 1] === i.id){
+  if (allIdPosts.indexOf(id) !== allIdPosts.length - 1) {
+    for (let i of PostStore.PostInfo) {
+      if (allIdPosts[allIdPosts.indexOf(id) + 1] === i.id) {
         PostStore.info = i
       }
     }
   }
 
 }
-
 
 
 const pagination = {
@@ -177,187 +183,197 @@ async function getFeed() {
 }
 
 
-
 const selectAll = () => {
-  for (let i in checkboxes.value){
-    if(checkboxes.value[i] === true){
+  for (let i in checkboxes.value) {
+    if (checkboxes.value[i] === true) {
       checkboxes.value[i] = false
       shared.value = false
+      sharedStudents = []
 
-    }
-    else{
-      forUsersSharedPost.value = GroupStore.usersInGroup
+    } else {
       checkboxes.value[i] = true
       shared.value = true
+      sharedStudents = allUsersInGroup
+
     }
   }
-  console.log(forUsersSharedPost.value)
+
+  console.log(sharedStudents)
 
 };
 
 const isSelectedUser = (infoUser: any, index: number) => {
-  console.log(checkboxes.value[index])
-  console.log(infoUser)
+  setTimeout(() => {
+    if (checkboxes.value[index] === false) {
+      sharedStudents = sharedStudents.filter((s) => {
+        return s != infoUser.id
+      })
+    } else {
+      sharedStudents.push(infoUser.id)
+    }
+
+  }, 50)
+
 }
 
-console.log(forUsersSharedPost.value)
+
 </script>
 
 <template>
-<ion-page>
-  <ion-content >
-    <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">
-      <v-card elevation="0"
-              class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
-              id="parentGrid">
+  <ion-page>
+    <ion-content>
+      <v-layout class="mt-4" v-show="PostStore.PostInfo.length > 0">
+        <v-card elevation="0"
+                class="pa-5 w-75 mx-auto parentGrid d-flex justify-center align-center flex-column-reverse"
+                id="parentGrid">
 
-        <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">
-          <ion-row v-for="(post, indexRow) in mapPosts()">
-            <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"
-                     :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color}">
-              {{ getPostByCords(indexRow + 1, indexCol)?.id }}
-            </ion-col>
-          </ion-row>
+          <ion-grid class="grid_post d-flex justify-center align-center flex-column" id="ionGrid">
+            <ion-row v-for="(post, indexRow) in mapPosts()">
+              <ion-col v-for="(indexCol, i) in 5" @click="handlePost(indexRow, indexCol)"
+                       :style="{ backgroundColor: getPostByCords(indexRow + 1, indexCol)?.color}">
+                {{ getPostByCords(indexRow + 1, indexCol)?.id }}
+              </ion-col>
+            </ion-row>
 
 
-        </ion-grid>
+          </ion-grid>
 
-      </v-card>
-    </v-layout>
-  </ion-content>
+        </v-card>
+      </v-layout>
+    </ion-content>
 
-  <ion-footer>
-    <div class="text-center">
-      <v-bottom-sheet v-model="sheet_read">
-        <v-card height="500">
-          <div class="d-flex justify-space-around ma-6">
-            <div class="left d-flex justify-center align-center">
-              <v-btn icon="mdi-arrow-left" elevation="0" @click="lastPost(PostStore.info.id)"></v-btn>
-            </div>
-
-            <div class="main d-flex flex-column justify-center align-center">
-              <v-card-subtitle>
-                {{ PostStore.info.type }}
-              </v-card-subtitle>
-
-              <v-card-subtitle>
-                {{ PostStore.info.id }}
-              </v-card-subtitle>
-
-              <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read">
-
+    <ion-footer>
+      <div class="text-center">
+        <v-bottom-sheet v-model="sheet_read">
+          <v-card height="500">
+            <div class="d-flex justify-space-around ma-6">
+              <div class="left d-flex justify-center align-center">
+                <v-btn icon="mdi-arrow-left" elevation="0" @click="lastPost(PostStore.info.id)"></v-btn>
               </div>
 
-              <v-card-title class="font-weight-bold">
-                {{ PostStore.info.title }}
-              </v-card-title>
+              <div class="main d-flex flex-column justify-center align-center">
+                <v-card-subtitle>
+                  {{ PostStore.info.type }}
+                </v-card-subtitle>
 
-              <v-card-text class="d-flex justify-center flex-column align-center">
-                <small>Опис завдання</small>
-                {{ PostStore.info.description }}
-              </v-card-text>
+                <v-card-subtitle>
+                  {{ PostStore.info.id }}
+                </v-card-subtitle>
 
-              <v-card-text>
-              </v-card-text>
-
-              <v-card-text class="d-flex justify-center flex-column align-center">
-                Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
-
-                <div>
-                  <v-btn v-show="postShared === false" @click="userSharePost = !userSharePost">
-                    Поділитися постом
-                  </v-btn>
+                <div :style="{backgroundColor: PostStore.info.color}" class="color_post_read">
 
                 </div>
-              </v-card-text>
-            </div>
 
-            <div class="right d-flex justify-center align-center">
-              <v-btn icon="mdi-arrow-right" elevation="0" @click="nextPost(PostStore.info.id)"></v-btn>
-            </div>
+                <v-card-title class="font-weight-bold">
+                  {{ PostStore.info.title }}
+                </v-card-title>
 
-          </div>
-        </v-card>
-      </v-bottom-sheet>
-    </div>
+                <v-card-text class="d-flex justify-center flex-column align-center">
+                  <small>Опис завдання</small>
+                  {{ PostStore.info.description }}
+                </v-card-text>
 
-    <div>
-      <v-bottom-sheet fullscreen v-model="userSharePost">
-        <v-card>
-          <ion-content>
-            <div class="mt-6" v-for="i of GroupStore.usersInGroup">
-              <div v-for="(j, index) of i">
-                <v-list>
-                  <v-list-item class="item_student">
-                    <div class="content-item-student">
-                      <v-list-item-title>
-                        {{ j.name }}
-                      </v-list-item-title>
+                <v-card-text>
+                </v-card-text>
 
-                      <v-list-item-subtitle>
-                        {{ j.email }}
-                      </v-list-item-subtitle>
-                    </div>
-                    <template v-slot:append >
-                      <v-checkbox v-model="checkboxes[index]" @click="isSelectedUser(j, index)"></v-checkbox>
-                    </template>
+                <v-card-text class="d-flex justify-center flex-column align-center">
+                  Оцінка за завдання <i>{{ PostStore.info.points }}</i> <br>
 
-                  </v-list-item>
-                </v-list>
+                  <div>
+                    <v-btn v-show="postShared === false" @click="userSharePost = !userSharePost">
+                      Поділитися постом
+                    </v-btn>
+
+                  </div>
+                </v-card-text>
               </div>
+
+              <div class="right d-flex justify-center align-center">
+                <v-btn icon="mdi-arrow-right" elevation="0" @click="nextPost(PostStore.info.id)"></v-btn>
+              </div>
+
             </div>
-          </ion-content>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
 
-          <v-btn class="mx-6" color="blue" @click="selectAll()">
-            {{shared === true ? "Зняти всі" : "Вибрати всі" }}
-          </v-btn >
-          <v-btn  prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
-                 @click="sharePostOpenSheet()">
-            Поділитись постом
-          </v-btn>
-        </v-card>
-      </v-bottom-sheet>
-    </div>
+      <div>
+        <v-bottom-sheet fullscreen v-model="userSharePost">
+          <v-card>
+            <ion-content>
+              <div class="mt-6" v-for="i of GroupStore.usersInGroup">
+                <div v-for="(j, index) of i">
+                  <v-list>
+                    <v-list-item class="item_student">
+                      <div class="content-item-student">
+                        <v-list-item-title>
+                          {{ j.name }}
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle>
+                          {{ j.email }}
+                        </v-list-item-subtitle>
+                      </div>
+                      <template v-slot:append>
+                        <v-checkbox v-model="checkboxes[index]" @click="isSelectedUser(j, index)"></v-checkbox>
+                      </template>
+
+                    </v-list-item>
+                  </v-list>
+                </div>
+              </div>
+            </ion-content>
+
+            <v-btn class="mx-6" color="blue" @click="selectAll()">
+              {{ shared === true ? "Зняти всі" : "Вибрати всі" }}
+            </v-btn>
+            <v-btn prepend-icon="mdi-share-all-outline" color="teal-accent-1" class="ma-6"
+                   @click="sharePostOpenSheet()">
+              Поділитись постом
+            </v-btn>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
 
 
-    <div class="text-center">
-      <v-bottom-sheet v-model="dialog" >
-        <v-card  >
-          <v-card-text>
-            <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
-            <v-text-field
-                label="Коментар"
-                variant="outlined"
-                v-model="sharePostBody.comment"
+      <div class="text-center">
+        <v-bottom-sheet v-model="dialog">
+          <v-card>
+            <v-card-text>
+              <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
+              <v-text-field
+                  label="Коментар"
+                  variant="outlined"
+                  v-model="sharePostBody.comment"
 
-            >
-            </v-text-field>
+              >
+              </v-text-field>
 
-            <v-text-field
-                label="Дата здачі"
-                variant="outlined"
-                type="datetime-local"
-                v-model="sharePostBody.deadline"
+              <v-text-field
+                  label="Дата здачі"
+                  variant="outlined"
+                  type="datetime-local"
+                  v-model="sharePostBody.deadline"
 
-            >
-            </v-text-field>
+              >
+              </v-text-field>
 
-            <div class="btnShare">
-              <v-btn class="btn_share_post" @click="sharePost()">
-                Поділитися
-              </v-btn>
-            </div>
+              <div class="btnShare">
+                <v-btn class="btn_share_post" @click="sharePost()">
+                  Поділитися
+                </v-btn>
+              </div>
 
-            <div class="d-flex justify-center ma-6">
-              <v-btn color="red"  @click="dialog = false">Закрити</v-btn>
-            </div>
-          </v-card-text>
+              <div class="d-flex justify-center ma-6">
+                <v-btn color="red" @click="dialog = false">Закрити</v-btn>
+              </div>
+            </v-card-text>
 
-        </v-card>
-      </v-bottom-sheet>
-    </div>
-  </ion-footer>
-</ion-page>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+    </ion-footer>
+  </ion-page>
 </template>
 
 <style scoped>
@@ -386,6 +402,7 @@ ion-col {
   background: linear-gradient(207deg, rgba(85, 255, 216, 1) 16%, rgba(214, 255, 255, 1) 100%);
   outline: 2px cyan ridge;
 }
+
 .color_post_read {
   width: 20px;
   height: 20px;
@@ -393,7 +410,7 @@ ion-col {
   border-radius: 50px;
 }
 
-.item_student{
+.item_student {
   outline: 1px solid grey;
   margin: 0 10px;
   border-radius: 15px;
