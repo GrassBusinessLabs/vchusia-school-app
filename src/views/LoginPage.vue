@@ -35,12 +35,14 @@
             Пароль
           </div>
           <v-text-field
-              type="password"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
               density="compact"
               placeholder="********"
               variant="outlined"
               prepend-inner-icon="mdi-lock"
               v-model="password"
+              @click:append-inner="visible = !visible"
           ></v-text-field>
 
           <v-card
@@ -113,7 +115,7 @@ export default {
       token: null,
       authStore: auth(),
       courseStore: course(),
-
+      visible: false
     }
   },
   methods: {

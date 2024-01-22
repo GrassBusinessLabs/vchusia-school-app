@@ -43,7 +43,9 @@
                 density="compact"
                 placeholder="********"
                 variant="outlined"
-                type="password"
+                @click:append-inner="visible = !visible"
+                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="visible ? 'text' : 'password'"
             ></v-text-field>
             <div class="text-subtitle-1 text-medium-emphasis">Роль</div>
 
@@ -131,6 +133,7 @@ export default defineComponent({
       date: "",
       role: "",
       authStore: auth(),
+      visible: false,
       user: JSON.parse(localStorage.getItem('user'))
     }
   },
