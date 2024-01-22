@@ -43,9 +43,12 @@ async function getUsersInGroup() {
   }
 }
 
-for (let i of GroupStore.usersInGroup[0]) {
-  allUsersInGroup.push(i.id)
+if(GroupStore.usersInGroup[0]){
+  for (let i of GroupStore.usersInGroup[0]) {
+    allUsersInGroup.push(i.id)
+  }
 }
+
 
 console.log(sharedStudents)
 onIonViewWillEnter(() => {

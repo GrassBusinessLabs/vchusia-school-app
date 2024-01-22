@@ -45,7 +45,7 @@ export const auth = defineStore('auth', {
                 this.token = response.token
                 const userData = JSON.parse(localStorage.getItem('user'));
                 if (userData.role === "TEACHER") {
-                    await router.replace('/main/courses')
+                    await router.replace('/main/feed')
                 } else {
                     await router.replace('/main/feed-student')
                 }

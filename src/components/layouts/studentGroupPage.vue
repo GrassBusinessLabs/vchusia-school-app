@@ -207,16 +207,6 @@ span {
   font-size: 14px;
 }
 
-.v-bottom-navigation {
-  z-index: 1;
-}
-
-..footerMenu {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
 
 ion-item {
   cursor: pointer;
