@@ -22,7 +22,7 @@ export const solution = defineStore('solution', {
         async saveSolution(body: SaveSolution): Promise <void> {
             try {
                 const response = await SolutionApi.saveSolution(body)
-                this.findSolutionBySharedPostId()
+                await this.findSolutionBySharedPostId()
                 this.solutionId = response.id
                 console.log(response)
             } catch (e) {
@@ -33,7 +33,7 @@ export const solution = defineStore('solution', {
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
-                this.findSolutionBySharedPostId()
+                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -52,7 +52,7 @@ export const solution = defineStore('solution', {
         async updateSolution(body: UpdateSolution, solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.updateSolution(body, solutionId)
-                this.findSolutionBySharedPostId()
+                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -62,6 +62,7 @@ export const solution = defineStore('solution', {
         async deleteSolution(solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteSolution(solutionId)
+                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -71,7 +72,7 @@ export const solution = defineStore('solution', {
         async deleteImage(imgId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteImage(imgId)
-                this.findSolutionBySharedPostId()
+                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)

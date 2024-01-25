@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IonPage, IonContent, IonFooter} from "@ionic/vue";
+import {IonPage, IonContent, IonFooter, IonTextarea, IonItem} from "@ionic/vue";
 import {solution} from "@/stores/solution";
 import {post} from "@/stores/post"
 import CropperComponent from "@/components/parts/CropperComponent.vue";
@@ -77,7 +77,10 @@ const saveSolution = async () => {
   await errorHandle();
 };
 
-
+const displayFooter = ref(false)
+const deleteSolution = async () => {
+  await SolutionStore.deleteSolution(SolutionStore.solutionInfo.id)
+}
 </script>
 
 <template>
@@ -88,7 +91,7 @@ const saveSolution = async () => {
       <div class="infoPost">
 
         <div class="title_post">
-          <h1>{{PostStore.sharedPostInfo.title}}</h1>
+          <h1>{{PostStore.sharedPostInfo.comment}}</h1>
           <p style="color:grey">Оцінка за завдання {{PostStore.sharedPostInfo.points}}</p>
         </div>
 
@@ -103,15 +106,45 @@ const saveSolution = async () => {
 
       </div>
 
+    <div>
+      <v-btn class="btn-comment" @click="displayFooter = !displayFooter">
+        Додати розв'язок
+      </v-btn>
 
+      <v-list>
+        <v-list-item v-for="i in 5" class="comment_item">
+          <v-list-item-title>
+            Коментар
+          </v-list-item-title>
+
+          <v-list-item-subtitle>
+            Текст коментару
+          </v-list-item-subtitle>
+        </v-list-item>
+      </v-list>
+    </div>
 
     </div>
 
   </ion-content>
   <ion-footer>
-    <div class="text-center">
+    <div class="d-flex align-center">
+      <ion-item class="w-100" >
+        <ion-textarea
+            :rows="1"
+            :auto-grow="true"
+            placeholder="Напишіть коментар"
+        >
+        </ion-textarea>
 
-      <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Рішення" v-model="descriptionSolution.description"></v-text-field>
+      </ion-item>
+      <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
+    </div>
+    <div class="text-center" v-if="displayFooter">
+
+      <div class="d-flex align-center container_comment_solution">
+        <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Коментар" v-model="descriptionSolution.description"></v-text-field>
+      </div>
 
 
       <div class="pin_image">
@@ -120,7 +153,7 @@ const saveSolution = async () => {
 
       <div class="accept_task">
         <v-btn class="btnAcceptTask" @click="updateStatus()">
-          Здати завдання
+          Відправити на перевірку
         </v-btn>
       </div>
 
@@ -173,5 +206,25 @@ const saveSolution = async () => {
   margin: 20px auto 0 auto;
   box-sizing: border-box;
  }
+.infoPost{
+  margin-bottom: 20%;
+}
+.comment_item{
+  padding: 5px;
+  margin: 10px;
+  border-radius:  15px;
+  outline: 1px solid red;
+}
+.btn-comment{
+  margin: 10px auto;
+  width: 91%;
+  color: #fff;
+  background: linear-gradient(#00b8d4, #00acc1);
 
+}
+
+.container_comment_solution{
+  width: 90%;
+  margin: 0 auto;
+}
 </style>

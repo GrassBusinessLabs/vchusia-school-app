@@ -169,7 +169,7 @@ ion-item:hover {
 
 
 .layout-footer {
-  max-height: 10vh;
+  max-height: 67px;
   width: 100%;
 
 }
@@ -231,11 +231,6 @@ ion-item:hover {
   margin-top: 30%;
 }
 
-.layout-footer {
-  max-height: 10vh;
-  width: 100%;
-
-}
 
 .bottom-nav {
   display: flex;

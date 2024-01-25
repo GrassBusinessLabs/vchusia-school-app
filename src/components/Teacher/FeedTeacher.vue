@@ -8,7 +8,19 @@ import {ref} from "vue";
 <template>
 <ion-page>
   <ion-content>
-    стрічка
+    <v-list class="list_feed">
+      <v-list-item v-for="i in 5" class="item_list_feed" @click="$router.replace('/main/solutions')">
+
+        <v-list-item-title>
+          Title
+        </v-list-item-title>
+
+        <v-list-item-action>
+          action
+        </v-list-item-action>
+
+      </v-list-item>
+    </v-list>
   </ion-content>
 
   <ion-footer class="d-flex align-center">
@@ -21,7 +33,7 @@ import {ref} from "vue";
       </ion-textarea>
 
     </ion-item>
-    <v-btn icon="mdi-send" elevation="0"></v-btn>
+    <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
 
 
   </ion-footer>
@@ -29,5 +41,13 @@ import {ref} from "vue";
 </template>
 
 <style scoped>
+.list_feed{
+  padding: 10px;
 
+}
+.item_list_feed{
+  outline: 1px solid black;
+  margin: 10px;
+  border-radius: 15px;
+}
 </style>
