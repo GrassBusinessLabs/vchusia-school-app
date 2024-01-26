@@ -2,42 +2,33 @@
   <div>
 
     <div class="main_holst">
-      <canvas
-          ref="canvas"
-          @touchstart="startDrawing"
-          @touchmove="draw"
-          @touchend="stopDrawing"
-          @mousedown="startDrawing"
-          @mousemove="draw"
-          @mouseup="stopDrawing"
-          :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
-      ></canvas>
-
-    </div>
-
-    <div class="d-flex justify-center justify-space-between mx-auto w-25">
-
-
-        <v-btn icon="mdi-pencil" @click="penType = 'pencil'"></v-btn>
-        <v-btn icon="mdi-brush" @click="penType = 'circle'"></v-btn>
-
-    </div>
-
-    <div class="d-flex justify-space-around align-center ma-6">
+      <v-btn icon="mdi-arrow-left" class="arrow-button" elevation="0"></v-btn>
       <div>
-        <v-btn icon="mdi-arrow-left" elevation="0"></v-btn>
-      </div>
-      <v-color-picker hide-canvas hide-inputs :swatches="swatches" show-swatches v-model="penColor" label="Цвет ручки"></v-color-picker>
 
-      <div>
-        <v-btn icon="mdi-arrow-right" elevation="0"></v-btn>
+        <canvas
+            ref="canvas"
+            @touchstart="startDrawing"
+            @touchmove="draw"
+            @touchend="stopDrawing"
+            @mousedown="startDrawing"
+            @mousemove="draw"
+            @mouseup="stopDrawing"
+            :style="{ backgroundImage: 'url(' + backgroundImage + ')'  }"
+        >
+        </canvas>
       </div>
+
+      <v-btn class="arrow-button" icon="mdi-arrow-right" elevation="0"></v-btn>
+
     </div>
 
-    <div class="d-flex justify-space-between mx-auto w-50 mb-4">
-      <v-btn @click="clearCanvas" icon="mdi-delete"></v-btn>
-      <v-btn @click="undo" icon="mdi-arrow-left"></v-btn>
-      <v-btn @click="saveImage" icon="mdi-content-save"></v-btn>
+
+    <div class="d-flex justify-space-around mx-auto w-75 mb-4">
+      <v-btn icon="mdi-pencil" @click="penType = 'pencil'" class="btn_panel pencil" elevation="0"></v-btn>
+      <v-btn icon="mdi-brush" @click="penType = 'circle'" class="btn_panel brush" elevation="0"></v-btn>
+      <v-btn @click="clearCanvas" icon="mdi-close" class="btn_panel" elevation="0"></v-btn>
+      <v-btn @click="undo" icon="mdi-subdirectory-arrow-left" class="btn_panel" elevation="0"></v-btn>
+      <v-btn @click="saveImage" icon="mdi-check" class="btn_panel" elevation="0"></v-btn>
 
     </div>
   </div>
@@ -51,19 +42,11 @@ export default {
       context: null,
       drawing: false,
       penType: 'pencil',
-      penColor: '#000000',
+      penColor: 'rgba(255, 99, 71, 0.6)',
       strokes: [],
       inline: null,
       column: null,
       backgroundImage: 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png',
-      swatches: [
-        ['#FF0000', '#AA0000', ],
-        ['#FFFF00', '#AAAA00', ],
-        ['#00FF00', '#00AA00', ],
-        ['#00FFFF', '#00AAAA', ],
-        ['#0000FF', '#0000AA',],
-      ],
-
     };
   },
   mounted() {
@@ -91,15 +74,20 @@ export default {
 
       if (this.penType === 'pencil') {
         this.context.lineTo(x - rect.left, y - rect.top);
+        this.context.strokeStyle = this.penColor;
+        this.context.lineWidth = 2; // Товщина лінії для олівця
         this.context.stroke();
+        this.context.beginPath();
+        this.context.moveTo(x - rect.left, y - rect.top);
       } else if (this.penType === 'circle') {
-        const radius = 10;
+        const radius = 3;
         this.context.beginPath();
         this.context.arc(x - rect.left, y - rect.top, radius, 0, 2 * Math.PI);
         this.context.fillStyle = this.penColor;
         this.context.fill();
       }
     },
+
     stopDrawing() {
       if (this.drawing) {
         this.drawing = false;
@@ -152,13 +140,46 @@ canvas {
   border-radius: 5px;
   touch-action: none;
   width: 100%;
-  height: 400px;
-  background-size: contain;
+  min-height: 70vh;
+  background-size: 100%;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
-.main_holst{
+.main_holst {
   display: flex;
+  justify-content: space-between;
   margin: 10px;
+  align-items: center;
+}
+.arrow-button {
+  position: relative;
+  z-index: 1;
+}
+.arrow-button {
+  font-size: 24px;
+  background-color: transparent;
+  color: #000;
+  cursor: pointer;
+  margin: 0;
+}
+
+.arrow-button:hover {
+  color: #FF0000;
+}
+
+.pencil:focus{
+  background: grey;
+  color: #fff;
+}
+.brush:focus{
+  background: grey;
+  color: #fff;
+
+
+}
+.btn_panel{
+  background: transparent;
+
 }
 </style>

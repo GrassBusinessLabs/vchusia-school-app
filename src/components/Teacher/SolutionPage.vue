@@ -87,13 +87,27 @@ const points = reactive({
 
           <v-list>
             <v-list-item v-for="i in 5" class="comment_item">
-              <v-list-item-title>
-                Коментар
-              </v-list-item-title>
 
-              <v-list-item-subtitle>
-                Текст коментару
-              </v-list-item-subtitle>
+              <div class="d-flex pa-3">
+                <div class="ma-2">
+                  <v-avatar>
+                    <img src="../../assets/Vchusia.png" alt="">
+                  </v-avatar>
+                </div>
+
+                <div class="ma-2" >
+                  <v-list-item-title>
+                    Коментар
+                  </v-list-item-title>
+
+                  <v-list-item-subtitle>
+                    Текст коментару
+                  </v-list-item-subtitle>
+                </div>
+              </div>
+
+
+
             </v-list-item>
           </v-list>
         </div>
@@ -123,10 +137,16 @@ const points = reactive({
 
 
             <div class="solution_student">
-              <p>Description</p>
-              <p>Student Name</p>
+              <div class="pb-3 ma-6">
+                <p>Description</p>
+                <p>Student Name</p>
+
+
+              </div>
 
               <div class="solution_img_container">
+                <img class="solution_img" src="../../assets/Vchusia.png" alt="Solution"
+                     @click="imageChange = !imageChange">
                 <img class="solution_img" src="../../assets/Vchusia.png" alt="Solution"
                      @click="imageChange = !imageChange">
               </div>
@@ -185,8 +205,8 @@ const points = reactive({
 
 
       <div class="text-center">
-        <v-bottom-sheet v-model="imageChange">
-          <v-card fullscreen>
+        <v-bottom-sheet v-model="imageChange" fullscreen>
+          <v-card class="d-flex justify-center">
 
 <DrawingCanvas />
 
@@ -225,7 +245,10 @@ const points = reactive({
   padding: 5px;
   margin: 10px;
   border-radius: 15px;
-  outline: 1px solid red;
+  background: rgb(149,255,98);
+  background: linear-gradient(96deg, rgba(149,255,98,0.4206057422969187) 0%, rgba(186,255,212,1) 100%);
+  color: grey;
+
 }
 
 .solution_group_item {
@@ -234,14 +257,11 @@ const points = reactive({
   border-radius: 15px;
   background: rgb(255, 251, 98);
   background: linear-gradient(96deg, rgba(255, 251, 98, 0.4206057422969187) 0%, rgba(255, 243, 186, 1) 100%);
-  padding: 15px 0;
+  padding: 20px 0;
+  color: grey;
+  height: 100px;
 }
 
-.students {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
 
 .solution_student {
   width: 90%;
@@ -249,14 +269,16 @@ const points = reactive({
 }
 
 .solution_img_container {
-  border: 1px solid red;
   margin: 10px;
 }
 
 .solution_img {
   height: 100px;
   margin: 10px;
-  border: #00b8d4 solid 1px;
+  outline: #00b8d4 ridge 1px;
+  padding: 10px;
+  border-radius: 15px;
+
 }
 
 .mark_solution {
