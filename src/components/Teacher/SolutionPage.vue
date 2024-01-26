@@ -8,10 +8,16 @@ import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
 const group_solution = ref(false)
 const studentSelected = ref(false)
 const imageChange = ref(false)
-
 const points = reactive({
-  point: 0
+  0: 'Пусто',
+  1: '1',
+  2: '2',
+  3: '3',
+  4: '4',
+  5: '5',
 })
+const valueSliderPoint = ref(0)
+
 </script>
 
 <template>
@@ -175,19 +181,21 @@ const points = reactive({
 
                 <div>
                   <div class="d-flex justify-center ma-5">
-                    <p><b class="font-weight-bold point">{{ points.point }}</b></p>
+                    <p><b class="font-weight-bold point">{{ points[valueSliderPoint] }}</b></p>
                   </div>
 
 
                   <v-slider
-                      :ticks="[1, 2, 3, 4 ,5]"
+                      :ticks="points"
                       :max="5"
                       step="1"
                       show-ticks="always"
                       tick-size="4"
-                      v-model="points.point"
-                      :min = 1
-                  ></v-slider>
+                      v-model="valueSliderPoint"
+
+                  >
+
+                  </v-slider>
                 </div>
 
                 <v-btn class="w-100" color="#090909" @click="studentSelected = false">
