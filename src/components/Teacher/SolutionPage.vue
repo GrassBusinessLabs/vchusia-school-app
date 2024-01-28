@@ -6,6 +6,7 @@ import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
 
 
 const group_solution = ref(false)
+const studentsList = ref(false)
 const studentSelected = ref(false)
 const imageChange = ref(false)
 const points = reactive({
@@ -46,9 +47,6 @@ const valueSliderPoint = ref(0)
         </div>
 
         <div>
-          <!--          <v-btn class="btn-comment" @click="displayFooter = !displayFooter">-->
-          <!--            Додати розв'язок-->
-          <!--          </v-btn>-->
           <div class="solutions_groups">
             <v-list class="pb-3">
 
@@ -64,7 +62,7 @@ const valueSliderPoint = ref(0)
                 </v-list-item-subtitle>
               </v-list-item>
 
-              <v-list-item class="solution_group_item" @click="group_solution = !group_solution">
+              <v-list-item class="solution_group_item" @click="studentsList = !studentsList">
                 <v-list-item-title class=" ml-2">
                   Призначені, не виконані
                 </v-list-item-title>
@@ -76,7 +74,7 @@ const valueSliderPoint = ref(0)
                 </v-list-item-subtitle>
               </v-list-item>
 
-              <v-list-item class="solution_group_item" @click="group_solution = !group_solution">
+              <v-list-item class="solution_group_item" @click="studentsList = !studentsList">
                 <v-list-item-title class=" ml-2">
                   Перевірені
                 </v-list-item-title>
@@ -221,6 +219,34 @@ const valueSliderPoint = ref(0)
           </v-card>
         </v-bottom-sheet>
       </div>
+
+      <div class="text-center">
+        <v-bottom-sheet v-model="studentsList">
+          <v-card height="600">
+            <v-list class="students_list">
+              <v-list-item class="item_student" v-for="i in 5">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-avatar class="border ma-2">
+                      <img src="../../assets/Vchusia.png" alt="Avatar">
+                    </v-avatar>
+                    <v-list-item-title>
+                      Student Name
+                    </v-list-item-title>
+                  </div>
+
+                  <div>
+                    <p><b>4/5</b></p>
+                  </div>
+
+
+                </div>
+
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
     </ion-footer>
 
   </ion-page>
@@ -299,5 +325,15 @@ const valueSliderPoint = ref(0)
 }
 .point{
   font-size: 90px;
+}
+.item_student{
+  outline: 1px solid grey;
+  border-radius: 15px;
+  width: 95%;
+  margin: 20px auto;
+}
+.students_list{
+  width: 90%;
+  margin: 10px auto;
 }
 </style>

@@ -18,17 +18,14 @@
         </canvas>
       </div>
 
-      <v-btn class="arrow-button" icon="mdi-arrow-right" elevation="0"></v-btn>
+      <v-btn class="arrow-button" icon="mdi-arrow-right" elevation="0" @click="saveImage"></v-btn>
 
     </div>
 
 
     <div class="d-flex justify-space-around mx-auto w-75 mb-4">
-      <v-btn icon="mdi-pencil" @click="penType = 'pencil'" class="btn_panel pencil" elevation="0"></v-btn>
-      <v-btn icon="mdi-brush" @click="penType = 'circle'" class="btn_panel brush" elevation="0"></v-btn>
       <v-btn @click="clearCanvas" icon="mdi-close" class="btn_panel" elevation="0"></v-btn>
       <v-btn @click="undo" icon="mdi-subdirectory-arrow-left" class="btn_panel" elevation="0"></v-btn>
-      <v-btn @click="saveImage" icon="mdi-check" class="btn_panel" elevation="0"></v-btn>
 
     </div>
   </div>
