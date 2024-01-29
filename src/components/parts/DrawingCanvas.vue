@@ -1,13 +1,18 @@
 <template>
-  <div class="arrow_nav">
+  <div class="arrow_nav-left">
     <v-btn icon="mdi-arrow-left" class="arrow" elevation="0"></v-btn>
+  </div>
+
+  <div class="arrow_nav-right">
     <v-btn icon="mdi-arrow-right" class="arrow" elevation="0"></v-btn>
   </div>
 
 
+
   <div class="d-flex justify-center container_canvas">
     <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw" @mouseup="stopDrawing"
-            @touchstart="startDrawing" @touchmove="draw" @touchend="stopDrawing"></canvas>
+            @touchstart="handleTouchStart"
+            @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
 
   </div>
 
@@ -36,6 +41,9 @@ export default {
       context: null,
       visibility: true,
       lineThickness: 5,
+      pinchStartDistance: 0,
+      initialCanvasWidth: 400,
+      initialCanvasHeight: 500,
     };
   },
 
@@ -43,6 +51,39 @@ export default {
     this.drawImage();
   },
   methods: {
+    handleTouchStart(event) {
+      if (event.touches.length === 2) {
+        const touch1 = event.touches[0];
+        const touch2 = event.touches[1];
+        this.pinchStartDistance = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+        );
+      } else {
+        this.startDrawing(event);
+      }
+    },
+
+    handleTouchMove(event) {
+      if (event.touches.length === 2) {
+        const touch1 = event.touches[0];
+        const touch2 = event.touches[1];
+        const pinchDistance = Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+        );
+        const scale = pinchDistance / this.pinchStartDistance;
+
+        const canvas = this.$refs.canvas;
+        canvas.width = this.initialCanvasWidth * scale;
+        canvas.height = this.initialCanvasHeight * scale;
+
+        this.drawImage();
+      } else {
+        this.draw(event);
+      }
+    },
+
     clearCanvas() {
       const canvas = this.$refs.canvas
       const context = canvas.getContext('2d')
@@ -104,11 +145,14 @@ export default {
 </script>
 
 <style scoped>
-.arrow_nav{
+.arrow_nav-left{
   position: absolute;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+}
+
+.arrow_nav-right{
+  position: absolute;
+  left: 89%;
+
 }
 .arrow{
   background: transparent;
@@ -117,6 +161,7 @@ export default {
 
 .canvas {
   margin: 20px;
+  touch-action: none;
 }
 .arrow:active{
   color: #fff3e0;
