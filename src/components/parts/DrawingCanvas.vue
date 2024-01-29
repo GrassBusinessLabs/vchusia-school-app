@@ -1,182 +1,124 @@
 <template>
-  <div>
-
-    <div class="main_holst">
-      <v-btn icon="mdi-arrow-left" class="arrow-button" elevation="0"></v-btn>
-      <div>
-
-        <canvas
-            ref="canvas"
-            @touchstart="startDrawing"
-            @touchmove="draw"
-            @touchend="stopDrawing"
-            @mousedown="startDrawing"
-            @mousemove="draw"
-            @mouseup="stopDrawing"
-            :style="{ backgroundImage: 'url(' + backgroundImage + ')'  }"
-        >
-        </canvas>
-      </div>
-
-      <v-btn class="arrow-button" icon="mdi-arrow-right" elevation="0" @click="saveImage"></v-btn>
-
-    </div>
-
-
-    <div class="d-flex justify-space-around mx-auto w-75 mb-4">
-      <v-btn @click="clearCanvas" icon="mdi-close" class="btn_panel" elevation="0"></v-btn>
-      <v-btn @click="undo" icon="mdi-subdirectory-arrow-left" class="btn_panel" elevation="0"></v-btn>
-
-    </div>
+  <div class="arrow_nav">
+    <v-btn icon="mdi-arrow-left" class="arrow" elevation="0"></v-btn>
+    <v-btn icon="mdi-arrow-right" class="arrow" elevation="0"></v-btn>
   </div>
+
+
+  <div class="d-flex justify-center container_canvas">
+    <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw" @mouseup="stopDrawing"
+            @touchstart="startDrawing" @touchmove="draw" @touchend="stopDrawing"></canvas>
+
+  </div>
+
+  <div class="d-flex justify-center">
+    <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-backspace"></v-btn>
+  </div>
+
+
+  <div class="d-flex justify-center w-75 mx-auto ma-5">
+    <div>
+      <p>Товщина</p>
+    </div>
+
+    <v-slider v-model="lineThickness" min="1" max="20" step="1"></v-slider>
+    <p>{{ lineThickness }}</p>
+
+  </div>
+
 </template>
 
 <script>
 export default {
   data() {
     return {
-      canvas: null,
-      context: null,
       drawing: false,
-      penType: 'pencil',
-      penColor: 'rgba(255, 99, 71, 0.6)',
-      strokes: [],
-      inline: null,
-      column: null,
-      backgroundImage: 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png',
+      context: null,
+      visibility: true,
+      lineThickness: 5,
     };
   },
+
   mounted() {
-    this.canvas = this.$refs.canvas;
-    this.context = this.canvas.getContext('2d');
+    this.drawImage();
   },
   methods: {
-
-    startDrawing(event) {
-      event.preventDefault();
-      const rect = this.canvas.getBoundingClientRect();
-      const x = (event.type === 'touchstart') ? event.touches[0].clientX : event.clientX;
-      const y = (event.type === 'touchstart') ? event.touches[0].clientY : event.clientY;
-
-      this.drawing = true;
-      this.context.beginPath();
-      this.context.moveTo(x - rect.left, y - rect.top);
+    clearCanvas() {
+      const canvas = this.$refs.canvas
+      const context = canvas.getContext('2d')
+      context.clearRect(0, 0, canvas.width, canvas.height)
+      this.drawImage()
     },
+    drawImage() {
+      const canvas = this.$refs.canvas
+      const context = canvas.getContext('2d')
+
+      const img = new Image()
+
+      img.src = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png'
+
+      img.onload = () => {
+        context.drawImage(img, 0, 0, canvas.width, canvas.height)
+      };
+    },
+    startDrawing(event) {
+      this.drawing = true
+      const canvas = this.$refs.canvas
+      this.context = canvas.getContext('2d')
+      this.context.lineCap = 'round'
+      this.context.strokeStyle = 'rgba(255, 0, 0, 0.1)'
+
+      this.context.lineWidth = this.lineThickness;
+      const x = event.type.startsWith('touch') ? event.touches[0].clientX - canvas.offsetLeft : event.clientX - canvas.offsetLeft
+      const y = event.type.startsWith('touch') ? event.touches[0].clientY - canvas.offsetTop : event.clientY - canvas.offsetTop
+      this.context.beginPath()
+      this.context.moveTo(x, y)
+
+
+    },
+
     draw(event) {
-      if (!this.drawing) return;
-
-      const rect = this.canvas.getBoundingClientRect();
-      const x = (event.type === 'touchmove') ? event.touches[0].clientX : event.clientX;
-      const y = (event.type === 'touchmove') ? event.touches[0].clientY : event.clientY;
-
-      if (this.penType === 'pencil') {
-        this.context.lineTo(x - rect.left, y - rect.top);
-        this.context.strokeStyle = this.penColor;
-        this.context.lineWidth = 2; // Товщина лінії для олівця
-        this.context.stroke();
-        this.context.beginPath();
-        this.context.moveTo(x - rect.left, y - rect.top);
-      } else if (this.penType === 'circle') {
-        const radius = 3;
-        this.context.beginPath();
-        this.context.arc(x - rect.left, y - rect.top, radius, 0, 2 * Math.PI);
-        this.context.fillStyle = this.penColor;
-        this.context.fill();
-      }
+      if (!this.drawing) return
+      const x = event.type.startsWith('touch') ? event.touches[0].clientX - this.$refs.canvas.offsetLeft : event.clientX - this.$refs.canvas.offsetLeft
+      const y = event.type.startsWith('touch') ? event.touches[0].clientY - this.$refs.canvas.offsetTop : event.clientY - this.$refs.canvas.offsetTop
+      this.context.lineWidth = this.lineThickness;
+      this.context.lineTo(x, y)
+      this.context.stroke()
     },
 
     stopDrawing() {
-      if (this.drawing) {
-        this.drawing = false;
-        this.context.closePath();
-        this.strokes.push(this.canvas.toDataURL('image/png'));
-      }
+      this.drawing = false
+      this.context.closePath()
     },
-    clearCanvas() {
-      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.strokes = [];
-    },
-    undo() {
-      if (this.strokes.length > 0) {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        const img = new Image();
-        img.src = this.strokes.pop();
-        img.onload = () => {
-          this.context.drawImage(img, 0, 0);
-        };
-      }
-    },
+
     saveImage() {
-      const dataUrl = this.canvas.toDataURL('image/png');
-      const blobPromise = new Promise((resolve) => {
-        this.canvas.toBlob((blob) => {
-          resolve(blob);
-        });
-      });
-
-      blobPromise.then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        console.log(blob)
-        a.href = url;
-        a.download = 'drawing.png'; // Ім'я файлу, яке ви хочете задати
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      });
+      const canvas = this.$refs.canvas
+      const dataUrl = canvas.toDataURL('image/png')
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = 'canvas_image.png'
+      link.click()
     },
-
   },
 };
 </script>
 
 <style scoped>
-canvas {
-  border: 1px solid #efefef;
-  border-radius: 5px;
-  touch-action: none;
+.arrow_nav{
+  position: absolute;
   width: 100%;
-  min-height: 70vh;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.main_holst {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
-  align-items: center;
 }
-.arrow-button {
-  position: relative;
-  z-index: 1;
-}
-.arrow-button {
-  font-size: 24px;
-  background-color: transparent;
-  color: #000;
-  cursor: pointer;
-  margin: 0;
-}
-
-.arrow-button:hover {
-  color: #FF0000;
-}
-
-.pencil:focus{
-  background: grey;
-  color: #fff;
-}
-.brush:focus{
-  background: grey;
-  color: #fff;
-
-
-}
-.btn_panel{
+.arrow{
   background: transparent;
+  font-size: 25px;
+}
 
+.canvas {
+  margin: 20px;
+}
+.arrow:active{
+  color: #fff3e0;
 }
 </style>
