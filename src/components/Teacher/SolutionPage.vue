@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
 
 
@@ -10,7 +10,7 @@ const studentsList = ref(false)
 const studentSelected = ref(false)
 const imageChange = ref(false)
 const points = reactive({
-  0: 'Пусто',
+  0: 'x',
   1: '1',
   2: '2',
   3: '3',
@@ -19,6 +19,10 @@ const points = reactive({
 })
 const valueSliderPoint = ref(0)
 
+
+const displayText = computed(() => {
+  return valueSliderPoint.value === 0 ? 'Немає оцінки' : points[valueSliderPoint.value];
+});
 </script>
 
 <template>
@@ -179,13 +183,14 @@ const valueSliderPoint = ref(0)
 
                 <div>
                   <div class="d-flex justify-center ma-5">
-                    <p><b class="font-weight-bold point">{{ points[valueSliderPoint] }}</b></p>
+                    <p><b class="font-weight-bold point" :class="{ 'no_point': displayText === 'Немає оцінки' }">{{ displayText }}</b></p>
                   </div>
 
 
                   <v-slider
                       :ticks="points"
                       :max="5"
+                      :min="0"
                       step="1"
                       show-ticks="always"
                       tick-size="4"
@@ -335,5 +340,9 @@ const valueSliderPoint = ref(0)
 .students_list{
   width: 90%;
   margin: 10px auto;
+}
+
+.no_point {
+  font-size: 50px;
 }
 </style>
