@@ -10,7 +10,7 @@ const studentsList = ref(false)
 const studentSelected = ref(false)
 const imageChange = ref(false)
 const points = reactive({
-  0: 'x',
+  0: '',
   1: '1',
   2: '2',
   3: '3',
@@ -217,7 +217,7 @@ const displayText = computed(() => {
 
       <div class="text-center">
         <v-bottom-sheet v-model="imageChange" fullscreen>
-          <v-card class="d-flex justify-center">
+          <v-card class="d-flex justify-end">
 
 <DrawingCanvas />
 

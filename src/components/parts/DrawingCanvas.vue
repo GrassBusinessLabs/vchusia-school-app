@@ -1,47 +1,65 @@
 <template>
-  <div class="arrow_nav-left">
-    <v-btn icon="mdi-arrow-left" class="arrow" elevation="0"></v-btn>
-  </div>
+  <main class="d-flex flex-column justify-end">
+    <div class="canvas-drawing w-100">
 
-  <div class="arrow_nav-right">
-    <v-btn icon="mdi-arrow-right" class="arrow" @click="saveImage()" elevation="0"></v-btn>
-  </div>
+      <div class="arrow_nav-left">
+        <v-btn icon="mdi-arrow-left" class="arrow" elevation="1"></v-btn>
+      </div>
 
+      <div class="arrow_nav-right">
+        <v-btn icon="mdi-arrow-right" class="arrow" @click="saveImage()" elevation="1"></v-btn>
+      </div>
 
+      <div class="d-flex justify-center container_canvas w-100">
+        <div class="d-flex justify-center align-center w-100 position-absolute">
+          <img class="img_canvas" src="https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png"
+               alt="Img">
+        </div>
 
-  <div class="d-flex justify-center container_canvas">
-    <img class="img_canvas" src="https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png" alt="Img">
-      <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw"
-              @mouseup="stopDrawing"
-              @touchstart="handleTouchStart"
-              @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
+        <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw"
+                @mouseup="stopDrawing"
+                @touchstart="handleTouchStart"
+                @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
+      </div>
 
-  </div>
-
-
-
-  <div class="d-flex justify-center w-75 mx-auto ma-10">
-    <div>
-      <p><v-icon>mdi-format-line-weight</v-icon></p>
     </div>
 
-    <v-slider v-model="lineThickness" min="1" max="20" step="1"></v-slider>
-    <p>{{ lineThickness }}</p>
-
-  </div>
 
 
-  <div class="d-flex justify-space-around">
-    <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-close"></v-btn>
-    <v-btn class="d-flex justify-center align-center" @click="undo" icon="mdi-undo"></v-btn>
-    <v-btn class="d-flex justify-center align-center" @click="redo" icon="mdi-redo"></v-btn>
-  </div>
+
+
+
+    <div class="panel-drawing mt-5" >
+      <div class="d-flex justify-center w-75 mx-auto ma-5" v-if="visibilityLineWeight ">
+        <div>
+          <p>
+            <v-icon>mdi-format-line-weight</v-icon>
+          </p>
+        </div>
+
+        <v-slider v-model="lineThickness" min="1" max="20" step="1"></v-slider>
+        <p>{{ lineThickness }}</p>
+
+      </div>
+
+
+      <div class="d-flex justify-space-around">
+        <v-btn icon="mdi-format-line-weight" @click="visibilityLineWeight = !visibilityLineWeight"></v-btn>
+        <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-close"></v-btn>
+        <v-btn class="d-flex justify-center align-center" @click="undo" icon="mdi-undo"></v-btn>
+        <v-btn class="d-flex justify-center align-center" @click="redo" icon="mdi-redo"></v-btn>
+      </div>
+    </div>
+  </main>
+
 
 
 
 </template>
 
 <script>
+
+import {ref} from "vue";
 
 export default {
 
@@ -58,6 +76,7 @@ export default {
       undoStack: [],
       redoStack: [],
       currentImage: null,
+      visibilityLineWeight: ref(false)
     };
   },
 
@@ -213,26 +232,37 @@ export default {
 .arrow {
   background: transparent;
   font-size: 25px;
+  z-index: 11;
 }
-
 
 
 .canvas {
   touch-action: none;
+  z-index: 10;
 
 }
 
-.img_canvas{
-  position: absolute;
+.img_canvas {
+
   z-index: -10;
-  bottom: 30%;
-  margin: 20px;
 
 
+}
+
+.canvas-drawing{
+  display: flex;
+  align-items: center;
+
+
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.1) inset;
 }
 
 
 .arrow:active {
   color: #fff3e0;
+}
+
+.panel-drawing{
+  margin-bottom: 30px;
 }
 </style>
