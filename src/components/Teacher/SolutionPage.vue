@@ -221,6 +221,7 @@ const displayText = computed(() => {
 
 <DrawingCanvas />
 
+
           </v-card>
         </v-bottom-sheet>
       </div>

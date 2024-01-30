@@ -8,13 +8,28 @@
   </div>
 
 
+
   <div class="d-flex justify-center container_canvas">
-    <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw"
-            @mouseup="stopDrawing"
-            @touchstart="handleTouchStart"
-            @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
+    <img class="img_canvas" src="https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png" alt="Img">
+      <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw"
+              @mouseup="stopDrawing"
+              @touchstart="handleTouchStart"
+              @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
 
   </div>
+
+
+
+  <div class="d-flex justify-center w-75 mx-auto ma-10">
+    <div>
+      <p><v-icon>mdi-format-line-weight</v-icon></p>
+    </div>
+
+    <v-slider v-model="lineThickness" min="1" max="20" step="1"></v-slider>
+    <p>{{ lineThickness }}</p>
+
+  </div>
+
 
   <div class="d-flex justify-space-around">
     <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-close"></v-btn>
@@ -23,20 +38,14 @@
   </div>
 
 
-  <div class="d-flex justify-center w-75 mx-auto ma-5">
-    <div>
-      <p>Товщина</p>
-    </div>
-
-    <v-slider v-model="lineThickness" min="1" max="20" step="1"></v-slider>
-    <p>{{ lineThickness }}</p>
-
-  </div>
 
 </template>
 
 <script>
+
 export default {
+
+
   data() {
     return {
       drawing: false,
@@ -60,7 +69,7 @@ export default {
     initCanvas() {
       const canvas = this.$refs.canvas;
       const context = canvas.getContext('2d');
-      context.fillStyle = '#ffffff';
+      context.fillStyle = 'transparent';
       context.fillRect(0, 0, canvas.width, canvas.height);
     },
     redo() {
@@ -132,11 +141,14 @@ export default {
     drawImage() {
       const canvas = this.$refs.canvas
       const context = canvas.getContext('2d')
-      const img = new Image()
-      img.src = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png'
-      img.onload = () => {
-        context.drawImage(img, 0, 0, canvas.width, canvas.height)
-      };
+
+      //Для збереження фотки повністю разом з нарисованим
+
+      // const img = new Image()
+      // img.src = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png'
+      // img.onload = () => {
+      //   context.drawImage(img, 0, 0, canvas.width, canvas.height)
+      // };
     },
 
     startDrawing(event) {
@@ -181,6 +193,7 @@ export default {
       link.href = dataUrl
       link.download = 'canvas_image.png'
       link.click()
+
     },
   },
 };
@@ -202,10 +215,22 @@ export default {
   font-size: 25px;
 }
 
+
+
 .canvas {
-  margin: 20px;
   touch-action: none;
+
 }
+
+.img_canvas{
+  position: absolute;
+  z-index: -10;
+  bottom: 30%;
+  margin: 20px;
+
+
+}
+
 
 .arrow:active {
   color: #fff3e0;
