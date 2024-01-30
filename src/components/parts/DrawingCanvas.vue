@@ -4,20 +4,22 @@
   </div>
 
   <div class="arrow_nav-right">
-    <v-btn icon="mdi-arrow-right" class="arrow" elevation="0"></v-btn>
+    <v-btn icon="mdi-arrow-right" class="arrow" @click="saveImage()" elevation="0"></v-btn>
   </div>
 
 
-
   <div class="d-flex justify-center container_canvas">
-    <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw" @mouseup="stopDrawing"
+    <canvas class="canvas" ref="canvas" width="400" height="500" @mousedown="startDrawing" @mousemove="draw"
+            @mouseup="stopDrawing"
             @touchstart="handleTouchStart"
             @touchmove="handleTouchMove" @touchend="stopDrawing"></canvas>
 
   </div>
 
-  <div class="d-flex justify-center">
-    <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-backspace"></v-btn>
+  <div class="d-flex justify-space-around">
+    <v-btn class="d-flex justify-center align-center" @click="clearCanvas" icon="mdi-close"></v-btn>
+    <v-btn class="d-flex justify-center align-center" @click="undo" icon="mdi-undo"></v-btn>
+    <v-btn class="d-flex justify-center align-center" @click="redo" icon="mdi-redo"></v-btn>
   </div>
 
 
@@ -44,13 +46,52 @@ export default {
       pinchStartDistance: 0,
       initialCanvasWidth: 400,
       initialCanvasHeight: 500,
+      undoStack: [],
+      redoStack: [],
+      currentImage: null,
     };
   },
 
   mounted() {
+    this.initCanvas();
     this.drawImage();
   },
   methods: {
+    initCanvas() {
+      const canvas = this.$refs.canvas;
+      const context = canvas.getContext('2d');
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    },
+    redo() {
+      if (this.redoStack.length > 0) {
+        const canvas = this.$refs.canvas;
+        const context = canvas.getContext('2d');
+        this.undoStack.push(this.currentImage || canvas.toDataURL('image/png'));
+        this.currentImage = this.redoStack.pop();
+        const img = new Image();
+        img.src = this.currentImage;
+        img.onload = () => {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+      }
+    },
+
+    undo() {
+      if (this.undoStack.length > 0) {
+        const canvas = this.$refs.canvas;
+        const context = canvas.getContext('2d');
+        this.redoStack.push(this.currentImage || canvas.toDataURL('image/png'));
+        this.currentImage = this.undoStack.pop();
+        const img = new Image();
+        img.src = this.currentImage;
+        img.onload = () => {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+      }
+    },
     handleTouchStart(event) {
       if (event.touches.length === 2) {
         const touch1 = event.touches[0];
@@ -73,11 +114,9 @@ export default {
             touch2.clientY - touch1.clientY
         );
         const scale = pinchDistance / this.pinchStartDistance;
-
         const canvas = this.$refs.canvas;
         canvas.width = this.initialCanvasWidth * scale;
         canvas.height = this.initialCanvasHeight * scale;
-
         this.drawImage();
       } else {
         this.draw(event);
@@ -93,29 +132,28 @@ export default {
     drawImage() {
       const canvas = this.$refs.canvas
       const context = canvas.getContext('2d')
-
       const img = new Image()
-
       img.src = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png'
-
       img.onload = () => {
         context.drawImage(img, 0, 0, canvas.width, canvas.height)
       };
     },
+
     startDrawing(event) {
-      this.drawing = true
-      const canvas = this.$refs.canvas
-      this.context = canvas.getContext('2d')
-      this.context.lineCap = 'round'
-      this.context.strokeStyle = 'rgba(255, 0, 0, 0.1)'
-
+      this.drawing = true;
+      const canvas = this.$refs.canvas;
+      this.context = canvas.getContext('2d');
+      this.context.lineCap = 'round';
+      this.context.strokeStyle = 'rgba(255, 0, 0, 0.1)';
       this.context.lineWidth = this.lineThickness;
-      const x = event.type.startsWith('touch') ? event.touches[0].clientX - canvas.offsetLeft : event.clientX - canvas.offsetLeft
-      const y = event.type.startsWith('touch') ? event.touches[0].clientY - canvas.offsetTop : event.clientY - canvas.offsetTop
-      this.context.beginPath()
-      this.context.moveTo(x, y)
 
+      const x = event.type.startsWith('touch') ? event.touches[0].clientX - canvas.offsetLeft : event.clientX - canvas.offsetLeft;
+      const y = event.type.startsWith('touch') ? event.touches[0].clientY - canvas.offsetTop : event.clientY - canvas.offsetTop;
 
+      this.context.beginPath();
+      this.context.moveTo(x, y);
+      this.undoStack.push(this.$refs.canvas.toDataURL('image/png'));
+      this.redoStack = [];
     },
 
     draw(event) {
@@ -128,8 +166,12 @@ export default {
     },
 
     stopDrawing() {
-      this.drawing = false
-      this.context.closePath()
+      if (this.drawing) {
+        this.drawing = false;
+        this.context.closePath();
+        this.undoStack.push(this.$refs.canvas.toDataURL('image/png'));
+        this.redoStack = [];
+      }
     },
 
     saveImage() {
@@ -145,16 +187,17 @@ export default {
 </script>
 
 <style scoped>
-.arrow_nav-left{
+.arrow_nav-left {
   position: absolute;
 }
 
-.arrow_nav-right{
+.arrow_nav-right {
   position: absolute;
   left: 89%;
 
 }
-.arrow{
+
+.arrow {
   background: transparent;
   font-size: 25px;
 }
@@ -163,7 +206,8 @@ export default {
   margin: 20px;
   touch-action: none;
 }
-.arrow:active{
+
+.arrow:active {
   color: #fff3e0;
 }
 </style>
