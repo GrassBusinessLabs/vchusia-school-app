@@ -182,7 +182,7 @@ const displayText = computed(() => {
                 </div>
 
                 <div>
-                  <div class="d-flex justify-center ma-5">
+                  <div class="d-flex justify-center ma-5 point-content">
                     <p><b class="font-weight-bold point" :class="{ 'no_point': displayText === 'Немає оцінки' }">{{ displayText }}</b></p>
                   </div>
 
@@ -201,7 +201,7 @@ const displayText = computed(() => {
                   </v-slider>
                 </div>
 
-                <v-btn class="w-100" color="#090909" @click="studentSelected = false">
+                <v-btn class="w-100 mt-4" color="#090909" @click="studentSelected = false">
                   Відправити
                 </v-btn>
 
@@ -345,5 +345,12 @@ const displayText = computed(() => {
 
 .no_point {
   font-size: 50px;
+}
+
+.point-content{
+  height: 100px;
+  text-align: center;
+  display: flex;
+  align-items: center;
 }
 </style>

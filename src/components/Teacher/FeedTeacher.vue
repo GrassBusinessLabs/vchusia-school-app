@@ -23,20 +23,7 @@ import {ref} from "vue";
     </v-list>
   </ion-content>
 
-  <ion-footer class="d-flex align-center">
-    <ion-item class="w-100" >
-      <ion-textarea
-          :rows="1"
-          :auto-grow="true"
-          placeholder="Напишіть коментар"
-      >
-      </ion-textarea>
 
-    </ion-item>
-    <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
-
-
-  </ion-footer>
 </ion-page>
 </template>
 
