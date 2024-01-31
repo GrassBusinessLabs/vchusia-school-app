@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
 import {IonCol, IonContent, IonGrid, IonRow, IonPage, IonFooter, onIonViewWillEnter} from "@ionic/vue";
-
+import {ShareMessage} from "@/models/Message";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
 import {group} from "@/stores/group";
 import {post} from "@/stores/post"
 import {sharePost} from "@/models/Post";
 import {onMounted, reactive, ref, watch} from "vue";
+import {message} from "@/stores/message";
 
 const tab = ref('Tape')
 const CourseStore = course()
@@ -17,6 +18,7 @@ const sheet_read = ref(false)
 const dialog = ref(false)
 const courseInfo = CourseStore.thisCourse
 const userSharePost = ref(false)
+const MessageStore = message()
 let items = []
 let groups: any = []
 let allIdPosts: any = []
@@ -43,7 +45,7 @@ async function getUsersInGroup() {
   }
 }
 
-if(GroupStore.usersInGroup[0]){
+if (GroupStore.usersInGroup[0]) {
   for (let i of GroupStore.usersInGroup[0]) {
     allUsersInGroup.push(i.id)
   }
@@ -54,7 +56,6 @@ console.log(sharedStudents)
 onIonViewWillEnter(() => {
   getUsersInGroup()
   PostStore.findPostWithRow()
-  getFeed()
 })
 
 const mapPosts = () => {
@@ -127,12 +128,15 @@ const handlePost = (row: any, column: any) => {
 
 }
 
-let sharePostBody = reactive({
-  groups: null,
-  comment: "",
-  deadline: ""
+let sharedMessage: ShareMessage = reactive({
+  groupId: GroupStore.idGroup,
+  courseId: CourseStore.courseId,
+  postId: PostStore.idPostsNow,
+  users: sharedStudents,
+  text: "",
+  points: 5,
+  deadline: ''
 })
-
 const sharePostOpenSheet = () => {
   sheet_read.value = false
   dialog.value = true
@@ -140,14 +144,17 @@ const sharePostOpenSheet = () => {
 
 }
 const sharePost = async () => {
-  const body: sharePost = {
-    users: sharedStudents,
-    groupId: GroupStore.idGroup,
-    comment: sharePostBody.comment,
-    deadline: new Date(sharePostBody.deadline).toISOString()
+  const body: ShareMessage = {
+    groupId: sharedMessage.groupId,
+    courseId: sharedMessage.courseId,
+    postId: sharedMessage.postId,
+    users: sharedMessage.users,
+    text: sharedMessage.text,
+    points: sharedMessage.points,
+    deadline: new Date(sharedMessage.deadline).toISOString()
   }
-  await PostStore.sharePost(body)
-  await getFeed()
+  await MessageStore.shareMessage(body)
+  await MessageStore.allMessages()
   dialog.value = false
 }
 
@@ -158,7 +165,6 @@ const lastPost = (id: any) => {
         PostStore.info = i
 
       }
-
     }
 
   }
@@ -347,7 +353,7 @@ const isSelectedUser = (infoUser: any, index: number) => {
               <v-text-field
                   label="Коментар"
                   variant="outlined"
-                  v-model="sharePostBody.comment"
+                  v-model="sharedMessage.text"
 
               >
               </v-text-field>
@@ -356,7 +362,7 @@ const isSelectedUser = (infoUser: any, index: number) => {
                   label="Дата здачі"
                   variant="outlined"
                   type="datetime-local"
-                  v-model="sharePostBody.deadline"
+                  v-model="sharedMessage.deadline"
 
               >
               </v-text-field>

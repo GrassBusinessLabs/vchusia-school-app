@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {IonPage, IonContent, IonFooter, IonInput, IonItem, IonTextarea} from "@ionic/vue";
 import {ref} from "vue";
+import {message} from "@/stores/message";
 
+const MessageStore = message()
 
 </script>
 
@@ -9,14 +11,14 @@ import {ref} from "vue";
 <ion-page>
   <ion-content>
     <v-list class="list_feed">
-      <v-list-item v-for="i in 5" class="item_list_feed" @click="$router.replace('/main/solutions')">
+      <v-list-item v-for="i in MessageStore.allMessages" class="item_list_feed" @click="$router.replace('/main/solutions')">
 
         <v-list-item-title>
-          Title
+          {{ i.text }}
         </v-list-item-title>
 
         <v-list-item-action>
-          action
+          {{ i.deadline }}
         </v-list-item-action>
 
       </v-list-item>

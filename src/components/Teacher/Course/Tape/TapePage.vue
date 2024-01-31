@@ -7,25 +7,30 @@ import {add} from "ionicons/icons";
 import {group} from "@/stores/group";
 import {course} from "@/stores/course";
 import {post} from "@/stores/post";
+import {message} from "@/stores/message";
 
 const sheet_comment = ref(false)
 const comment = ref('')
-const user = JSON.parse(localStorage.getItem('user'))
 const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
+const MessageStore = message()
 
 const pagination = {
   page: 1,
   count: 10
 }
 
-async function getFeed() {
-  await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
+// async function getFeed() {
+//   await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
+// }
+async function userMessages() {
+  await MessageStore.userMessages()
 }
+//Потрібно буде вказати groupID, courseID
 
 onIonViewWillEnter(() => {
-  getFeed();
+  userMessages();
   PostStore.findPostWithRow()
 });
 
@@ -36,14 +41,14 @@ onIonViewWillEnter(() => {
 <ion-page>
   <ion-content>
     <v-card elevation="0">
-      <v-list class="tape_list" v-for="i of PostStore.feedPosts">
+      <v-list class="tape_list" v-for="i of MessageStore.allMessages">
         <v-list-item class="tape_list_item">
           <v-list-item-title>
-            {{i.title}}
+            {{i.text}}
           </v-list-item-title>
 
           <v-list-item-subtitle>
-            {{i.description}}
+            {{i.postId}}
           </v-list-item-subtitle>
 
           <v-list-item-action>
