@@ -154,7 +154,6 @@ const sharePost = async () => {
     deadline: new Date(sharedMessage.deadline).toISOString()
   }
   await MessageStore.shareMessage(body)
-  await MessageStore.allMessages()
   dialog.value = false
 }
 

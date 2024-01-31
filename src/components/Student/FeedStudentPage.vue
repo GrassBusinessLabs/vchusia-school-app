@@ -8,10 +8,12 @@ import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
 import Solution from "@/http/modules/solution";
 import {auth} from "@/stores/auth";
+import {message} from "@/stores/message";
 
 const readPost = ref(false)
 const PostStore = post()
 const SolutionStore = solution()
+const MessagesStore = message()
 const attachImage = ref(false)
 const pagination = {
   page: 1,
@@ -25,19 +27,36 @@ const image = ref()
 const feedPosts = ref([])
 let hasMore = true
 
-async function getPostsOnFeed() {
-  if (!hasMore) return
-  const newPosts = await PostStore.getPosts(pagination)
-  if (newPosts.length < pagination.count) {
-    hasMore = false
-  }
-  feedPosts.value.push(...newPosts)
-  pagination.page += 1
+// async function getPostsOnFeed() {
+//   if (!hasMore) return
+//   const newPosts = await PostStore.getPosts(pagination)
+//   if (newPosts.length < pagination.count) {
+//     hasMore = false
+//   }
+//   feedPosts.value.push(...newPosts)
+//   pagination.page += 1
+// }
+// async function userMessages() {
+//   if (!hasMore) return
+//   const newPosts = await MessagesStore.userMessages()
+  // if (newPosts != undefined){
+  //   if (newPosts.length < pagination.count) {
+  //     hasMore = false
+  //   }
+  // }
+  //
+  // feedPosts.value.push(...newPosts)
+  // pagination.page += 1
+// }
+//
+// userMessages()
+// const el = ref<HTMLElement | null>(null)
+// useInfiniteScroll(el, userMessages, {distance: 10})
+
+const userMessages = async () => {
+  await MessagesStore.userMessages()
 }
-
-
-const el = ref<HTMLElement | null>(null)
-useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
+userMessages()
 
 let virtualList: UseVirtualListReturn<any>;
 virtualList = useVirtualList(feedPosts, {itemSize: 70});
@@ -82,41 +101,50 @@ const randomColor = (authorName: any) => {
 <template>
   <ion-page>
     <ion-content>
-      <div ref="el" class="el">
-        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"
-                @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div class="content_task">
-            <div class="info_user">
-              <v-avatar v-if='item.authorAvatar'>
-                <v-img :src="URL_IMG+item.authorAvatar"></v-img>
-              </v-avatar>
+<!--      <div ref="el" class="el">-->
+<!--        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed"-->
+<!--                @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
+<!--          <div class="content_task">-->
+<!--            <div class="info_user">-->
+<!--              <v-avatar v-if='item.authorAvatar'>-->
+<!--                <v-img :src="URL_IMG+item.authorAvatar"></v-img>-->
+<!--              </v-avatar>-->
 
-              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor(item.authorName) }">
-                <span class="initials">{{ userInitials(item) }}</span>
-              </v-avatar>
+<!--              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor(item.authorName) }">-->
+<!--                <span class="initials">{{ userInitials(item) }}</span>-->
+<!--              </v-avatar>-->
 
-              <div class="user">
-                <p>{{ item.authorName }}</p>
-                <p>{{ item.courseName }}</p>
-              </div>
-            </div>
-
-
-            <div class="data_block">
-              <v-card-subtitle>
-                {{ formatDate(item.deadline) }}
-              </v-card-subtitle>
-
-            </div>
-          </div>
-
-          <div class="description_block">
-            <p>{{ item.description }}</p>
-          </div>
+<!--              <div class="user">-->
+<!--                <p>{{ item.authorName }}</p>-->
+<!--                <p>{{ item.courseName }}</p>-->
+<!--              </div>-->
+<!--            </div>-->
 
 
+<!--            <div class="data_block">-->
+<!--              <v-card-subtitle>-->
+<!--                {{ formatDate(item.deadline) }}-->
+<!--              </v-card-subtitle>-->
+
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="description_block">-->
+<!--            <p>{{ item.description }}</p>-->
+<!--          </div>-->
+
+
+<!--        </v-list>-->
+
+<!--      </div>-->
+      <div>
+        <v-list>
+          <v-list-item v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i ,$router.replace('/group-info-student/post')">
+            <v-list-item-title>
+              {{i.text}}
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
-
       </div>
 
 

@@ -1,12 +1,13 @@
 import {defineStore} from "pinia";
-import {SaveSolution, UpdateSolution} from "@/models/Solution";
+import {UpdateSolution} from "@/models/Solution";
 import SolutionApi from "@/http/modules/solution"
 interface State {
     gpId: number,
     file: any,
     solutionId: number,
     solutionInfo: any,
-    spId: number
+    spId: number,
+    solutionsUsers: any
 }
 
 export const solution = defineStore('solution', {
@@ -15,21 +16,11 @@ export const solution = defineStore('solution', {
         file: null,
         solutionId: 0,
         solutionInfo: [],
-        spId: 0
+        solutionsUsers: [],
+        spId: 0,
     }),
 
     actions: {
-        async saveSolution(body: SaveSolution): Promise <void> {
-            try {
-                const response = await SolutionApi.saveSolution(body)
-                await this.findSolutionBySharedPostId()
-                this.solutionId = response.id
-                console.log(response)
-            } catch (e) {
-                console.log(e)
-            }
-        },
-
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
@@ -52,7 +43,6 @@ export const solution = defineStore('solution', {
         async updateSolution(body: UpdateSolution, solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.updateSolution(body, solutionId)
-                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -88,16 +78,28 @@ export const solution = defineStore('solution', {
             }
         },
 
-        async findSolutionBySharedPostId(): Promise <void>{
+
+        async findSolutionsUsers(msgId: number): Promise <void> {
             try {
-                const response = await SolutionApi.findSolutionBySharedPostId()
-                this.solutionInfo = response
+                const response = await SolutionApi.findSolutionsUsers(msgId)
+                this.solutionsUsers = response.items
                 console.log(response)
-                return true
             } catch (e) {
                 console.log(e)
-                return false
+            }
+        },
+
+        async findSolutionByMessageId(msgId: number): Promise <void> {
+            try {
+                const response = await SolutionApi.findSolutionByMessageId(msgId)
+                console.log(response)
+            } catch (e) {
+                console.log(e)
             }
         }
+
+
+
+
     }
 })

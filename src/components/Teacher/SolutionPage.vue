@@ -3,8 +3,11 @@ import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput} from "@i
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {computed, reactive, ref} from "vue";
 import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
+import {solution} from "@/stores/solution";
+import {message} from "@/stores/message";
 
-
+const SolutionStore = solution()
+const MessageStore = message()
 const group_solution = ref(false)
 const studentsList = ref(false)
 const studentSelected = ref(false)
@@ -19,7 +22,10 @@ const points = reactive({
 })
 const valueSliderPoint = ref(0)
 
-
+const findSolutionsUsers = async() => {
+  await SolutionStore.findSolutionsUsers(MessageStore.msgId)
+}
+findSolutionsUsers()
 const displayText = computed(() => {
   return valueSliderPoint.value === 0 ? 'Немає оцінки' : points[valueSliderPoint.value];
 });
@@ -34,18 +40,17 @@ const displayText = computed(() => {
         <div class="infoPost">
 
           <div class="title_post">
-            <h1>Title</h1>
-            <p style="color:grey">Оцінка за завдання points</p>
+            <p style="color:grey">Оцінка за завдання {{MessageStore.thisMessage.points}}</p>
           </div>
 
           <div class="deadline_points">
-            <!--            <p class="missingDate" v-if="isFutureDate(PostStore.sharedPostInfo.deadline) == false">Пропущено термін здачі</p>-->
-            <!--            <p>Виконати до {{formatDate(PostStore.sharedPostInfo.deadline)}}</p>-->
-            <p>Виконати до data</p>
+<!--                        <p class="missingDate" v-if="isFutureDate(PostStore.sharedPostInfo.deadline) == false">Пропущено термін здачі</p>-->
+<!--                        <p>Виконати до {{formatDate(PostStore.sharedPostInfo.deadline)}}</p>-->
+            <p>Виконати до {{MessageStore.thisMessage.deadline}}</p>
           </div>
 
           <div class="description_task">
-            <p>Description</p>
+            <p>{{MessageStore.thisMessage.text}}</p>
           </div>
 
         </div>
@@ -230,14 +235,14 @@ const displayText = computed(() => {
         <v-bottom-sheet v-model="studentsList">
           <v-card height="600">
             <v-list class="students_list">
-              <v-list-item class="item_student" v-for="i in 5">
+              <v-list-item class="item_student" v-for="i of SolutionStore.solutionsUsers">
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
                     <v-avatar class="border ma-2">
                       <img src="../../assets/Vchusia.png" alt="Avatar">
                     </v-avatar>
                     <v-list-item-title>
-                      Student Name
+                      {{ i.name }}
                     </v-list-item-title>
                   </div>
 

@@ -1,13 +1,7 @@
-import {SaveSolution, UpdateSolution} from "@/models/Solution";
+import { UpdateSolution } from "@/models/Solution";
 import axios from "../api";
 import {solution} from "@/stores/solution";
 
-
-
-function saveSolution(body: SaveSolution) {
-    let gpId: number = solution().gpId
-    return axios.post(`/solution/${gpId}`, body)
-}
 
 function attachImage() {
     let solutionId = solution().solutionInfo.id
@@ -21,27 +15,36 @@ function updateStatus(solutionId: number) {
 function updateSolution(body: UpdateSolution, solutionId: number) {
     return axios.put(`/solution/${solutionId}`, body)
 }
-function deleteSolution(solutionId: number){
+
+function deleteSolution(solutionId: number) {
 
     return axios.delete(`/solution/${solutionId}`)
 }
+
 function deleteImage(imgId: number) {
     return axios.delete(`/solution/${imgId}/deleteImage`)
 }
+
 function findSolutionById(solutionId: number) {
     return axios.get(`/solution/${solutionId}`)
 }
-function findSolutionBySharedPostId() {
-    let spId: number = solution().spId
-    return axios.get(`/solution/sharedPost/${spId}`)
+
+function findSolutionsUsers(msgId: number) {
+    return axios.get(`/solution/messageId/${msgId}`)
 }
+
+function findSolutionByMessageId(msgId: number) {
+    return axios.get(`/solution/message/${msgId}`)
+}
+
 export default {
-    saveSolution,
     attachImage,
     updateStatus,
     updateSolution,
     deleteSolution,
     deleteImage,
     findSolutionById,
-    findSolutionBySharedPostId
+    findSolutionsUsers,
+    findSolutionByMessageId
+
 }

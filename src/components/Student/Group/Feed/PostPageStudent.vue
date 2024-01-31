@@ -5,8 +5,10 @@ import {post} from "@/stores/post"
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {onMounted, reactive, ref, watch} from "vue";
 import {SaveSolution, UpdateSolution} from "@/models/Solution";
+import {message} from "@/stores/message";
 
 const PostStore = post()
+const MessageStore = message()
 const SolutionStore = solution()
 const check = ref(false)
 
@@ -35,47 +37,18 @@ function isFutureDate(targetDate: any) {
   return targetDateTime > currentDate;
 }
 
-const errorHandle = async () => {
-  console.log(PostStore.sharedPostInfo.sharedPostId);
-  try {
-    const res = await SolutionStore.findSolutionBySharedPostId();
 
-    if (res === true) {
-      check.value = true;
-      descriptionSolution.description = SolutionStore.solutionInfo.description;
-    } else {
-      check.value = false;
-      await saveSolution();
-    }
-  } catch (error) {
-    console.error('Error fetching solution:', error);
-    await saveSolution();
-  }
-};
 
-onMounted(() => {
-  errorHandle();
-})
 
 const updateStatus = async () => {
   await SolutionStore.updateStatus(SolutionStore.solutionInfo.id);
 };
 
 const updateSolution = async () => {
-  try {
-    await SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionInfo.id);
-    descriptionSolution.description = SolutionStore.solutionInfo.description;
-    await errorHandle()
-  } catch (error) {
-    console.error('Error updating solution:', error);
-    await saveSolution();
-  }
+  await SolutionStore.updateSolution(descriptionSolution, 4);
+  descriptionSolution.description = SolutionStore.solutionInfo.description;
 };
 
-const saveSolution = async () => {
-  await SolutionStore.saveSolution(descriptionSolution);
-  await errorHandle();
-};
 
 const displayFooter = ref(false)
 const deleteSolution = async () => {
@@ -84,138 +57,149 @@ const deleteSolution = async () => {
 </script>
 
 <template>
-<ion-page>
-  <ion-content>
-    <div class="container">
+  <ion-page>
+    <ion-content>
+      <div class="container">
 
-      <div class="infoPost">
+        <div class="infoPost">
 
-        <div class="title_post">
-          <h1>{{PostStore.sharedPostInfo.comment}}</h1>
-          <p style="color:grey">Оцінка за завдання {{PostStore.sharedPostInfo.points}}</p>
+          <div class="title_post">
+<!--            <h1>{{ MessageStore.thisMessage.text }}</h1>-->
+            <p style="color:grey">Оцінка за завдання {{ MessageStore.thisMessage.points }}</p>
+          </div>
+
+          <div class="deadline_points">
+            <p class="missingDate" v-if="isFutureDate(MessageStore.thisMessage.deadline) == false">Пропущено термін
+              здачі</p>
+            <p>Виконати до {{ formatDate(MessageStore.thisMessage.deadline) }}</p>
+          </div>
+
+          <div class="description_task">
+            <p>{{ MessageStore.thisMessage.text }}</p>
+          </div>
+
         </div>
 
-        <div class="deadline_points">
-          <p class="missingDate" v-if="isFutureDate(PostStore.sharedPostInfo.deadline) == false">Пропущено термін здачі</p>
-          <p>Виконати до {{formatDate(PostStore.sharedPostInfo.deadline)}}</p>
+        <div>
+          <v-btn class="btn-comment" @click="displayFooter = !displayFooter">
+            Додати розв'язок
+          </v-btn>
+
+          <v-list>
+            <v-list-item v-for="i in 5" class="comment_item">
+              <v-list-item-title>
+                Коментар
+              </v-list-item-title>
+
+              <v-list-item-subtitle>
+                Текст коментару
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
         </div>
 
-        <div class="description_task">
-          <p>{{PostStore.sharedPostInfo.description}}</p>
+      </div>
+
+    </ion-content>
+    <ion-footer>
+      <div class="d-flex align-center">
+        <ion-item class="w-100">
+          <ion-textarea
+              :rows="1"
+              :auto-grow="true"
+              placeholder="Напишіть коментар"
+          >
+          </ion-textarea>
+
+        </ion-item>
+        <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
+      </div>
+      <div class="text-center" v-if="displayFooter">
+
+        <div class="d-flex align-center container_comment_solution">
+          <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Коментар"
+                        v-model="descriptionSolution.description"></v-text-field>
+        </div>
+
+
+        <div class="pin_image">
+          <CropperComponent/>
+        </div>
+
+        <div class="accept_task">
+          <v-btn class="btnAcceptTask" @click="updateStatus()">
+            Відправити на перевірку
+          </v-btn>
         </div>
 
       </div>
 
-    <div>
-      <v-btn class="btn-comment" @click="displayFooter = !displayFooter">
-        Додати розв'язок
-      </v-btn>
 
-      <v-list>
-        <v-list-item v-for="i in 5" class="comment_item">
-          <v-list-item-title>
-            Коментар
-          </v-list-item-title>
+    </ion-footer>
 
-          <v-list-item-subtitle>
-            Текст коментару
-          </v-list-item-subtitle>
-        </v-list-item>
-      </v-list>
-    </div>
-
-    </div>
-
-  </ion-content>
-  <ion-footer>
-    <div class="d-flex align-center">
-      <ion-item class="w-100" >
-        <ion-textarea
-            :rows="1"
-            :auto-grow="true"
-            placeholder="Напишіть коментар"
-        >
-        </ion-textarea>
-
-      </ion-item>
-      <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
-    </div>
-    <div class="text-center" v-if="displayFooter">
-
-      <div class="d-flex align-center container_comment_solution">
-        <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Коментар" v-model="descriptionSolution.description"></v-text-field>
-      </div>
-
-
-      <div class="pin_image">
-        <CropperComponent/>
-      </div>
-
-      <div class="accept_task">
-        <v-btn class="btnAcceptTask" @click="updateStatus()">
-          Відправити на перевірку
-        </v-btn>
-      </div>
-
-    </div>
-
-
-  </ion-footer>
-
-</ion-page>
+  </ion-page>
 </template>
 
 <style scoped>
-.container{
+.container {
   width: 90%;
   margin: 0 auto;
 }
-.title_post{
+
+.title_post {
   padding: 10px 0;
   border-bottom: 1px solid black;
 }
-.deadline_points{
+
+.deadline_points {
   margin: 10px 0;
   display: flex;
   font-size: 14px;
   flex-direction: column;
   color: grey;
 }
+
 .missingDate {
   color: red;
   font-weight: 900;
 }
-.accept_task{
+
+.accept_task {
   width: 90%;
   margin: 20px auto 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.btnAcceptTask{
+
+.btnAcceptTask {
   width: 90%;
   background: #4CAF50;
   color: #fff;
 }
 
-.pin_image{
+.pin_image {
   width: 100%;
 }
-.description_text{
+
+.description_text {
   width: 90%;
   margin: 20px auto 0 auto;
   box-sizing: border-box;
- }
-.infoPost{
+}
+
+.infoPost {
   margin-bottom: 20%;
 }
-.comment_item{
+
+.comment_item {
   padding: 5px;
   margin: 10px;
-  border-radius:  15px;
+  border-radius: 15px;
   outline: 1px solid red;
 }
-.btn-comment{
+
+.btn-comment {
   margin: 10px auto;
   width: 91%;
   color: #fff;
@@ -223,7 +207,7 @@ const deleteSolution = async () => {
 
 }
 
-.container_comment_solution{
+.container_comment_solution {
   width: 90%;
   margin: 0 auto;
 }

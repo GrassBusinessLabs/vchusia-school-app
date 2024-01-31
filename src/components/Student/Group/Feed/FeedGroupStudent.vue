@@ -9,12 +9,14 @@ import {useInfiniteScroll, useVirtualList} from "@vueuse/core";
 import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
 import Course from "@/http/modules/course";
+import {message} from "@/stores/message";
 
 const readPost = ref(false)
 const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
 const SolutionStore = solution()
+const MessageStore = message()
 const pagination = {
   page: 1,
   count: 5
@@ -24,28 +26,32 @@ const feedPosts = ref([])
 let hasMore = true
 PostStore.feedPosts = []
 
-
-async function getPostsOnFeed() {
-  if (!hasMore) return
-  const newPosts = await PostStore.getPosts(pagination)
-  if (newPosts.length < pagination.count) {
-    hasMore = false
-  }
-  for (let i of newPosts){
-    if(i.courseId === CourseStore.courseId){
-      feedPosts.value.push(i)
-    }
-  }
-  pagination.page += 1
-
+const userMessages = async () => {
+  await MessageStore.userMessages()
 }
 
-console.log(feedPosts.value)
-PostStore.postsInTask = feedPosts.value
-const el = ref<HTMLElement | null>(null)
-useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
-
-const virtualList = useVirtualList(feedPosts, {itemSize: 70})
+userMessages()
+// async function getPostsOnFeed() {
+//   if (!hasMore) return
+//   const newPosts = await MessageStore.userMessages()
+//   if (newPosts.length < pagination.count) {
+//     hasMore = false
+//   }
+//   for (let i of newPosts){
+//     if(i.courseId === CourseStore.courseId){
+//       feedPosts.value.push(i)
+//     }
+//   }
+//   pagination.page += 1
+//
+//  }
+//
+// console.log(feedPosts.value)
+// PostStore.postsInTask = feedPosts.value
+// const el = ref<HTMLElement | null>(null)
+// useInfiniteScroll(el, getPostsOnFeed, {distance: 10})
+//
+// const virtualList = useVirtualList(feedPosts, {itemSize: 70})
 const URL_IMG = 'https://vchusia.grassbusinesslabs.tk/static/'
 
 
@@ -81,7 +87,6 @@ const randomColor = () => {
 const userInitials = (item?: any) => {
   const nameParts = item.authorName.split(' ');
   const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
-
   return initials
 }
 </script>
@@ -89,41 +94,50 @@ const userInitials = (item?: any) => {
 <template>
   <ion-page>
     <ion-content>
-      <div ref="el">
-        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">
-          <div class="content_task">
-            <div class="info_user">
-              <v-avatar v-if='item.authorAvatar'>
-                <v-img :src="URL_IMG+item.authorAvatar"></v-img>
-              </v-avatar>
+<!--      <div ref="el">-->
+<!--        <v-list v-for="(item, index) in feedPosts" :key="index" class="itemListFeed" @click="PostStore.sharedPostInfo = item, SolutionStore.gpId = item.sharedPostId, SolutionStore.spId = item.sharedPostId, $router.replace('/group-info-student/post')">-->
+<!--          <div class="content_task">-->
+<!--            <div class="info_user">-->
+<!--              <v-avatar v-if='item.authorAvatar'>-->
+<!--                <v-img :src="URL_IMG+item.authorAvatar"></v-img>-->
+<!--              </v-avatar>-->
 
-              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor() }">
-                <span class="initials">{{ userInitials(item) }}</span>
-              </v-avatar>
+<!--              <v-avatar v-if='!item.authorAvatar' :style="{ backgroundColor: randomColor() }">-->
+<!--                <span class="initials">{{ userInitials(item) }}</span>-->
+<!--              </v-avatar>-->
 
-              <div class="user">
-                <p>{{ item.authorName }}</p>
-                <p>{{ item.courseName }}</p>
-              </div>
-            </div>
-
-
-
-            <div class="data_block">
-              <v-card-subtitle>
-                {{ formatDate(item.deadline) }}
-              </v-card-subtitle>
-
-            </div>
-          </div>
-
-          <div class="description_block">
-            <p>{{item.description}}</p>
-          </div>
+<!--              <div class="user">-->
+<!--                <p>{{ item.authorName }}</p>-->
+<!--                <p>{{ item.courseName }}</p>-->
+<!--              </div>-->
+<!--            </div>-->
 
 
+
+<!--            <div class="data_block">-->
+<!--              <v-card-subtitle>-->
+<!--                {{ formatDate(item.deadline) }}-->
+<!--              </v-card-subtitle>-->
+
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="description_block">-->
+<!--            <p>{{item.description}}</p>-->
+<!--          </div>-->
+
+
+<!--        </v-list>-->
+
+<!--      </div>-->
+      <div>
+        <v-list>
+          <v-list-item v-for="i of MessageStore.allMessages">
+            <v-list-item-title>
+                {{i.text}}
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
-
       </div>
     </ion-content>
 
