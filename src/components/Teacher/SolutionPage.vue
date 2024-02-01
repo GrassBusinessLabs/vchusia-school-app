@@ -72,7 +72,7 @@ const displayText = computed(() => {
               </v-list-item>
 
               <v-list-item class="solution_group_item" @click="studentsList = !studentsList">
-                <v-list-item-title class=" ml-2">
+                <v-list-item-title class=" ml-2" >
                   Призначені, не виконані
                 </v-list-item-title>
 
@@ -236,7 +236,8 @@ const displayText = computed(() => {
           <v-card height="600">
             <v-list class="students_list">
               <v-list-item class="item_student" v-for="i of SolutionStore.solutionsUsers">
-                <div class="d-flex align-center justify-space-between">
+
+                <div class="d-flex align-center justify-space-between" v-if="i.solution.status === 'DRAFT'">
                   <div class="d-flex align-center">
                     <v-avatar class="border ma-2">
                       <img src="../../assets/Vchusia.png" alt="Avatar">

@@ -92,7 +92,7 @@ export default {
     canvasSize() {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      const maxWidth = 800;
+      const maxWidth = 1000;
       const maxHeight = 1000;
 
       const width = Math.min(maxWidth, windowWidth);
@@ -272,6 +272,10 @@ export default {
 .img_canvas {
   z-index: -10;
   display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .canvas-drawing {
