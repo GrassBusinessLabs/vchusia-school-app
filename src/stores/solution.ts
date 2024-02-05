@@ -7,7 +7,8 @@ interface State {
     solutionId: number,
     solutionInfo: any,
     spId: number,
-    solutionsUsers: any
+    solutionsUsers: any,
+    imageSolutionSize: object
 }
 
 export const solution = defineStore('solution', {
@@ -18,13 +19,13 @@ export const solution = defineStore('solution', {
         solutionInfo: [],
         solutionsUsers: [],
         spId: 0,
+        imageSolutionSize: {width: 0, height: 0}
     }),
 
     actions: {
         async attachImage(): Promise <void>{
             try {
                 const response = await SolutionApi.attachImage()
-                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -52,7 +53,6 @@ export const solution = defineStore('solution', {
         async deleteSolution(solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteSolution(solutionId)
-                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -62,7 +62,6 @@ export const solution = defineStore('solution', {
         async deleteImage(imgId: number): Promise <void>{
             try {
                 const response = await SolutionApi.deleteImage(imgId)
-                await this.findSolutionBySharedPostId()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -92,6 +91,7 @@ export const solution = defineStore('solution', {
         async findSolutionByMessageId(msgId: number): Promise <void> {
             try {
                 const response = await SolutionApi.findSolutionByMessageId(msgId)
+                this.solutionId = response.id
                 console.log(response)
             } catch (e) {
                 console.log(e)

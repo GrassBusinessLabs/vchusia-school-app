@@ -139,7 +139,7 @@ const randomColor = (authorName: any) => {
 <!--      </div>-->
       <div>
         <v-list>
-          <v-list-item v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i ,$router.replace('/group-info-student/post')">
+          <v-list-item v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i, MessagesStore.msgId = MessagesStore.thisMessage.id ,$router.replace('/group-info-student/post')">
             <v-list-item-title>
               {{i.text}}
             </v-list-item-title>

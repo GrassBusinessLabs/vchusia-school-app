@@ -222,7 +222,7 @@ const displayText = computed(() => {
 
       <div class="text-center">
         <v-bottom-sheet v-model="imageChange" fullscreen>
-          <v-card class="d-flex justify-end">
+          <v-card class="d-flex justify-center">
 
 <DrawingCanvas />
 

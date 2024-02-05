@@ -18,7 +18,9 @@
         <div class="d-flex justify-center align-center w-100 h-100 position-absolute">
           <img class="img_canvas"
                src="https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png"
-               alt="Img">
+               alt="Img"
+
+          >
         </div>
 
         <canvas class="canvas" ref="canvas" :width="canvasSize.width" :height="canvasSize.height"
@@ -59,8 +61,11 @@
 
 <script>
 
-import {ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
+import {solution} from "@/stores/solution.ts";
+
+
 
 export default {
   components: {
@@ -79,24 +84,28 @@ export default {
       undoStack: [],
       redoStack: [],
       currentImage: null,
-      popUpLineWeight: ref(false)
+      popUpLineWeight: ref(false),
+      imageWidth: 0,
+      imageHeight: 0,
+      SolutionStore: solution()
     };
   },
+
 
   mounted() {
     this.initCanvas();
     this.drawImage();
     window.addEventListener("resize", this.handleResize);
+    this.fetchImageDimensions();
   },
   computed: {
+
     canvasSize() {
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      const maxWidth = 1000;
-      const maxHeight = 1000;
 
-      const width = Math.min(maxWidth, windowWidth);
-      const height = Math.min(maxHeight, windowHeight);
+      const width = Math.min(this.imageWidth, windowWidth);
+      const height = Math.min(this.imageHeight, windowHeight);
 
       return {
         width,
@@ -106,6 +115,35 @@ export default {
   },
 
   methods: {
+    async fetchImageDimensions() {
+      const imageUrl = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png';
+      try {
+        const dimensions = await this.getImageDimensions(imageUrl);
+        this.imageWidth = dimensions.width;
+        this.imageHeight = dimensions.height;
+        console.log('Image size:', this.imageWidth, this.imageHeight);
+      } catch (error) {
+        console.error('Error loading image:', error);
+      }
+    },
+
+    getImageDimensions(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+
+        img.onload = function() {
+          const width = img.naturalWidth;
+          const height = img.naturalHeight;
+          resolve({ width, height });
+        };
+
+        img.onerror = function(error) {
+          reject(error);
+        };
+      });
+    },
+
     handleResize() {
       this.initCanvas();
       this.drawImage();
@@ -266,6 +304,7 @@ export default {
 .canvas {
   touch-action: none;
   z-index: 10;
+
 
 }
 

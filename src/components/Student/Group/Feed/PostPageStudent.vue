@@ -37,15 +37,22 @@ function isFutureDate(targetDate: any) {
   return targetDateTime > currentDate;
 }
 
+const findSolutionByMsgId = async () => {
+  await SolutionStore.findSolutionByMessageId(MessageStore.msgId)
+}
+findSolutionByMsgId()
 
-
+const findSolutionById = async () => {
+  await SolutionStore.findSolutionById(SolutionStore.solutionId)
+}
+findSolutionById()
 
 const updateStatus = async () => {
-  await SolutionStore.updateStatus(SolutionStore.solutionInfo.id);
+  await SolutionStore.updateStatus(SolutionStore.solutionId);
 };
 
 const updateSolution = async () => {
-  await SolutionStore.updateSolution(descriptionSolution, 4);
+  await SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionId);
   descriptionSolution.description = SolutionStore.solutionInfo.description;
 };
 

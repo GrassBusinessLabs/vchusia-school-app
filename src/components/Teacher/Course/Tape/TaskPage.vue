@@ -1,6 +1,16 @@
 <script setup lang="ts">
 
-import {IonCol, IonContent, IonGrid, IonRow, IonPage, IonFooter, onIonViewWillEnter} from "@ionic/vue";
+import {
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonPage,
+  IonFooter,
+  IonTextarea,
+  IonItem,
+  onIonViewWillEnter
+} from "@ionic/vue";
 import {ShareMessage} from "@/models/Message";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {course} from "@/stores/course";
@@ -19,17 +29,17 @@ const dialog = ref(false)
 const courseInfo = CourseStore.thisCourse
 const userSharePost = ref(false)
 const MessageStore = message()
-let items = []
-let groups: any = []
+let items: any[] = []
+let groups: any[] = []
 let allIdPosts: any = []
-let r, c;
+let r: number, c: number
 const switchMode = ref(true)
 const postShared = ref(false)
 allIdPosts = []
 const shared = ref(true)
 const checkboxes = ref({})
-let allUsersInGroup = []
-let sharedStudents = []
+let allUsersInGroup: any[] = []
+let sharedStudents: any[] = []
 
 sharedStudents = allUsersInGroup
 
@@ -86,7 +96,7 @@ const getPostByCords = (row: any, column: any) => {
 
 const handlePost = (row: any, column: any) => {
 
-  let idPost
+  let idPost: number
   if (getPostByCords(row + 1, column)) {
 
     if (switchMode.value === true) {
@@ -99,6 +109,8 @@ const handlePost = (row: any, column: any) => {
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
+          sharedMessage.text = i.description
+
         }
       }
       for (const j of PostStore.feedPosts) {
@@ -118,14 +130,13 @@ const handlePost = (row: any, column: any) => {
           idPost = i.id
           PostStore.idPostsNow = i.id
           PostStore.info = i
+
         }
       }
     }
 
   }
-
   return idPost, r, c, items
-
 }
 
 let sharedMessage: ShareMessage = reactive({
@@ -133,16 +144,19 @@ let sharedMessage: ShareMessage = reactive({
   courseId: CourseStore.courseId,
   postId: PostStore.idPostsNow,
   users: sharedStudents,
-  text: "",
+  text: '',
   points: 5,
   deadline: ''
 })
+
+
 const sharePostOpenSheet = () => {
   sheet_read.value = false
   dialog.value = true
   userSharePost.value = false
-
 }
+
+
 const sharePost = async () => {
   const body: ShareMessage = {
     groupId: sharedMessage.groupId,
@@ -156,6 +170,7 @@ const sharePost = async () => {
   await MessageStore.shareMessage(body)
   dialog.value = false
 }
+
 
 const lastPost = (id: any) => {
   if (allIdPosts.indexOf(id) > 0) {
@@ -178,16 +193,6 @@ const nextPost = (id: any) => {
     }
   }
 
-}
-
-
-const pagination = {
-  page: 1,
-  count: 10
-}
-
-async function getFeed() {
-  await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
 }
 
 
@@ -349,13 +354,12 @@ const isSelectedUser = (infoUser: any, index: number) => {
           <v-card>
             <v-card-text>
               <v-card-text class="text-center"><b>{{ PostStore.info.id }}</b></v-card-text>
-              <v-text-field
-                  label="Коментар"
-                  variant="outlined"
-                  v-model="sharedMessage.text"
-
-              >
-              </v-text-field>
+              <!--              <v-text-field-->
+              <!--                  label="Коментар"-->
+              <!--                  variant="outlined"-->
+              <!--                  v-model="sharedMessage.text"-->
+              <!--              >-->
+              <!--              </v-text-field>-->
 
               <v-text-field
                   label="Дата здачі"
@@ -365,6 +369,12 @@ const isSelectedUser = (infoUser: any, index: number) => {
 
               >
               </v-text-field>
+              <ion-item class="item-textarea-comment">
+                <ion-textarea :rows="1" placeholder="Коментар" :auto-grow="true" v-model="sharedMessage.text">
+
+                </ion-textarea>
+              </ion-item>
+
 
               <div class="btnShare">
                 <v-btn class="btn_share_post" @click="sharePost()">
@@ -387,7 +397,6 @@ const isSelectedUser = (infoUser: any, index: number) => {
 <style scoped>
 ion-col {
   background-color: #fff;
-  outline: 1px solid grey;
   height: 48.5px;
   border-radius: 30px;
   text-align: center;
@@ -422,5 +431,10 @@ ion-col {
   outline: 1px solid grey;
   margin: 0 10px;
   border-radius: 15px;
+}
+
+.item-textarea-comment {
+  border: 1px solid #afafaf;
+  margin-bottom: 20px;
 }
 </style>
