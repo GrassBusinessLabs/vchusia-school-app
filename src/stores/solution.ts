@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {UpdateSolution} from "@/models/Solution";
+import {MarkSolution, UpdateSolution} from "@/models/Solution";
 import SolutionApi from "@/http/modules/solution"
 interface State {
     gpId: number,
@@ -8,7 +8,12 @@ interface State {
     solutionInfo: any,
     spId: number,
     solutionsUsers: any,
-    imageSolutionSize: object
+    imageSolutionSize: object,
+    nowPoint: number,
+    submittedSolutionsId: any [],
+    complettedSolutions: any [],
+    nowSolution: any [],
+    imageURL: string | null
 }
 
 export const solution = defineStore('solution', {
@@ -19,7 +24,12 @@ export const solution = defineStore('solution', {
         solutionInfo: [],
         solutionsUsers: [],
         spId: 0,
-        imageSolutionSize: {width: 0, height: 0}
+        imageSolutionSize: {width: 0, height: 0},
+        nowPoint: 0,
+        submittedSolutionsId: [],
+        complettedSolutions: [],
+        nowSolution: [],
+        imageURL: null
     }),
 
     actions: {
@@ -71,6 +81,7 @@ export const solution = defineStore('solution', {
         async findSolutionById(solutionId: number): Promise <void>{
             try {
                 const response = await SolutionApi.findSolutionById(solutionId)
+                this.nowSolution = response
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -81,7 +92,9 @@ export const solution = defineStore('solution', {
         async findSolutionsUsers(msgId: number): Promise <void> {
             try {
                 const response = await SolutionApi.findSolutionsUsers(msgId)
-                this.solutionsUsers = response.items
+                this.solutionsUsers = response.solutions
+                this.submittedSolutionsId = (this.solutionsUsers.filter(solution => solution.status === 'SUBMITTED').map(sol => sol.id))
+                this.complettedSolutions = this.solutionsUsers.filter(solution => solution.status === 'COMPLETED')
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -94,6 +107,16 @@ export const solution = defineStore('solution', {
                 this.solutionId = response.id
                 console.log(response)
             } catch (e) {
+                console.log(e)
+            }
+        },
+
+        async markSolution(solutionId: number, status: string, body: MarkSolution): Promise <void> {
+            try {
+                const response = await SolutionApi.markSolution(solutionId, status, body)
+                console.log(response)
+            }
+            catch (e) {
                 console.log(e)
             }
         }

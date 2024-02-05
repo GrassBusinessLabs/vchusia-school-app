@@ -1,11 +1,11 @@
-import { UpdateSolution } from "@/models/Solution";
+import { UpdateSolution, MarkSolution } from "@/models/Solution";
 import axios from "../api";
 import {solution} from "@/stores/solution";
 
 
 function attachImage() {
     let solutionId = solution().solutionInfo.id
-    return axios.post(`/solution/${solutionId}/addImage`, solution().file)
+    return axios.post(`/solution/9/addImage`, solution().file)
 }
 
 function updateStatus(solutionId: number) {
@@ -37,6 +37,9 @@ function findSolutionByMessageId(msgId: number) {
     return axios.get(`/solution/message/${msgId}`)
 }
 
+function markSolution(solutionId: number, status: string, body: MarkSolution) {
+    return axios.put(`/solution/${solutionId}/mark?status=${status}`, body)
+}
 export default {
     attachImage,
     updateStatus,
@@ -45,6 +48,7 @@ export default {
     deleteImage,
     findSolutionById,
     findSolutionsUsers,
-    findSolutionByMessageId
+    findSolutionByMessageId,
+    markSolution
 
 }

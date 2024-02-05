@@ -17,10 +17,10 @@
       <div class="d-flex justify-center container_canvas w-100">
         <div class="d-flex justify-center align-center w-100 h-100 position-absolute">
           <img class="img_canvas"
-               src="https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png"
+               :src='SolutionStore.imageURL'
                alt="Img"
 
-          >
+          />
         </div>
 
         <canvas class="canvas" ref="canvas" :width="canvasSize.width" :height="canvasSize.height"

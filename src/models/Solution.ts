@@ -4,3 +4,7 @@ export interface SaveSolution {
 export interface UpdateSolution {
     description: string
 }
+
+export interface MarkSolution {
+    points: number
+}
