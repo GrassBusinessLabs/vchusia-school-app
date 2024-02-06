@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput} from "@ionic/vue";
+import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput, onIonViewWillEnter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {computed, reactive, ref} from "vue";
 import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
@@ -29,7 +29,17 @@ const valueSliderPoint = ref(0)
 const findSolutionsUsers = async () => {
   await SolutionStore.findSolutionsUsers(MessageStore.msgId)
 }
-findSolutionsUsers()
+
+onIonViewWillEnter(() => {
+  findSolutionsUsers()
+})
+
+const findPointsUsers = () => {
+  const solutionsId = SolutionStore.complettedSolutions.map(point => point.id)
+  solutionsId.forEach(solutionId => {
+    SolutionStore.findSolutionById(solutionId)
+  })
+}
 
 const findSolutionById = async () => {
   await SolutionStore.findSolutionById(SolutionStore.submittedSolutionsId[0])
@@ -73,13 +83,14 @@ const displayText = computed(() => {
           <div class="solutions_groups">
             <v-list class="pb-3">
 
-              <v-list-item class="solution_group_item" @click="group_solution = !group_solution, findSolutionById()" >
+              <v-list-item class="solution_group_item" @click="group_solution = !group_solution, findSolutionById()">
                 <v-list-item-title class=" ml-2">
-                  Виконані, не перевірені
+                  Очікують перевірки
                 </v-list-item-title>
 
                 <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.submittedSolutionsId.length" v-if="SolutionStore.submittedSolutionsId.length > 0">
+                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.submittedSolutionsId.length"
+                            v-if="SolutionStore.submittedSolutionsId.length > 0">
                     <img src="../../assets/Vchusia.png" alt="Avatar">
                   </v-avatar>
                   <div v-else>
@@ -90,23 +101,28 @@ const displayText = computed(() => {
 
               <v-list-item class="solution_group_item" @click="studentsListDraft = !studentsListDraft">
                 <v-list-item-title class=" ml-2">
-                  Призначені, не виконані
+                  Очікуються
                 </v-list-item-title>
 
-                <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in 2">
+                <v-list-item-subtitle >
+                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.draftReturnSolutions.length" v-if="SolutionStore.draftReturnSolutions.length > 0">
                     <img src="../../assets/Vchusia.png" alt="Avatar">
                   </v-avatar>
+
+                  <div v-else>
+                    <h2>Немає очікуваних</h2>
+                  </div>
                 </v-list-item-subtitle>
               </v-list-item>
 
-              <v-list-item class="solution_group_item" @click="studentsChecked = !studentsChecked">
+              <v-list-item class="solution_group_item" @click="studentsChecked = !studentsChecked, findPointsUsers()">
                 <v-list-item-title class=" ml-2">
                   Перевірені
                 </v-list-item-title>
 
                 <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.complettedSolutions.length" v-if="SolutionStore.complettedSolutions.length > 0">
+                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.complettedSolutions.length"
+                            v-if="SolutionStore.complettedSolutions.length > 0">
                     <img src="../../assets/Vchusia.png" alt="Avatar">
                   </v-avatar>
 
@@ -175,15 +191,14 @@ const displayText = computed(() => {
 
               </div>
 
-              <div class="solution_img_container" >
-                <div class="images_block"  v-for="i of SolutionStore.nowSolution.images">
+              <div class="solution_img_container">
+                <div class="images_block" v-for="i of SolutionStore.nowSolution.images">
                   <v-img class="solution_img" :src='image_URL+i.name' alt="Solution"
-                         @click="imageChange = !imageChange, SolutionStore.imageURL = image_URL+i.name" > </v-img>
+                         @click="imageChange = !imageChange, SolutionStore.imageURL = image_URL+i.name"></v-img>
                   <!--                <img class="solution_img" src="../../assets/Vchusia.png" alt="Solution"-->
                   <!--                     @click="imageChange = !imageChange">-->
                 </div>
               </div>
-
 
 
               <div class="result_solution">
@@ -225,11 +240,11 @@ const displayText = computed(() => {
                   </v-slider>
                 </div>
 
-                <v-btn class="w-100 mt-4" color="#090909" @click="studentSelected = false, markSolution('c')">
+                <v-btn class="w-100 mt-4" color="#090909" @click="studentSelected = false, markSolution('c'), findSolutionsUsers()">
                   Виставити оцінку
                 </v-btn>
 
-                <v-btn class="w-100 mt-4" color="grey" @click="studentSelected = false, markSolution('r')">
+                <v-btn class="w-100 mt-4" color="grey" @click="studentSelected = false, markSolution('r'), findSolutionsUsers()">
                   Повернути
                 </v-btn>
 
@@ -262,34 +277,38 @@ const displayText = computed(() => {
         <v-bottom-sheet v-model="studentsListDraft">
           <v-card height="600">
             <v-list class="students_list">
+              <div v-for="i of SolutionStore.solutionsUsers" v-if="SolutionStore.draftReturnSolutions.length > 0">
+
+                <v-list-item class="item_student" v-if="i.status === 'DRAFT' || i.status === 'RETURNED'">
+                  <div class="d-flex align-center justify-space-between">
+
+                    <div class="d-flex align-center">
+                      <v-avatar class="border ma-2">
+                        <img src="../../assets/Vchusia.png" alt="Avatar">
+                      </v-avatar>
+
+                      <div>
+                        <v-list-item-title>
+                          {{ i.userName }}
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle>
+                          {{ i.status }}
+                        </v-list-item-subtitle>
+                      </div>
 
 
-           <div v-for="i of SolutionStore.solutionsUsers">
-             <v-list-item class="item_student" v-if="i.status === 'DRAFT'">
+                    </div>
 
-               <div class="d-flex align-center justify-space-between">
 
-                 <div class="d-flex align-center">
-                   <v-avatar class="border ma-2">
-                     <img src="../../assets/Vchusia.png" alt="Avatar">
-                   </v-avatar>
-                   <v-list-item-title>
-                     {{ i.userName }}
-                   </v-list-item-title>
+                  </div>
+                </v-list-item>
 
-                   <v-list-item-subtitle>
-                     {{ i.status }}
-                   </v-list-item-subtitle>
-                 </div>
+              </div>
 
-                 <div>
-                   <p><b>4/5</b></p>
-                 </div>
-
-               </div>
-             </v-list-item>
-           </div>
-
+              <div class="text-center" v-else>
+                <h2>Немає очікуваних</h2>
+              </div>
 
             </v-list>
           </v-card>
@@ -301,29 +320,38 @@ const displayText = computed(() => {
           <v-card height="600">
 
             <v-list>
-              <div v-for="i of SolutionStore.solutionsUsers">
-                <v-list-item v-if="i.status === 'COMPLETED'">
+              <div v-for="(student, studentIndex) in SolutionStore.solutionsUsers"
+                   v-if="SolutionStore.complettedSolutions.length > 0">
+                <v-list-item v-if="student.status === 'COMPLETED'" class="item_student">
                   <div class="d-flex align-center justify-space-between">
 
                     <div class="d-flex align-center">
                       <v-avatar class="border ma-2">
                         <img src="../../assets/Vchusia.png" alt="Avatar">
                       </v-avatar>
-                      <v-list-item-title>
-                        {{ i.userName }}
-                      </v-list-item-title>
 
-                      <v-list-item-subtitle>
-                        {{ i.status }}
-                      </v-list-item-subtitle>
+                      <div>
+                        <v-list-item-title>
+                          {{ student.userName }}
+                        </v-list-item-title>
+
+                        <v-list-item-subtitle>
+                          {{ student.status }}
+                        </v-list-item-subtitle>
+                      </div>
+
                     </div>
 
                     <div>
-                      <p><b>4/5</b></p>
+                      <p><b>{{ SolutionStore.pointsCompletted[studentIndex] }}/5</b></p>
                     </div>
 
                   </div>
                 </v-list-item>
+              </div>
+
+              <div class="text-center" v-else>
+                <h2>Немає рішень</h2>
               </div>
             </v-list>
           </v-card>
@@ -416,6 +444,7 @@ const displayText = computed(() => {
   border-radius: 15px;
   width: 95%;
   margin: 20px auto;
+
 }
 
 .students_list {
@@ -433,7 +462,8 @@ const displayText = computed(() => {
   display: flex;
   align-items: center;
 }
-.images_block{
+
+.images_block {
   width: 30%;
 }
 </style>

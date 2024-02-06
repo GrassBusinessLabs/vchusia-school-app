@@ -12,8 +12,10 @@ interface State {
     nowPoint: number,
     submittedSolutionsId: any [],
     complettedSolutions: any [],
+    draftReturnSolutions: any[],
     nowSolution: any [],
-    imageURL: string | null
+    imageURL: string | null,
+    pointsCompletted: any []
 }
 
 export const solution = defineStore('solution', {
@@ -28,8 +30,10 @@ export const solution = defineStore('solution', {
         nowPoint: 0,
         submittedSolutionsId: [],
         complettedSolutions: [],
+        draftReturnSolutions: [],
         nowSolution: [],
-        imageURL: null
+        imageURL: null,
+        pointsCompletted: []
     }),
 
     actions: {
@@ -79,8 +83,10 @@ export const solution = defineStore('solution', {
         },
 
         async findSolutionById(solutionId: number): Promise <void>{
+            this.pointsCompletted = []
             try {
                 const response = await SolutionApi.findSolutionById(solutionId)
+                this.pointsCompletted.push(response.points)
                 this.nowSolution = response
                 console.log(response)
             } catch (e) {
@@ -95,6 +101,7 @@ export const solution = defineStore('solution', {
                 this.solutionsUsers = response.solutions
                 this.submittedSolutionsId = (this.solutionsUsers.filter(solution => solution.status === 'SUBMITTED').map(sol => sol.id))
                 this.complettedSolutions = this.solutionsUsers.filter(solution => solution.status === 'COMPLETED')
+                this.draftReturnSolutions = this.solutionsUsers.filter(solution => solution.status === 'DRAFT' || solution.status === 'RETURNED')
                 console.log(response)
             } catch (e) {
                 console.log(e)

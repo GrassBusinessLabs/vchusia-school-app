@@ -21,13 +21,9 @@ const pagination = {
   count: 10
 }
 
-// async function getFeed() {
-//   await PostStore.getPosts(pagination, GroupStore.groupId, CourseStore.courseId);
-// }
 async function userMessages() {
-  await MessageStore.userMessages()
+  await MessageStore.userMessages(CourseStore.courseId, GroupStore.idGroup)
 }
-//Потрібно буде вказати groupID, courseID
 
 onIonViewWillEnter(() => {
   userMessages();
