@@ -31,7 +31,6 @@ onIonViewWillEnter(() => {
     </v-list>
   </ion-content>
 
-
 </ion-page>
 </template>
 

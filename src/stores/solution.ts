@@ -41,6 +41,7 @@ export const solution = defineStore('solution', {
             try {
                 const response = await SolutionApi.attachImage()
                 console.log(response)
+                await this.findSolutionById(this.solutionId)
             } catch (e) {
                 console.log(e)
             }

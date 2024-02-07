@@ -139,7 +139,7 @@ const randomColor = (authorName: any) => {
 <!--      </div>-->
       <div>
         <v-list>
-          <v-list-item v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i, MessagesStore.msgId = MessagesStore.thisMessage.id ,$router.replace('/group-info-student/post')">
+          <v-list-item class="item-feed" v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i, MessagesStore.msgId = MessagesStore.thisMessage.id ,$router.replace('/group-info-student/post')">
             <v-list-item-title>
               {{i.text}}
             </v-list-item-title>
@@ -211,6 +211,18 @@ const randomColor = (authorName: any) => {
   font-weight: bold;
   font-size: 20px;
   color: #fff;
+}
+
+.item-feed{
+  border-radius: 15px;
+  margin: 15px;
+  padding: 5px;
+  color: grey;
+  background: rgb(255, 251, 98);
+  background: linear-gradient(96deg, rgba(255, 251, 98, 0.4206057422969187) 0%, rgba(255, 243, 186, 1) 100%);
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
 }
 </style>
 

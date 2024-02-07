@@ -313,7 +313,7 @@ const isSelectedUser = (infoUser: any, index: number) => {
       <div>
         <v-bottom-sheet fullscreen v-model="userSharePost">
           <v-card>
-            <ion-content>
+            <ion-content @click="console.log(sharedStudents)">
               <div class="mt-6" v-for="i of GroupStore.usersInGroup">
                 <div v-for="(j, index) of i">
                   <v-list>

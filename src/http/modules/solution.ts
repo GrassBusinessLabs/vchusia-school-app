@@ -4,8 +4,8 @@ import {solution} from "@/stores/solution";
 
 
 function attachImage() {
-    let solutionId = solution().solutionInfo.id
-    return axios.post(`/solution/9/addImage`, solution().file)
+    let solutionId = solution().solutionId
+    return axios.post(`/solution/${solutionId}/addImage`, solution().file)
 }
 
 function updateStatus(solutionId: number) {
@@ -17,7 +17,6 @@ function updateSolution(body: UpdateSolution, solutionId: number) {
 }
 
 function deleteSolution(solutionId: number) {
-
     return axios.delete(`/solution/${solutionId}`)
 }
 

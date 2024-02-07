@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {IonPage, IonContent, IonFooter, IonTextarea, IonItem} from "@ionic/vue";
+import {IonPage, IonContent, IonFooter, IonTextarea, IonItem, onIonViewWillEnter} from "@ionic/vue";
 import {solution} from "@/stores/solution";
 import {post} from "@/stores/post"
 import CropperComponent from "@/components/parts/CropperComponent.vue";
@@ -13,7 +13,7 @@ const SolutionStore = solution()
 const check = ref(false)
 
 let descriptionSolution: SaveSolution = reactive({
-  description: ''
+  description: SolutionStore.nowSolution.description
 })
 
 const formatDate = (dateString: any) => {
@@ -40,12 +40,15 @@ function isFutureDate(targetDate: any) {
 const findSolutionByMsgId = async () => {
   await SolutionStore.findSolutionByMessageId(MessageStore.msgId)
 }
-findSolutionByMsgId()
+onIonViewWillEnter(() => {
+  findSolutionByMsgId()
+  findSolutionById()
+})
 
 const findSolutionById = async () => {
   await SolutionStore.findSolutionById(SolutionStore.solutionId)
 }
-findSolutionById()
+
 
 const updateStatus = async () => {
   await SolutionStore.updateStatus(SolutionStore.solutionId);
@@ -53,7 +56,8 @@ const updateStatus = async () => {
 
 const updateSolution = async () => {
   await SolutionStore.updateSolution(descriptionSolution, SolutionStore.solutionId);
-  descriptionSolution.description = SolutionStore.solutionInfo.description;
+  await findSolutionById()
+
 };
 
 
@@ -71,7 +75,6 @@ const deleteSolution = async () => {
         <div class="infoPost">
 
           <div class="title_post">
-<!--            <h1>{{ MessageStore.thisMessage.text }}</h1>-->
             <p style="color:grey">Оцінка за завдання {{ MessageStore.thisMessage.points }}</p>
           </div>
 
@@ -134,7 +137,8 @@ const deleteSolution = async () => {
         </div>
 
         <div class="accept_task">
-          <v-btn class="btnAcceptTask" @click="updateStatus()">
+          <v-btn class="btnAcceptTask" @click="updateStatus(), displayFooter = !displayFooter
+">
             Відправити на перевірку
           </v-btn>
         </div>
