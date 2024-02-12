@@ -12,9 +12,8 @@ const MessageStore = message()
 const SolutionStore = solution()
 const check = ref(false)
 
-let descriptionSolution: SaveSolution = reactive({
-  description: SolutionStore.nowSolution.description
-})
+const descriptionSolution = ref(SolutionStore.nowSolution.description);
+
 
 const formatDate = (dateString: any) => {
   const options = {
@@ -40,10 +39,8 @@ function isFutureDate(targetDate: any) {
 const findSolutionByMsgId = async () => {
   await SolutionStore.findSolutionByMessageId(MessageStore.msgId)
 }
-onIonViewWillEnter(() => {
-  findSolutionByMsgId()
-  findSolutionById()
-})
+
+
 
 const findSolutionById = async () => {
   await SolutionStore.findSolutionById(SolutionStore.solutionId)
@@ -65,6 +62,13 @@ const displayFooter = ref(false)
 const deleteSolution = async () => {
   await SolutionStore.deleteSolution(SolutionStore.solutionInfo.id)
 }
+
+onMounted(async() => {
+  await findSolutionByMsgId()
+  await findSolutionById()
+  descriptionSolution.value = SolutionStore.nowSolution.description
+
+})
 </script>
 
 <template>
@@ -128,7 +132,7 @@ const deleteSolution = async () => {
 
         <div class="d-flex align-center container_comment_solution">
           <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Коментар"
-                        v-model="descriptionSolution.description"></v-text-field>
+                        v-model="descriptionSolution"></v-text-field>
         </div>
 
 

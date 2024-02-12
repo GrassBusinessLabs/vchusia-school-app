@@ -43,7 +43,7 @@
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'" class="ion-no-border">
+      <ion-header v-if="route.path !== '/tape/tape' && route.path !== '/tape/task' && route.path !== '/main/feed'" class="ion-no-border">
         <div>
           <v-toolbar
               dark

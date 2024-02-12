@@ -84,16 +84,26 @@ export const solution = defineStore('solution', {
         },
 
         async findSolutionById(solutionId: number): Promise <void>{
-            this.pointsCompletted = []
             try {
                 const response = await SolutionApi.findSolutionById(solutionId)
-                this.pointsCompletted.push(response.points)
                 this.nowSolution = response
                 console.log(response)
             } catch (e) {
                 console.log(e)
             }
         },
+
+        async findSolutionByIdPoints(solutionId: number): Promise <void> {
+            this.pointsCompletted = []
+            try {
+                const response = await SolutionApi.findSolutionById(solutionId)
+                this.pointsCompletted.push(response.points)
+                console.log(response)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+
 
 
         async findSolutionsUsers(msgId: number): Promise <void> {

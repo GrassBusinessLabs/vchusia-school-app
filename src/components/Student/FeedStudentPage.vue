@@ -9,6 +9,8 @@ import {solution} from "@/stores/solution";
 import Solution from "@/http/modules/solution";
 import {auth} from "@/stores/auth";
 import {message} from "@/stores/message";
+import router from "@/router";
+import {computed} from "vue";
 
 const readPost = ref(false)
 const PostStore = post()
@@ -62,6 +64,32 @@ let virtualList: UseVirtualListReturn<any>;
 virtualList = useVirtualList(feedPosts, {itemSize: 70});
 
 
+const selectMessage = (message: any) => {
+  MessagesStore.thisMessage = message;
+  MessagesStore.msgId = message.id;
+  router.replace('/group-info-student/post');
+}
+
+const groupedMessages = computed(() => {
+  const grouped = {};
+  MessagesStore.allMessages.forEach(message => {
+    const date = new Date(message.updatedDate).toLocaleDateString();
+    if (!grouped[date]) {
+      grouped[date] = [];
+    }
+    grouped[date].push(message);
+  });
+
+  const sortedGrouped = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+  return sortedGrouped.reduce((acc, date) => {
+    acc[date] = grouped[date];
+    return acc;
+  }, {});
+
+})
+
+
 function isFutureDate(targetDate) {
   const currentDate = new Date();
   const targetDateTime = new Date(targetDate);
@@ -70,18 +98,38 @@ function isFutureDate(targetDate) {
 }
 
 const formatDate = (dateString) => {
-  const options = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  };
+  const targetDate = new Date(dateString);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
 
-  const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
-  return formattedDate;
+  if (isFutureDate(dateString)) {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return targetDate.toLocaleString('ua-UA', options);
+  } else if (targetDate.toDateString() === today.toDateString()) {
+    return 'Сьогодні';
+  } else if (targetDate.toDateString() === yesterday.toDateString()) {
+    return 'Вчора';
+  } else {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return targetDate.toLocaleString('ua-UA', options);
+  }
 };
+
 
 
 const userInitials = (item?: any) => {
@@ -95,6 +143,7 @@ let color: any
 const randomColor = (authorName: any) => {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
+
 
 </script>
 
@@ -139,12 +188,25 @@ const randomColor = (authorName: any) => {
 <!--      </div>-->
       <div>
         <v-list>
-          <v-list-item class="item-feed" v-for="i of MessagesStore.allMessages" @click="MessagesStore.thisMessage = i, MessagesStore.msgId = MessagesStore.thisMessage.id ,$router.replace('/group-info-student/post')">
-            <v-list-item-title>
-              {{i.text}}
-            </v-list-item-title>
-          </v-list-item>
+          <template v-for="(messages, date) in groupedMessages" :key="date">
+            <v-list-item
+                class="subheader overflow-hidden ma-0"
+            >
+              <v-list-item-title>{{ date }}</v-list-item-title>
+
+            </v-list-item>
+            <v-list-item
+                v-for="message in messages"
+                :key="message.id"
+                class="item-feed"
+                @click="selectMessage(message)"
+            >
+              <v-list-item-title>{{ message.text }}</v-list-item-title>
+            </v-list-item>
+          </template>
         </v-list>
+
+
       </div>
 
 
@@ -224,5 +286,6 @@ const randomColor = (authorName: any) => {
   justify-content: space-between;
   overflow: hidden;
 }
+
 </style>
 

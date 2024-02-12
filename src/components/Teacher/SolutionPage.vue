@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput, onIonViewWillEnter} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
 import {solution} from "@/stores/solution";
 import {message} from "@/stores/message";
@@ -14,6 +14,7 @@ const studentsListDraft = ref(false)
 const studentSelected = ref(false)
 const studentsChecked = ref(false)
 const imageChange = ref(false)
+const changeComplettedSolution = ref(false)
 const image_URL = 'https://vchusia.grassbusinesslabs.tk/static/'
 const points = reactive({
   0: '',
@@ -23,30 +24,40 @@ const points = reactive({
   4: '4',
   5: '5',
 })
-const valueSliderPoint = ref(0)
+let valueSliderPoint = ref(0)
 
+const viewMode = ref(false)
 
 const findSolutionsUsers = async () => {
   await SolutionStore.findSolutionsUsers(MessageStore.msgId)
 }
 
-onIonViewWillEnter(() => {
+onMounted(() => {
   findSolutionsUsers()
 })
 
 const findPointsUsers = () => {
+
   const solutionsId = SolutionStore.complettedSolutions.map(point => point.id)
   solutionsId.forEach(solutionId => {
-    SolutionStore.findSolutionById(solutionId)
+    SolutionStore.findSolutionByIdPoints(solutionId)
   })
+
 }
 
 const findSolutionById = async () => {
   await SolutionStore.findSolutionById(SolutionStore.submittedSolutionsId[0])
 }
+
+const findCompletedSolution = async (studentIndex: number) => {
+  await SolutionStore.findSolutionById(SolutionStore.complettedSolutions[studentIndex].id)
+  changeComplettedSolution.value = true
+
+}
 const markSolution = async (status: string) => {
   console.log(SolutionStore.nowPoint)
   await SolutionStore.markSolution(SolutionStore.submittedSolutionsId[0], status, {points: SolutionStore.nowPoint})
+  findSolutionsUsers()
 }
 
 const displayText = computed(() => {
@@ -64,30 +75,25 @@ const displayText = computed(() => {
       <div class="container">
 
         <div class="infoPost">
-
           <div class="title_post">
             <p style="color:grey">Оцінка за завдання {{ MessageStore.thisMessage.points }}</p>
           </div>
-
           <div class="deadline_points">
             <p>Виконати до {{ MessageStore.thisMessage.deadline }}</p>
           </div>
-
           <div class="description_task">
             <p>{{ MessageStore.thisMessage.text }}</p>
           </div>
-
         </div>
 
         <div>
           <div class="solutions_groups">
             <v-list class="pb-3">
-
-              <v-list-item class="solution_group_item" @click="group_solution = !group_solution, findSolutionById()">
+              <v-list-item class="solution_group_item"
+                           @click="group_solution = !group_solution, findSolutionById(), viewMode = false">
                 <v-list-item-title class=" ml-2">
                   Очікують перевірки
                 </v-list-item-title>
-
                 <v-list-item-subtitle>
                   <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.submittedSolutionsId.length"
                             v-if="SolutionStore.submittedSolutionsId.length > 0">
@@ -103,12 +109,11 @@ const displayText = computed(() => {
                 <v-list-item-title class=" ml-2">
                   Очікуються
                 </v-list-item-title>
-
-                <v-list-item-subtitle >
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.draftReturnSolutions.length" v-if="SolutionStore.draftReturnSolutions.length > 0">
+                <v-list-item-subtitle>
+                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.draftReturnSolutions.length"
+                            v-if="SolutionStore.draftReturnSolutions.length > 0">
                     <img src="../../assets/Vchusia.png" alt="Avatar">
                   </v-avatar>
-
                   <div v-else>
                     <h2>Немає очікуваних</h2>
                   </div>
@@ -119,13 +124,11 @@ const displayText = computed(() => {
                 <v-list-item-title class=" ml-2">
                   Перевірені
                 </v-list-item-title>
-
                 <v-list-item-subtitle>
                   <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.complettedSolutions.length"
                             v-if="SolutionStore.complettedSolutions.length > 0">
                     <img src="../../assets/Vchusia.png" alt="Avatar">
                   </v-avatar>
-
                   <div v-else>
                     <h2>Немає рішень</h2>
                   </div>
@@ -137,25 +140,21 @@ const displayText = computed(() => {
 
           <v-list>
             <v-list-item v-for="i in 5" class="comment_item">
-
               <div class="d-flex pa-3">
                 <div class="ma-2">
                   <v-avatar>
                     <img src="../../assets/Vchusia.png" alt="">
                   </v-avatar>
                 </div>
-
                 <div class="ma-2">
                   <v-list-item-title>
                     Коментар
                   </v-list-item-title>
-
                   <v-list-item-subtitle>
                     Текст коментару
                   </v-list-item-subtitle>
                 </div>
               </div>
-
 
             </v-list-item>
           </v-list>
@@ -174,7 +173,6 @@ const displayText = computed(() => {
               placeholder="Напишіть коментар"
           >
           </ion-textarea>
-
         </ion-item>
         <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
       </div>
@@ -182,27 +180,17 @@ const displayText = computed(() => {
       <div class="text-center">
         <v-bottom-sheet v-model="group_solution">
           <v-card height="700">
-
-
             <div class="solution_student" v-if="SolutionStore.submittedSolutionsId.length > 0">
               <div class="pb-3 ma-6">
                 <p>{{ SolutionStore.nowSolution.description }}</p>
-
-
               </div>
-
               <div class="solution_img_container">
                 <div class="images_block" v-for="i of SolutionStore.nowSolution.images">
                   <v-img class="solution_img" :src='image_URL+i.name' alt="Solution"
                          @click="imageChange = !imageChange, SolutionStore.imageURL = image_URL+i.name"></v-img>
-                  <!--                <img class="solution_img" src="../../assets/Vchusia.png" alt="Solution"-->
-                  <!--                     @click="imageChange = !imageChange">-->
                 </div>
               </div>
-
-
               <div class="result_solution">
-
                 <div class="mark_solution">
                   <div class="comment_for_solution">
                     <ion-item class="w-100">
@@ -215,8 +203,6 @@ const displayText = computed(() => {
                       </ion-textarea>
                     </ion-item>
                   </div>
-
-
                 </div>
 
                 <div>
@@ -224,8 +210,6 @@ const displayText = computed(() => {
                     <p><b class="font-weight-bold point"
                           :class="{ 'no_point': displayText === 'Без оцінки' }">{{ displayText }}</b></p>
                   </div>
-
-
                   <v-slider
                       :ticks="points"
                       :max="5"
@@ -236,26 +220,25 @@ const displayText = computed(() => {
                       v-model="valueSliderPoint"
 
                   >
-
                   </v-slider>
                 </div>
 
-                <v-btn class="w-100 mt-4" color="#090909" @click="studentSelected = false, markSolution('c'), findSolutionsUsers()">
-                  Виставити оцінку
-                </v-btn>
-
-                <v-btn class="w-100 mt-4" color="grey" @click="studentSelected = false, markSolution('r'), findSolutionsUsers()">
-                  Повернути
-                </v-btn>
-
+                <div>
+                  <v-btn class="w-100 mt-4" color="#090909"
+                         @click="studentSelected = false, markSolution('c'), group_solution = !group_solution">
+                    Виставити оцінку
+                  </v-btn>
+                  <v-btn class="w-100 mt-4" color="grey"
+                         @click="studentSelected = false, markSolution('r'), group_solution = !group_solution">
+                    Повернути
+                  </v-btn>
+                </div>
               </div>
-
             </div>
 
             <div class="text-center" v-else>
               <h1>Рішень немає</h1>
             </div>
-
 
           </v-card>
         </v-bottom-sheet>
@@ -265,10 +248,7 @@ const displayText = computed(() => {
       <div class="text-center">
         <v-bottom-sheet v-model="imageChange" fullscreen>
           <v-card class="d-flex justify-center">
-
             <DrawingCanvas/>
-
-
           </v-card>
         </v-bottom-sheet>
       </div>
@@ -286,7 +266,6 @@ const displayText = computed(() => {
                       <v-avatar class="border ma-2">
                         <img src="../../assets/Vchusia.png" alt="Avatar">
                       </v-avatar>
-
                       <div>
                         <v-list-item-title>
                           {{ i.userName }}
@@ -322,7 +301,8 @@ const displayText = computed(() => {
             <v-list>
               <div v-for="(student, studentIndex) in SolutionStore.solutionsUsers"
                    v-if="SolutionStore.complettedSolutions.length > 0">
-                <v-list-item v-if="student.status === 'COMPLETED'" class="item_student">
+                <v-list-item v-if="student.status === 'COMPLETED'" class="item_student"
+                             @click="findCompletedSolution(studentIndex)">
                   <div class="d-flex align-center justify-space-between">
 
                     <div class="d-flex align-center">
@@ -354,6 +334,69 @@ const displayText = computed(() => {
                 <h2>Немає рішень</h2>
               </div>
             </v-list>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
+
+      <div class="text-center">
+        <v-bottom-sheet v-model="changeComplettedSolution">
+          <v-card height="600">
+            <div>
+
+              <div class="pb-3 ma-6">
+                <p>{{ SolutionStore.nowSolution.description }}</p>
+              </div>
+
+              <div class="solution_img_container">
+                <div class="images_block" v-for="i of SolutionStore.nowSolution.images">
+                  <v-img class="solution_img" :src='image_URL+i.name' alt="Solution"
+                         @click="imageChange = !imageChange, SolutionStore.imageURL = image_URL+i.name"></v-img>
+                </div>
+              </div>
+
+              <div class="mark_solution">
+                <div class="comment_for_solution">
+                  <ion-item class="w-100">
+                    <ion-textarea
+                        :rows="1"
+                        :auto-grow="true"
+                        placeholder="Напишіть коментар"
+
+                    >
+                    </ion-textarea>
+                  </ion-item>
+                </div>
+              </div>
+
+              <div>
+                <div class="d-flex justify-center ma-5 point-content">
+                  <p><b class="font-weight-bold point">{{ SolutionStore.nowSolution.points }}</b></p>
+                </div>
+
+
+                <v-slider
+                    :ticks="points"
+                    :max="5"
+                    :min="0"
+                    step="1"
+                    show-ticks="always"
+                    tick-size="4"
+                    v-model="SolutionStore.nowSolution.points"
+
+                >
+
+                </v-slider>
+              </div>
+
+              <div class="w-75 mx-auto ma-5">
+                <v-btn class="w-100 mt-4" color="grey">
+                  Редагувати
+                </v-btn>
+              </div>
+
+
+            </div>
           </v-card>
         </v-bottom-sheet>
       </div>
