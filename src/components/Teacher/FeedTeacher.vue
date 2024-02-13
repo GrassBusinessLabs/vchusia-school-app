@@ -4,8 +4,10 @@ import {computed, ref} from "vue";
 import {message} from "@/stores/message";
 import router from '../../router/index'
 import {data} from "browserslist";
+import {auth} from "@/stores/auth";
 const MessageStore = message()
 const tab = ref(null)
+const AuthStore = auth()
 const userMessages = async () => {
   await MessageStore.userMessages()
 }
@@ -40,7 +42,12 @@ const groupedMessages = computed(() => {
 })
 
 const formatDate = (dateString: any) => {
-  const date = new Date(Date.parse(dateString));
+  const parts = dateString.split(".");
+  const year = parseInt(parts[2]);
+  const month = parseInt(parts[1]) - 1; // Місяць є нумерований з нуля
+  const day = parseInt(parts[0]);
+
+  const date = new Date(year, month, day);
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -62,12 +69,6 @@ const formatDate = (dateString: any) => {
   }
 };
 
-
-function isFutureDate(targetDate: any) {
-  const currentDate = new Date();
-  const targetDateTime = new Date(targetDate);
-  return targetDateTime > currentDate;
-}
 
 </script>
 
@@ -91,46 +92,23 @@ function isFutureDate(targetDate: any) {
   </ion-header>
   <ion-content>
     <v-card class="d-flex flex-column align-center">
-
       <v-card-text class="w-100">
-
-<!--            <v-list class="list_feed">-->
-<!--              <v-list-item v-for="i in MessageStore.allMessages" class="item_list_feed" @click="MessageStore.thisMessage = i, MessageStore.msgId = i.id ,$router.replace('/main/solutions')">-->
-
-<!--                <v-list-item-title>-->
-<!--                  {{ i.text }}-->
-<!--                </v-list-item-title>-->
-
-<!--                <v-list-item-action>-->
-<!--                  {{ i.deadline }}-->
-<!--                </v-list-item-action>-->
-
-<!--              </v-list-item>-->
-<!--            </v-list>-->
             <v-list class="list_feed">
-
               <template  class="subheader_date" v-for="(messages, date) in groupedMessages">
-                <v-subheader>{{formatDate(date)}}</v-subheader>
+                  <p>{{ formatDate(date) }}</p>
                 <v-list-item
                     v-for="message in messages"
                     :key="message.id"
                     class="item_list_feed"
-                    @click="selectMessage(message)"
+                    @click="selectMessage(message), AuthStore.activePage = 'Рішення'"
                 >
                   <v-list-item-title>{{ message.text }}</v-list-item-title>
-
                 </v-list-item>
               </template>
             </v-list>
-
-
-
       </v-card-text>
     </v-card>
-
-
   </ion-content>
-
 </ion-page>
 </template>
 
@@ -155,4 +133,5 @@ function isFutureDate(targetDate: any) {
 .filterItem{
   font-weight: 700;
 }
+
 </style>

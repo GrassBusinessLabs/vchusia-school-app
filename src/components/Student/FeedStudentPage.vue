@@ -186,28 +186,28 @@ const randomColor = (authorName: any) => {
 <!--        </v-list>-->
 
 <!--      </div>-->
-      <div>
-        <v-list>
-          <template v-for="(messages, date) in groupedMessages" :key="date">
-            <v-list-item
-                class="subheader overflow-hidden ma-0"
-            >
-              <v-list-item-title>{{ date }}</v-list-item-title>
 
-            </v-list-item>
-            <v-list-item
-                v-for="message in messages"
-                :key="message.id"
-                class="item-feed"
-                @click="selectMessage(message)"
-            >
-              <v-list-item-title>{{ message.text }}</v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
+      <v-card>
+        <v-card-text>
+          <div>
+            <v-list>
+              <template v-for="(messages, date) in groupedMessages" :key="date">
+                <p>{{ date }}</p>
 
+                <v-list-item
+                    v-for="message in messages"
+                    :key="message.id"
+                    class="item-feed"
+                    @click="selectMessage(message)"
+                >
+                  <v-list-item-title>{{ message.text }}</v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </div>
+        </v-card-text>
+      </v-card>
 
-      </div>
 
 
     </ion-content>

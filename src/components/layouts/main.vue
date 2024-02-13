@@ -23,11 +23,11 @@
             <v-divider></v-divider>
 
             <v-list nav class="list-menu">
-              <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
-              <v-list-item title="Курси" value="course" @click="replaceCourse(), activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
-              <v-list-item title="Завдання" value="task" @click="$router.replace('/main/tasks'), activePage='Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
-              <v-list-item title="Групи" value="groups" @click="replaceGroup(), activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
-              <v-list-item title="Учні" value="pupils" @click="$router.replace('/main/tasks'), activePage='Учні'" prepend-icon="mdi-school-outline"></v-list-item>
+              <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), this.authStore.activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
+              <v-list-item title="Курси" value="course" @click="replaceCourse(), this.authStore.activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
+              <v-list-item title="Завдання" value="task" @click="$router.replace('/main/tasks'), this.authStore.activePage='Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
+              <v-list-item title="Групи" value="groups" @click="replaceGroup(), this.authStore.activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
+              <v-list-item title="Учні" value="pupils" @click="$router.replace('/main/tasks'), this.authStore.activePage='Учні'" prepend-icon="mdi-school-outline"></v-list-item>
 
             </v-list>
             <v-footer class="footerMenu">
@@ -54,7 +54,7 @@
           >
 
 
-            <v-toolbar-title>{{ this.activePage }}</v-toolbar-title>
+            <v-toolbar-title>{{ this.authStore.activePage }}</v-toolbar-title>
 
           </v-toolbar>
         </div>
@@ -72,17 +72,17 @@
                              :grow='true'
 
         >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), activePage='Стрічка'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), this.authStore.activePage='Стрічка'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Стрічка</span>
           </v-btn>
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), activePage='Курси'" v-if="this.user.role !== 'STUDENT'">
+          <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), this.authStore.activePage='Курси'" v-if="this.user.role !== 'STUDENT'">
             <v-icon icon="mdi-book-outline" class="icon-course"/>
             <span>Курси</span>
           </v-btn>
 
 
-          <v-btn class="btn-bottom-nav" @click="replaceGroup(), activePage='Групи'">
+          <v-btn class="btn-bottom-nav" @click="replaceGroup(), this.authStore.activePage='Групи'">
             <v-icon icon="mdi-account-group-outline"></v-icon>
 
             <span>Групи</span>
@@ -189,8 +189,8 @@ export default defineComponent({
 
 
   methods: {
-    changePage(page){
-      this.activePage.value = page;
+    changePage(page: string){
+      this.authStore.activePage = page;
     },
     router() {
       return router

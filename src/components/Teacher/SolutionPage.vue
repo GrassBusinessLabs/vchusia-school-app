@@ -8,10 +8,12 @@ import {message} from "@/stores/message";
 import {MarkSolution} from "@/models/Solution";
 import {comment} from "@/stores/comment";
 import {add} from "ionicons/icons";
+import {auth} from "@/stores/auth";
 
 const SolutionStore = solution()
 const MessageStore = message()
 const CommentStore = comment()
+const AuthStore = auth()
 const changeComment = ref(false)
 const group_solution = ref(false)
 const studentsListDraft = ref(false)
@@ -186,14 +188,14 @@ const deleteComment = async () => {
 
 
 
-                <div class="d-flex justify-space-between align-center">
+                <div class="d-flex justify-space-between align-center" v-if="AuthStore.user.user.id === i.userId">
                   <div @click="changeComment = !changeComment">
                     <v-icon >
                       mdi-pencil
                     </v-icon>
                   </div>
 
-                <div @click="deleteComment()">
+                  <div @click="deleteComment()">
                     <v-icon>
                       mdi-delete
                     </v-icon>

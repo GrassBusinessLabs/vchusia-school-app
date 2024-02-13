@@ -8,7 +8,8 @@ const toast = useToast()
 interface State {
     user: any,
     token: string | null,
-    file: any | null
+    file: any | null,
+    activePage: string
 }
 
 
@@ -16,7 +17,8 @@ export const auth = defineStore('auth', {
     state: (): State => ({
         user: null,
         token: null,
-        file: null
+        file: null,
+        activePage: 'Стрічка'
     }),
     actions: {
         errorLogin(text){

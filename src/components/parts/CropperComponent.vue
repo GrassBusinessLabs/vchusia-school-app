@@ -27,9 +27,9 @@
       </div>
 
 
-      <v-btn class="mt-5 btn-upload" color="blue"
+      <v-btn icon="mdi-paperclip" class="mt-5 btn-upload" color="blue"
         @click="$refs.filePickerField.click()"
-      > Завантажити фото </v-btn>
+      >  </v-btn>
 
       <image-cropper-dialog
         ref="cropperDialog"
@@ -86,6 +86,7 @@ export default {
 
 <style>
 .btn-upload{
+
   width: 80%;
 }
 .image_block{
