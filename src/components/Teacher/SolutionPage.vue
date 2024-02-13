@@ -6,9 +6,13 @@ import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
 import {solution} from "@/stores/solution";
 import {message} from "@/stores/message";
 import {MarkSolution} from "@/models/Solution";
+import {comment} from "@/stores/comment";
+import {add} from "ionicons/icons";
 
 const SolutionStore = solution()
 const MessageStore = message()
+const CommentStore = comment()
+const changeComment = ref(false)
 const group_solution = ref(false)
 const studentsListDraft = ref(false)
 const studentSelected = ref(false)
@@ -65,6 +69,27 @@ const displayText = computed(() => {
   return valueSliderPoint.value === 0 ? 'Без оцінки' : points[valueSliderPoint.value];
 });
 
+const addCommentText = reactive({
+  text: ''
+})
+const addComment = async () => {
+  await CommentStore.commentMessage(MessageStore.msgId, addCommentText)
+  addCommentText.text = ''
+  await getComments()
+}
+
+const updateComment = async (changedText: string) => {
+  await CommentStore.updateComment(CommentStore.commentId, {text: changedText})
+}
+const getComments = async () => {
+  await CommentStore.findByMessageId(MessageStore.msgId)
+}
+getComments()
+
+const deleteComment = async () => {
+  await CommentStore.deleteComment(CommentStore.commentId)
+  await getComments()
+}
 
 </script>
 
@@ -139,21 +164,43 @@ const displayText = computed(() => {
           </div>
 
           <v-list>
-            <v-list-item v-for="i in 5" class="comment_item">
-              <div class="d-flex pa-3">
-                <div class="ma-2">
-                  <v-avatar>
-                    <img src="../../assets/Vchusia.png" alt="">
-                  </v-avatar>
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item"  :style="{ minHeight: 'auto' }">
+              <div class="d-flex justify-space-between align-center pa-3" @click="CommentStore.commentId = i.id, CommentStore.nowComment = i">
+
+                <div class="d-flex">
+                  <div class="ma-2">
+                    <v-avatar>
+                      <img src="../../assets/Vchusia.png" alt="">
+                    </v-avatar>
+                  </div>
+
+                  <div class="ma-2">
+                    <v-list-item-title>
+                      {{i.userId}}
+                    </v-list-item-title>
+                    <v-list-item-subtitle >
+                      {{i.text}}
+                    </v-list-item-subtitle>
+                  </div>
                 </div>
-                <div class="ma-2">
-                  <v-list-item-title>
-                    Коментар
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Текст коментару
-                  </v-list-item-subtitle>
+
+
+
+                <div class="d-flex justify-space-between align-center">
+                  <div @click="changeComment = !changeComment">
+                    <v-icon >
+                      mdi-pencil
+                    </v-icon>
+                  </div>
+
+                <div @click="deleteComment()">
+                    <v-icon>
+                      mdi-delete
+                    </v-icon>
+                  </div>
                 </div>
+
+
               </div>
 
             </v-list-item>
@@ -165,16 +212,36 @@ const displayText = computed(() => {
     </ion-content>
 
     <ion-footer>
+      <div class="text-center">
+        <v-bottom-sheet v-model="changeComment">
+          <v-card height="100" class="d-flex justify-center">
+            <div class="d-flex align-center">
+              <ion-item class="w-100">
+                <ion-textarea
+                    v-model="CommentStore.nowComment.text"
+                    :rows="1"
+                    :auto-grow="true"
+                    placeholder="Напишіть коментар"
+                >
+                </ion-textarea>
+              </ion-item>
+              <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="updateComment(CommentStore.nowComment.text)"></v-btn>
+            </div>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
+
       <div class="d-flex align-center">
         <ion-item class="w-100">
           <ion-textarea
+              v-model="addCommentText.text"
               :rows="1"
               :auto-grow="true"
               placeholder="Напишіть коментар"
           >
           </ion-textarea>
         </ion-item>
-        <v-btn class="bg-transparent" icon="mdi-send" elevation="0"></v-btn>
+        <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="addComment()"></v-btn>
       </div>
 
       <div class="text-center">
@@ -259,7 +326,7 @@ const displayText = computed(() => {
             <v-list class="students_list">
               <div v-for="i of SolutionStore.solutionsUsers" v-if="SolutionStore.draftReturnSolutions.length > 0">
 
-                <v-list-item class="item_student" v-if="i.status === 'DRAFT' || i.status === 'RETURNED'">
+                <v-list-item class="item_student" v-if="i.status === 'DRAFT' || i.status === 'RETURNED'" >
                   <div class="d-flex align-center justify-space-between">
 
                     <div class="d-flex align-center">
@@ -508,5 +575,8 @@ const displayText = computed(() => {
 
 .images_block {
   width: 30%;
+}
+.comment-text {
+  overflow: visible;
 }
 </style>

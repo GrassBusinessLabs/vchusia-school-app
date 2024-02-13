@@ -3,6 +3,7 @@ import {IonPage, IonContent, IonFooter, IonInput, IonItem, IonTextarea, IonHeade
 import {computed, ref} from "vue";
 import {message} from "@/stores/message";
 import router from '../../router/index'
+import {data} from "browserslist";
 const MessageStore = message()
 const tab = ref(null)
 const userMessages = async () => {
@@ -12,7 +13,7 @@ onIonViewWillEnter(() => {
   userMessages()
 })
 
-const filterTags = ['Не перевірені', 'Очікуються', 'Решта']
+const filterTags = ['Дедлайн', 'Останнні', 'Групи']
 const selectMessage = (message: any) => {
   MessageStore.thisMessage = message;
   MessageStore.msgId = message.id;
@@ -22,7 +23,7 @@ const selectMessage = (message: any) => {
 const groupedMessages = computed(() => {
   const grouped = {};
   MessageStore.allMessages.forEach(message => {
-    const date = new Date(message.updatedDate).toLocaleDateString();
+    const date = new Date(message.deadline).toLocaleDateString();
     if (!grouped[date]) {
       grouped[date] = [];
     }
@@ -39,24 +40,35 @@ const groupedMessages = computed(() => {
 })
 
 const formatDate = (dateString: any) => {
-  const options = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  };
+  const date = new Date(Date.parse(dateString));
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
 
-  const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
-  return formattedDate;
+  if (date.toDateString() === today.toDateString()) {
+    return 'Сьогодні';
+  } else if (date.toDateString() === yesterday.toDateString()) {
+    return 'Вчора';
+  } else {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return date.toLocaleString('ua-UA', options);
+  }
 };
+
 
 function isFutureDate(targetDate: any) {
   const currentDate = new Date();
   const targetDateTime = new Date(targetDate);
   return targetDateTime > currentDate;
 }
+
 </script>
 
 <template>
@@ -96,8 +108,9 @@ function isFutureDate(targetDate: any) {
 <!--              </v-list-item>-->
 <!--            </v-list>-->
             <v-list class="list_feed">
+
               <template  class="subheader_date" v-for="(messages, date) in groupedMessages">
-                <v-subheader>{{ date }}</v-subheader>
+                <v-subheader>{{formatDate(date)}}</v-subheader>
                 <v-list-item
                     v-for="message in messages"
                     :key="message.id"
