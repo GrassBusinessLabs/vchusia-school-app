@@ -19,6 +19,7 @@ const group_solution = ref(false)
 const studentsListDraft = ref(false)
 const studentSelected = ref(false)
 const studentsChecked = ref(false)
+const deleteCommentSheet = ref(false)
 const imageChange = ref(false)
 const changeComplettedSolution = ref(false)
 const image_URL = 'https://vchusia.grassbusinesslabs.tk/static/'
@@ -82,6 +83,8 @@ const addComment = async () => {
 
 const updateComment = async (changedText: string) => {
   await CommentStore.updateComment(CommentStore.commentId, {text: changedText})
+  changeComment.value = false
+  await getComments()
 }
 const getComments = async () => {
   await CommentStore.findByMessageId(MessageStore.msgId)
@@ -90,9 +93,69 @@ getComments()
 
 const deleteComment = async () => {
   await CommentStore.deleteComment(CommentStore.commentId)
+  deleteCommentSheet.value = false
   await getComments()
 }
 
+function isFutureDate(targetDate) {
+  const currentDate = new Date();
+  const targetDateTime = new Date(targetDate);
+
+  return targetDateTime > currentDate;
+}
+
+const formatDate = (dateString) => {
+  const targetDate = new Date(dateString);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (isFutureDate(dateString)) {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    return targetDate.toLocaleDateString('ua-UA', options);
+  } else if (targetDate.toDateString() === today.toDateString()) {
+    return 'Сьогодні';
+  } else if (targetDate.toDateString() === yesterday.toDateString()) {
+    return 'Вчора';
+  } else {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    return targetDate.toLocaleDateString('ua-UA', options);
+  }
+};
+
+
+const dayOfWeek = () => {
+  const datesStringName = {
+    1: 'Понеділок',
+    2: 'Вівторок',
+    3: 'Середа',
+    4: 'Четвер',
+    5: "П'ятниця",
+    6: 'Субота',
+    7: 'Неділя'
+  }
+  const day = new Date(MessageStore.thisMessage.deadline).getDay()
+  return datesStringName[day]
+}
+
+const menuComment = [{title: 'Редагувати'}, {title: 'Видалити'}]
+
+const eventClickMenuComment = (item: any) => {
+  if (item.title === 'Редагувати') {
+    changeComment.value = true
+  }
+  if (item.title === 'Видалити') {
+    deleteCommentSheet.value = true
+  }
+}
 </script>
 
 <template>
@@ -106,7 +169,8 @@ const deleteComment = async () => {
             <p style="color:grey">Оцінка за завдання {{ MessageStore.thisMessage.points }}</p>
           </div>
           <div class="deadline_points">
-            <p>Виконати до {{ MessageStore.thisMessage.deadline }}</p>
+            <p>Термін здачі </p>
+            <p>{{ dayOfWeek() }} {{ formatDate(MessageStore.thisMessage.deadline) }}</p>
           </div>
           <div class="description_task">
             <p>{{ MessageStore.thisMessage.text }}</p>
@@ -165,73 +229,116 @@ const deleteComment = async () => {
             </v-list>
           </div>
 
+          <div class="horizontal_line"></div>
+
+
           <v-list>
-            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item"  :style="{ minHeight: 'auto' }">
-              <div class="d-flex justify-space-between align-center pa-3" @click="CommentStore.commentId = i.id, CommentStore.nowComment = i">
-
-                <div class="d-flex">
-                  <div class="ma-2">
-                    <v-avatar>
-                      <img src="../../assets/Vchusia.png" alt="">
-                    </v-avatar>
-                  </div>
-
-                  <div class="ma-2">
-                    <v-list-item-title>
-                      {{i.userId}}
-                    </v-list-item-title>
-                    <v-list-item-subtitle >
-                      {{i.text}}
-                    </v-list-item-subtitle>
-                  </div>
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" :style="{ minHeight: 'auto' }">
+              <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
+                   :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                <div class="avatar-wrapper">
+                  <v-avatar v-if="AuthStore.user.user.id !== i.userId">
+                    <img src="../../assets/Vchusia.png" alt="">
+                  </v-avatar>
                 </div>
+                <div class="content-wrapper">
+                  <div class="comment-header">
+                    <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
+                  </div>
+                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                    {{ i.text }}
+                  </div>
+                  <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                    <small>13:00</small>
 
+                    <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                      <v-menu
 
+                      >
+                        <template v-slot:activator="{ props }">
+                          <v-icon
+                              color="grey"
+                              v-bind="props"
+                              @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                          >
+                            mdi-dots-horizontal-circle-outline
+                          </v-icon>
+                        </template>
 
-                <div class="d-flex justify-space-between align-center" v-if="AuthStore.user.user.id === i.userId">
-                  <div @click="changeComment = !changeComment">
-                    <v-icon >
-                      mdi-pencil
-                    </v-icon>
+                        <v-list>
+                          <v-list-item
+                              v-for="(item, index) in menuComment"
+                              :key="index"
+                              @click="eventClickMenuComment(item)"
+                          >
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
+
                   </div>
 
-                  <div @click="deleteComment()">
-                    <v-icon>
-                      mdi-delete
-                    </v-icon>
-                  </div>
                 </div>
-
-
               </div>
-
             </v-list-item>
           </v-list>
+
         </div>
 
       </div>
 
     </ion-content>
 
+    <!--    FOOTER-->
+
     <ion-footer>
-      <div class="text-center">
-        <v-bottom-sheet v-model="changeComment">
-          <v-card height="100" class="d-flex justify-center">
-            <div class="d-flex align-center">
-              <ion-item class="w-100">
-                <ion-textarea
-                    v-model="CommentStore.nowComment.text"
-                    :rows="1"
-                    :auto-grow="true"
-                    placeholder="Напишіть коментар"
-                >
-                </ion-textarea>
-              </ion-item>
-              <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="updateComment(CommentStore.nowComment.text)"></v-btn>
-            </div>
-          </v-card>
-        </v-bottom-sheet>
-      </div>
+
+      <v-bottom-sheet v-model="changeComment">
+        <v-card class="d-flex justify-center">
+          <div class="d-flex align-center">
+            <ion-item class="w-100">
+              <ion-textarea
+                  v-model="CommentStore.nowComment.text"
+                  :rows="1"
+                  :auto-grow="true"
+                  placeholder="Напишіть коментар"
+              >
+              </ion-textarea>
+            </ion-item>
+            <v-btn class="bg-transparent" icon="mdi-send" elevation="0"
+                   @click="updateComment(CommentStore.nowComment.text)"></v-btn>
+          </div>
+        </v-card>
+      </v-bottom-sheet>
+
+      <v-bottom-sheet v-model="deleteCommentSheet">
+        <v-card>
+          <v-card-text>
+            <v-sheet>
+              <v-container class="d-flex flex-column justify-center align-center">
+                <v-row>
+                  <v-col>
+                    <p>Бажаєте видалити коментар?</p>
+                  </v-col>
+                </v-row>
+
+                <v-row class="d-flex justify-space-between">
+                  <v-col>
+                    <v-btn @click="deleteComment()">Так</v-btn>
+                  </v-col>
+                  <v-col>
+                    <v-btn @click="deleteCommentSheet = !deleteCommentSheet">
+                      Ні
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-sheet>
+          </v-card-text>
+        </v-card>
+      </v-bottom-sheet>
+
 
       <div class="d-flex align-center">
         <ion-item class="w-100">
@@ -267,7 +374,6 @@ const deleteComment = async () => {
                           :rows="1"
                           :auto-grow="true"
                           placeholder="Напишіть коментар"
-
                       >
                       </ion-textarea>
                     </ion-item>
@@ -328,7 +434,7 @@ const deleteComment = async () => {
             <v-list class="students_list">
               <div v-for="i of SolutionStore.solutionsUsers" v-if="SolutionStore.draftReturnSolutions.length > 0">
 
-                <v-list-item class="item_student" v-if="i.status === 'DRAFT' || i.status === 'RETURNED'" >
+                <v-list-item class="item_student" v-if="i.status === 'DRAFT' || i.status === 'RETURNED'">
                   <div class="d-flex align-center justify-space-between">
 
                     <div class="d-flex align-center">
@@ -344,11 +450,7 @@ const deleteComment = async () => {
                           {{ i.status }}
                         </v-list-item-subtitle>
                       </div>
-
-
                     </div>
-
-
                   </div>
                 </v-list-item>
 
@@ -504,8 +606,8 @@ const deleteComment = async () => {
   background: rgb(149, 255, 98);
   background: linear-gradient(96deg, rgba(149, 255, 98, 0.4206057422969187) 0%, rgba(186, 255, 212, 1) 100%);
   color: grey;
-
 }
+
 
 .solution_group_item {
   margin: 10px 5px;
@@ -578,7 +680,99 @@ const deleteComment = async () => {
 .images_block {
   width: 30%;
 }
+
+
+.comment-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.avatar-wrapper {
+  margin-right: 10px;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 15px;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
 .comment-text {
-  overflow: visible;
+  background-color: #eff0f1;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  margin-left: 10px;
+}
+
+.comment-time {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textMyComment {
+  text-align: right;
+}
+
+.my-comment {
+  margin-top: 10px;
+  margin-right: 9px;
+}
+
+.my-comment .comment-text {
+  background-color: #d2b9ff;
+}
+
+.other-comment .comment-text {
+  background-color: #fff;
+}
+
+
+.other-comment .comment-text::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  border: solid transparent;
+  border-right-color: #fff;
+  border-width: 10px;
+  margin-top: -10px;
+
+}
+
+
+.my-comment .comment-text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  border: solid transparent;
+  border-left-color: #d2b9ff;
+  border-width: 10px;
+  margin-top: -10px;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.horizontal_line {
+  height: 2px;
+  background: grey;
+  width: 100%;
 }
 </style>

@@ -26,9 +26,6 @@ const formatDate = (dateString: any) => {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
   };
 
   const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
@@ -101,6 +98,32 @@ const deleteComment = async () => {
   deleteCommentSheet.value = false
   await getCommentsMessages()
 }
+
+const dayOfWeek = () => {
+  const datesStringName = {
+    1: 'Понеділок',
+    2: 'Вівторок',
+    3: 'Середа',
+    4: 'Четвер',
+    5: "П'ятниця",
+    6: 'Субота',
+    7: 'Неділя'
+  }
+  const day = new Date(MessageStore.thisMessage.deadline).getDay()
+  return datesStringName[day]
+}
+
+
+const menuComment = [{title: 'Редагувати'}, {title: 'Видалити'}]
+
+const eventClickMenuComment = (item: any) => {
+  if (item.title === 'Редагувати') {
+    updateCommentSheet.value = true
+  }
+  if (item.title === 'Видалити') {
+    deleteCommentSheet.value = true
+  }
+}
 </script>
 
 <template>
@@ -117,7 +140,8 @@ const deleteComment = async () => {
           <div class="deadline_points">
             <p class="missingDate" v-if="isFutureDate(MessageStore.thisMessage.deadline) == false">Пропущено термін
               здачі</p>
-            <p>Виконати до {{ formatDate(MessageStore.thisMessage.deadline) }}</p>
+            <p>Термін здачі </p>
+            <p>{{dayOfWeek()}} {{formatDate(MessageStore.thisMessage.deadline) }}</p>
           </div>
 
           <div class="description_task">
@@ -132,33 +156,54 @@ const deleteComment = async () => {
           </v-btn>
 
           <v-list>
-            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item">
-              <div class="d-flex justify-space-between align-center" @click.prevent="CommentStore.nowComment = i, CommentStore.commentId = i.id">
-                <div>
-                  <v-list-item-title>
-                    {{i.userId}}
-                  </v-list-item-title>
-
-                  <v-list-item-subtitle>
-                    {{i.text}}
-                  </v-list-item-subtitle>
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" :style="{ minHeight: 'auto' }">
+              <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
+                   :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                <div class="avatar-wrapper">
+                  <v-avatar v-if="AuthStore.user.user.id !== i.userId">
+                    <img src="../../../../assets/Vchusia.png" alt="">
+                  </v-avatar>
                 </div>
-                <div class="d-flex justify-space-between align-center" v-if="AuthStore.user.user.id === i.userId">
-                  <div @click="updateCommentSheet = !updateCommentSheet">
-                    <v-icon>
-                      mdi-pencil
-                    </v-icon>
+                <div class="content-wrapper">
+                  <div class="comment-header">
+                    <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
+                  </div>
+                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                    {{ i.text }}
+                  </div>
+                  <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                    <small>13:00</small>
+
+                    <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                      <v-menu
+
+                      >
+                        <template v-slot:activator="{ props }">
+                          <v-icon
+                              color="grey"
+                              v-bind="props"
+                              @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                          >
+                            mdi-dots-horizontal-circle-outline
+                          </v-icon>
+                        </template>
+
+                        <v-list>
+                          <v-list-item
+                              v-for="(item, index) in menuComment"
+                              :key="index"
+                              @click="eventClickMenuComment(item)"
+                          >
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
+
                   </div>
 
-                  <div @click="deleteCommentSheet = !deleteCommentSheet">
-                    <v-icon>
-                      mdi-delete
-                    </v-icon>
-                  </div>
                 </div>
-
               </div>
-
             </v-list-item>
           </v-list>
         </div>
@@ -334,4 +379,95 @@ const deleteComment = async () => {
   width: 90%;
   margin: 0 auto;
 }
+
+
+.comment-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.avatar-wrapper {
+  margin-right: 10px;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.comment-text {
+  background-color: #eff0f1;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  margin-left: 10px;
+
+}
+
+.comment-time {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textMyComment {
+  text-align: right;
+}
+
+.my-comment {
+  margin-top: 10px;
+  margin-right: 9px;
+}
+
+.my-comment .comment-text {
+  background-color: #d2b9ff;
+}
+
+.other-comment .comment-text {
+  background-color: #fff;
+}
+
+
+.other-comment .comment-text::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  border: solid transparent;
+  border-right-color: #fff;
+  border-width: 10px;
+  margin-top: -10px;
+
+}
+
+
+.my-comment .comment-text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  border: solid transparent;
+  border-left-color: #d2b9ff;
+  border-width: 10px;
+  margin-top: -10px;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
 </style>

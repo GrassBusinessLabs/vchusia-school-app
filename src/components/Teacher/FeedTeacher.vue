@@ -60,12 +60,9 @@ const formatDate = (dateString: any) => {
     const options = {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
+      year: 'numeric'
     };
-    return date.toLocaleString('ua-UA', options);
+    return date.toLocaleDateString('ua-UA', options);
   }
 };
 
