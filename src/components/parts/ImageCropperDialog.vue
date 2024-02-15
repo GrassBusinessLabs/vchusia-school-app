@@ -90,9 +90,9 @@ export default {
           const croppedFile = new File([blob], `cropped_image.${this.imageFileType.split('/')[1]}`);
           this.SolutionStore.file = croppedFile
           console.log(croppedFile)
-            this.attachImage()
+            await this.attachImage()
             this.$emit('onCrop', this.$refs.cropper.getCroppedCanvas().toDataURL(this.imageFileType));
-            this.resetCropper();
+            await this.resetCropper();
         },
     },
 }

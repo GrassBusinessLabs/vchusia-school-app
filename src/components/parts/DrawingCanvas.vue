@@ -64,6 +64,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {solution} from "@/stores/solution.ts";
+import {image} from "@/stores/image.ts";
 
 
 
@@ -87,7 +88,8 @@ export default {
       popUpLineWeight: ref(false),
       imageWidth: 0,
       imageHeight: 0,
-      SolutionStore: solution()
+      SolutionStore: solution(),
+      ImageStore: image()
     };
   },
 
@@ -268,14 +270,12 @@ export default {
       }
     },
 
-    saveImage() {
+    async saveImage() {
       const canvas = this.$refs.canvas
       const dataUrl = canvas.toDataURL('image/png')
-      const link = document.createElement('a')
-      link.href = dataUrl
-      link.download = 'canvas_image.png'
-      link.click()
-
+      const blob = await fetch(dataUrl).then(res => res.blob());
+      const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
+      await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
     },
     beforeUnmount() {
       window.removeEventListener("resize", this.handleResize);

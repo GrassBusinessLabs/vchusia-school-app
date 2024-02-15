@@ -9,6 +9,7 @@ import {MarkSolution} from "@/models/Solution";
 import {comment} from "@/stores/comment";
 import {add} from "ionicons/icons";
 import {auth} from "@/stores/auth";
+import {image} from "@/stores/image";
 
 const SolutionStore = solution()
 const MessageStore = message()
@@ -20,9 +21,11 @@ const studentsListDraft = ref(false)
 const studentSelected = ref(false)
 const studentsChecked = ref(false)
 const deleteCommentSheet = ref(false)
+const ImageStore = image()
 const imageChange = ref(false)
 const changeComplettedSolution = ref(false)
 const image_URL = 'https://vchusia.grassbusinesslabs.tk/static/'
+
 const points = reactive({
   0: '',
   1: '1',
@@ -233,51 +236,58 @@ const eventClickMenuComment = (item: any) => {
 
 
           <v-list>
-            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" :style="{ minHeight: 'auto' }">
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" >
               <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
                    :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
-                <div class="avatar-wrapper">
-                  <v-avatar v-if="AuthStore.user.user.id !== i.userId">
-                    <img src="../../assets/Vchusia.png" alt="">
-                  </v-avatar>
-                </div>
+
                 <div class="content-wrapper">
-                  <div class="comment-header">
-                    <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
-                  </div>
+
                   <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
-                    {{ i.text }}
-                  </div>
-                  <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
-                    <small>13:00</small>
+                    <div class="comment-header">
 
-                    <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
-                      <v-menu
-
-                      >
-                        <template v-slot:activator="{ props }">
-                          <v-icon
-                              color="grey"
-                              v-bind="props"
-                              @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
-                          >
-                            mdi-dots-horizontal-circle-outline
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                              v-for="(item, index) in menuComment"
-                              :key="index"
-                              @click="eventClickMenuComment(item)"
-                          >
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
+                      <div class="avatar-wrapper">
+                        <v-avatar v-if="AuthStore.user.user.id !== i.userId">
+                          <img src="../../assets/Vchusia.png" alt="">
+                        </v-avatar>
+                      </div>
+                      <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
+                    </div>
+                    <div class="text-block">
+                      <p>{{ i.text }}</p>
                     </div>
 
+                    <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                      <small>13:00</small>
+
+                      <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                        <v-menu
+
+                        >
+                          <template v-slot:activator="{ props }">
+                            <v-icon
+                                color="grey"
+                                v-bind="props"
+                                @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                            >
+                              mdi-dots-horizontal-circle-outline
+                            </v-icon>
+                          </template>
+
+                          <v-list>
+                            <v-list-item
+                                v-for="(item, index) in menuComment"
+                                :key="index"
+                                @click="eventClickMenuComment(item)"
+                            >
+                              <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                      </div>
+
+                    </div>
                   </div>
+
 
                 </div>
               </div>
@@ -363,7 +373,7 @@ const eventClickMenuComment = (item: any) => {
               <div class="solution_img_container">
                 <div class="images_block" v-for="i of SolutionStore.nowSolution.images">
                   <v-img class="solution_img" :src='image_URL+i.name' alt="Solution"
-                         @click="imageChange = !imageChange, SolutionStore.imageURL = image_URL+i.name"></v-img>
+                         @click="imageChange = !imageChange; SolutionStore.imageURL = image_URL+i.name; ImageStore.imgId = i.id"></v-img>
                 </div>
               </div>
               <div class="result_solution">
@@ -600,11 +610,9 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .comment_item {
-  padding: 5px;
   margin: 10px;
   border-radius: 15px;
-  background: rgb(149, 255, 98);
-  background: linear-gradient(96deg, rgba(149, 255, 98, 0.4206057422969187) 0%, rgba(186, 255, 212, 1) 100%);
+
   color: grey;
 }
 
@@ -685,7 +693,7 @@ const eventClickMenuComment = (item: any) => {
 .comment-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+
   position: relative;
 }
 
@@ -699,7 +707,7 @@ const eventClickMenuComment = (item: any) => {
 
 .comment-header {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
   margin-top: 10px;
   margin-left: 15px;
@@ -729,8 +737,12 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .my-comment {
-  margin-top: 10px;
+
   margin-right: 9px;
+}
+
+.text-block{
+  margin-left: 15px;
 }
 
 .my-comment .comment-text {
@@ -738,7 +750,7 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .other-comment .comment-text {
-  background-color: #fff;
+  background-color: #e0e0e0;
 }
 
 
@@ -748,7 +760,7 @@ const eventClickMenuComment = (item: any) => {
   top: 50%;
   right: 100%;
   border: solid transparent;
-  border-right-color: #fff;
+  border-right-color: #e0e0e0;
   border-width: 10px;
   margin-top: -10px;
 
