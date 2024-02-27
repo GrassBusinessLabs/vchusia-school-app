@@ -20,6 +20,7 @@
                :src='SolutionStore.imageURL'
                alt="Img"
 
+
           />
         </div>
 
@@ -123,7 +124,8 @@ export default {
         const dimensions = await this.getImageDimensions(imageUrl);
         this.imageWidth = dimensions.width;
         this.imageHeight = dimensions.height;
-        console.log('Image size:', this.imageWidth, this.imageHeight);
+        console.log('Image size:', this.imageWidth, this.imageHeight)
+
       } catch (error) {
         console.error('Error loading image:', error);
       }
@@ -271,11 +273,18 @@ export default {
     },
 
     async saveImage() {
-      const canvas = this.$refs.canvas
-      const dataUrl = canvas.toDataURL('image/png')
-      const blob = await fetch(dataUrl).then(res => res.blob());
-      const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
-      await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
+      // const canvas = this.$refs.canvas
+      // const dataUrl = canvas.toDataURL('image/png')
+      // const blob = await fetch(dataUrl).then(res => res.blob());
+      // const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
+      // await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
+
+        const canvas = this.$refs.canvas
+        const dataUrl = canvas.toDataURL('image/png', 1.0); // Указываем качество 1.0
+        const blob = await fetch(dataUrl).then(res => res.blob());
+        const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
+        await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
+
     },
     beforeUnmount() {
       window.removeEventListener("resize", this.handleResize);

@@ -10,17 +10,23 @@ import {Comment} from "@/models/Comment";
 import {comment} from "@/stores/comment";
 import {auth} from "@/stores/auth";
 
+
+const updateCommentConst = ref(false)
 const PostStore = post()
 const MessageStore = message()
 const SolutionStore = solution()
 const CommentStore = comment()
 const AuthStore = auth()
+const viewPrivateComment = ref(false)
 const check = ref(false)
 const updateCommentSheet = ref(false)
 const deleteCommentSheet = ref(false)
 const descriptionSolution = ref(SolutionStore.nowSolution.description);
+const imgURL = 'https://vchusia.grassbusinesslabs.tk/static/'
 
-
+const showPrivateCommentField = ref(false)
+const showCommentField = ref(false)
+const showEditCommentField = ref(false)
 const formatDate = (dateString: any) => {
   const options = {
     day: '2-digit',
@@ -32,6 +38,22 @@ const formatDate = (dateString: any) => {
   return formattedDate;
 };
 
+const formatTime = (dateString: any) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+
+  const formattedTime = new Date(dateString).toLocaleString('ua-UA', options);
+  return formattedTime;
+};
+
+const textCommentUpdate = reactive({
+  text: ''
+})
 function isFutureDate(targetDate: any) {
   const currentDate = new Date();
   const targetDateTime = new Date(targetDate);
@@ -42,7 +64,6 @@ function isFutureDate(targetDate: any) {
 const findSolutionByMsgId = async () => {
   await SolutionStore.findSolutionByMessageId(MessageStore.msgId)
 }
-
 
 
 const findSolutionById = async () => {
@@ -65,7 +86,7 @@ const deleteSolution = async () => {
   await SolutionStore.deleteSolution(SolutionStore.solutionInfo.id)
 }
 
-onMounted(async() => {
+onMounted(async () => {
   await findSolutionByMsgId()
   await findSolutionById()
   await getCommentsMessages()
@@ -73,12 +94,16 @@ onMounted(async() => {
   descriptionSolution.value = SolutionStore.nowSolution.description
 })
 
-const addCommentText: Comment = reactive({
+const addCommentTextMessage: Comment = reactive({
   text: ''
 })
-const addComment = async () => {
-  await CommentStore.commentMessage(MessageStore.msgId, addCommentText)
-  addCommentText.text = ''
+
+const addCommentTextSolution: Comment = reactive({
+  text: ''
+})
+const addCommentMessage = async () => {
+  await CommentStore.commentMessage(MessageStore.msgId, addCommentTextMessage)
+  addCommentTextMessage.text = ''
   await getCommentsMessages()
 }
 
@@ -88,15 +113,31 @@ const getCommentsMessages = async () => {
 
 
 const updateComment = async () => {
-  await CommentStore.updateComment(CommentStore.commentId, {text: CommentStore.nowComment.text})
+  await CommentStore.updateComment(CommentStore.commentId, {text: textCommentUpdate.text})
   updateCommentSheet.value = false
   await getCommentsMessages()
+  await getCommentSolution()
+  showPrivateCommentField.value = false
+  showCommentField.value = false
+  showEditCommentField.value = false
 }
 
 const deleteComment = async () => {
   await CommentStore.deleteComment(CommentStore.commentId)
   deleteCommentSheet.value = false
+  await getCommentSolution()
   await getCommentsMessages()
+}
+
+const getCommentSolution = async () => {
+  await CommentStore.findBySolutionId(SolutionStore.solutionId)
+}
+getCommentSolution()
+
+const addCommentSolution = async () => {
+  await CommentStore.commentSolution(SolutionStore.solutionId, addCommentTextSolution)
+  addCommentTextSolution.text = ""
+  await getCommentSolution()
 }
 
 const dayOfWeek = () => {
@@ -116,13 +157,41 @@ const dayOfWeek = () => {
 
 const menuComment = [{title: 'Редагувати'}, {title: 'Видалити'}]
 
+const togglePrivateCommentField = () => {
+  showPrivateCommentField.value = true
+  showCommentField.value = false
+  showEditCommentField.value = false
+}
+
+const toggleCommentField = () => {
+  showPrivateCommentField.value = false
+  showCommentField.value = true
+  showEditCommentField.value = false
+}
+
+const toggleEditCommentField = () => {
+  showPrivateCommentField.value = false
+  showCommentField.value = false
+  showEditCommentField.value = true
+  textCommentUpdate.text = CommentStore.nowComment.text
+}
 const eventClickMenuComment = (item: any) => {
   if (item.title === 'Редагувати') {
-    updateCommentSheet.value = true
+    toggleEditCommentField()
   }
   if (item.title === 'Видалити') {
     deleteCommentSheet.value = true
   }
+}
+
+const randomColor = () => {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
+
+const userInitials = () => {
+  const nameParts = auth().user.user.name.split(' ');
+  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
+  return initials
 }
 </script>
 
@@ -141,7 +210,7 @@ const eventClickMenuComment = (item: any) => {
             <p class="missingDate" v-if="isFutureDate(MessageStore.thisMessage.deadline) == false">Пропущено термін
               здачі</p>
             <p>Термін здачі </p>
-            <p>{{dayOfWeek()}} {{formatDate(MessageStore.thisMessage.deadline) }}</p>
+            <p>{{ dayOfWeek() }} {{ formatDate(MessageStore.thisMessage.deadline) }}</p>
           </div>
 
           <div class="description_task">
@@ -151,56 +220,123 @@ const eventClickMenuComment = (item: any) => {
         </div>
 
         <div>
+
+          <div>
+            <v-list>
+              <v-list-item v-for="i in CommentStore.commentsSolution" class="comment_item">
+                <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
+                     :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+
+                  <div class="content-wrapper">
+
+                    <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                      <div class="comment-header">
+
+                      </div>
+                      <div class="text-block">
+                        <pre>{{ i.text }}</pre>
+                      </div>
+
+                      <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                        <small>{{formatTime(i.createdDate)}}</small>
+
+                        <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                          <v-menu
+
+                          >
+                            <template v-slot:activator="{ props }">
+                              <v-icon
+                                  color="grey"
+                                  v-bind="props"
+                                  @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                              >
+                                mdi-dots-horizontal-circle-outline
+                              </v-icon>
+                            </template>
+
+                            <v-list>
+                              <v-list-item
+                                  v-for="(item, index) in menuComment"
+                                  :key="index"
+                                  @click="eventClickMenuComment(item)"
+                              >
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </v-list-item>
+            </v-list>
+          </div>
+
+
+
+          <v-btn class="btn-comment" elevation="0" @click="togglePrivateCommentField">
+            Написати приватний коментар
+          </v-btn>
+
           <v-btn class="btn-comment" elevation="0" @click="displayFooter = !displayFooter">
             Додати розв'язок
           </v-btn>
 
           <v-list>
-            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" :style="{ minHeight: 'auto' }">
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item">
               <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
                    :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
                 <div class="avatar-wrapper">
-                  <v-avatar v-if="AuthStore.user.user.id !== i.userId">
-                    <img src="../../../../assets/Vchusia.png" alt="">
+                  <v-avatar v-if="AuthStore.user.user.id !== i.userId" class="avatar-comment-user" :style="{ backgroundColor: randomColor() }">
+                    <img :src='imgURL+i.userAvatar' v-if='i.userAvatar !== ""'>
+                    <span class="initials" v-else>{{ userInitials() }}</span>
                   </v-avatar>
                 </div>
                 <div class="content-wrapper">
-                  <div class="comment-header">
-                    <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
-                  </div>
+
                   <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
-                    {{ i.text }}
-                  </div>
-                  <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
-                    <small>13:00</small>
+                    <div class="comment-header">
 
-                    <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
-                      <v-menu
 
-                      >
-                        <template v-slot:activator="{ props }">
-                          <v-icon
-                              color="grey"
-                              v-bind="props"
-                              @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
-                          >
-                            mdi-dots-horizontal-circle-outline
-                          </v-icon>
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                              v-for="(item, index) in menuComment"
-                              :key="index"
-                              @click="eventClickMenuComment(item)"
-                          >
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
+                    </div>
+                    <div class="text-block">
+                      <pre>{{ i.text }}</pre>
                     </div>
 
+                    <div class="comment-time " >
+                      <small>{{formatTime(i.createdDate)}}</small>
+
+                      <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                        <v-menu
+
+                        >
+                          <template v-slot:activator="{ props }">
+                            <v-icon
+                                color="grey"
+                                v-bind="props"
+                                @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                            >
+                              mdi-dots-horizontal-circle-outline
+                            </v-icon>
+                          </template>
+
+                          <v-list>
+                            <v-list-item
+                                v-for="(item, index) in menuComment"
+                                :key="index"
+                                @click="eventClickMenuComment(item)"
+                            >
+                              <v-list-item-title >{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                          </v-list>
+                        </v-menu>
+                      </div>
+
+                    </div>
                   </div>
+
 
                 </div>
               </div>
@@ -208,31 +344,69 @@ const eventClickMenuComment = (item: any) => {
           </v-list>
         </div>
 
+        <v-btn class="btn-comment" elevation="0" @click="toggleCommentField">
+          Написати коментар
+        </v-btn>
+
       </div>
 
     </ion-content>
+
+
     <ion-footer>
-      <div class="text-center">
-        <v-bottom-sheet v-model="updateCommentSheet">
-          <v-card class="d-flex justify-center">
+      <div class="d-flex align-center" v-if="showEditCommentField">
+        <ion-item class="w-100">
+          <ion-textarea
+              :rows="1"
+              :auto-grow="true"
+              placeholder="Напишіть коментар"
+              v-model="textCommentUpdate.text"
 
-              <div class="d-flex align-center" >
-                <ion-item class="w-100">
-                  <ion-textarea
-                      :rows="1"
-                      :auto-grow="true"
-                      placeholder="Напишіть коментар"
-                      v-model="CommentStore.nowComment.text"
-                  >
-                  </ion-textarea>
+          >
+          </ion-textarea>
 
-                </ion-item>
-                <v-btn class="bg-transparent" icon="mdi-send" @click="updateComment()" elevation="0"></v-btn>
-              </div>
-
-          </v-card>
-        </v-bottom-sheet>
+        </ion-item>
+        <v-btn class="bg-transparent" icon="mdi-send" @click="updateComment()" elevation="0"></v-btn>
       </div>
+
+
+
+      <div class="d-flex align-center" v-if="showPrivateCommentField">
+        <ion-item class="w-100">
+          <ion-textarea
+              :rows="1"
+              :auto-grow="true"
+              placeholder="Напишіть приватний коментар"
+              v-model="addCommentTextSolution.text"
+          >
+          </ion-textarea>
+
+        </ion-item>
+        <v-btn class="bg-transparent" icon="mdi-send" @click="addCommentSolution()" elevation="0"></v-btn>
+      </div>
+
+
+<!--      <div class="text-center">-->
+<!--        <v-bottom-sheet v-model="updateCommentSheet">-->
+<!--          <v-card class="d-flex justify-center">-->
+
+<!--            <div class="d-flex align-center">-->
+<!--              <ion-item class="w-100">-->
+<!--                <ion-textarea-->
+<!--                    :rows="1"-->
+<!--                    :auto-grow="true"-->
+<!--                    placeholder="Напишіть коментар"-->
+<!--                    v-model="CommentStore.nowComment.text"-->
+<!--                >-->
+<!--                </ion-textarea>-->
+
+<!--              </ion-item>-->
+<!--              <v-btn class="bg-transparent" icon="mdi-send" @click="updateComment()" elevation="0"></v-btn>-->
+<!--            </div>-->
+
+<!--          </v-card>-->
+<!--        </v-bottom-sheet>-->
+<!--      </div>-->
 
       <div class="text-center">
         <v-bottom-sheet v-model="deleteCommentSheet">
@@ -263,18 +437,23 @@ const eventClickMenuComment = (item: any) => {
         </v-bottom-sheet>
       </div>
 
-      <div class="d-flex align-center" v-if="!displayFooter">
+      <div class="d-flex align-center" v-if="!displayFooter && showCommentField">
+
         <ion-item class="w-100">
           <ion-textarea
               :rows="1"
               :auto-grow="true"
               placeholder="Напишіть коментар"
-              v-model="addCommentText.text"
+              style="white-space: pre-wrap;"
+              v-model="addCommentTextMessage.text"
           >
           </ion-textarea>
 
         </ion-item>
-        <v-btn class="bg-transparent" icon="mdi-send" @click="addComment()" elevation="0"></v-btn>
+        <v-btn class="bg-transparent" icon="mdi-send" @click="addCommentMessage()" elevation="0"></v-btn>
+      </div>
+      <div class="ma-4" v-if="SolutionStore.nowSolution.points !== 0">
+        {{SolutionStore.nowSolution.points}}/5
       </div>
 
       <div class="text-center" v-if="displayFooter">
@@ -356,11 +535,8 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .comment_item {
-  padding: 5px;
   margin: 10px;
   border-radius: 15px;
-  background: rgb(149,255,98);
-  background: linear-gradient(96deg, rgba(149,255,98,0.4206057422969187) 0%, rgba(186,255,212,1) 100%);
   color: grey;
 }
 
@@ -369,9 +545,9 @@ const eventClickMenuComment = (item: any) => {
   width: 90%;
   border-radius: 15px;
   color: grey;
-  background: rgb(206,255,244);
+  background: rgb(206, 255, 244);
   outline: 1px ridge #a3ffea;
-  background: linear-gradient(96deg, rgba(206,255,244,0.4206057422969187) 0%, rgba(186,248,255,1) 100%);
+  background: linear-gradient(96deg, rgba(206, 255, 244, 0.4206057422969187) 0%, rgba(186, 248, 255, 1) 100%);
 
 }
 
@@ -384,7 +560,7 @@ const eventClickMenuComment = (item: any) => {
 .comment-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+
   position: relative;
 }
 
@@ -398,10 +574,10 @@ const eventClickMenuComment = (item: any) => {
 
 .comment-header {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  margin-top: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 15px;
 }
 
 .user-name {
@@ -414,23 +590,19 @@ const eventClickMenuComment = (item: any) => {
   padding: 10px;
   position: relative;
   margin-left: 10px;
-
 }
 
 .comment-time {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.textMyComment {
-  text-align: right;
-}
 
-.my-comment {
-  margin-top: 10px;
-  margin-right: 9px;
+
+.text-block {
+  margin-left: 15px;
 }
 
 .my-comment .comment-text {
@@ -438,7 +610,7 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .other-comment .comment-text {
-  background-color: #fff;
+  background-color: #e0e0e0;
 }
 
 
@@ -448,13 +620,11 @@ const eventClickMenuComment = (item: any) => {
   top: 50%;
   right: 100%;
   border: solid transparent;
-  border-right-color: #fff;
+  border-right-color: #e0e0e0;
   border-width: 10px;
   margin-top: -10px;
 
 }
-
-
 .my-comment .comment-text::after {
   content: "";
   position: absolute;
@@ -469,5 +639,12 @@ const eventClickMenuComment = (item: any) => {
 .justify-end {
   justify-content: flex-end;
 }
-
+.avatar-comment-user{
+  outline: 1px solid #c4c4c4;
+}
+.initials{
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+}
 </style>

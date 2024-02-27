@@ -5,14 +5,16 @@ import {defineStore} from "pinia";
 interface State {
     commentsMessage: any [],
     commentId: number,
-    nowComment: any []
+    nowComment: any [],
+    commentsSolution: any
 }
 
 export const comment = defineStore('comment', {
     state: (): State => ({
         commentsMessage: [],
         commentId: 0,
-        nowComment: []
+        nowComment: [],
+        commentsSolution: []
     }),
 
     actions: {
@@ -60,6 +62,7 @@ export const comment = defineStore('comment', {
         async findBySolutionId(solutionId: number) {
             try {
                 const response = await CommentApi.findBySolutionId(solutionId)
+                this.commentsSolution = response.items
                 console.log(response)
             } catch (e) {
                 console.log(e)

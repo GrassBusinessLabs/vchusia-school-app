@@ -15,7 +15,8 @@ interface State {
     draftReturnSolutions: any[],
     nowSolution: any [],
     imageURL: string | null,
-    pointsCompletted: any []
+    pointsCompletted: any [],
+    slImgId: number
 }
 
 export const solution = defineStore('solution', {
@@ -33,7 +34,8 @@ export const solution = defineStore('solution', {
         draftReturnSolutions: [],
         nowSolution: [],
         imageURL: null,
-        pointsCompletted: []
+        pointsCompletted: [],
+        slImgId: 0
     }),
 
     actions: {

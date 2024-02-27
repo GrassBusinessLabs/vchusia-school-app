@@ -10,6 +10,8 @@ import CropperComponent from "@/components/parts/CropperComponent.vue";
 import {solution} from "@/stores/solution";
 import Course from "@/http/modules/course";
 import {message} from "@/stores/message";
+import {computed} from "vue";
+import router from "@/router";
 
 const readPost = ref(false)
 const GroupStore = group()
@@ -68,6 +70,36 @@ const formatDate = (dateString: any) => {
   const formattedDate = new Date(dateString).toLocaleString('ua-UA', options);
   return formattedDate;
 };
+
+const groupedMessages = computed(() => {
+  const grouped = {};
+  MessageStore.allMessages.forEach(message => {
+    if (message.groupId === GroupStore.groupId) {
+      console.log(message.groupId);
+      const date = new Date(message.updatedDate).toLocaleDateString();
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(message);
+    }
+  });
+
+  const sortedGrouped = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+  return sortedGrouped.reduce((acc, date) => {
+    acc[date] = grouped[date];
+    return acc;
+  }, {});
+});
+
+
+const selectMessage = (message: any) => {
+  MessageStore.thisMessage = message;
+  MessageStore.msgId = message.id;
+  router.replace('/group-info-student/post');
+}
+
+
 
 function isFutureDate(targetDate: any) {
   const currentDate = new Date();
@@ -130,15 +162,26 @@ const userInitials = (item?: any) => {
 <!--        </v-list>-->
 
 <!--      </div>-->
-      <div>
-        <v-list>
-          <v-list-item v-for="i of MessageStore.allMessages">
-            <v-list-item-title>
-                {{i.text}}
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </div>
+      <v-card>
+        <v-card-text>
+          <div>
+            <v-list>
+              <template v-for="(messages, date) in groupedMessages" :key="date">
+                <p>{{ date }}</p>
+
+                <v-list-item
+                    v-for="message in messages"
+                    :key="message.id"
+                    class="item-feed"
+                    @click="selectMessage(message)"
+                >
+                  <v-list-item-title>{{ message.text }}</v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list>
+          </div>
+        </v-card-text>
+      </v-card>
     </ion-content>
 
   </ion-page>
@@ -189,6 +232,19 @@ const userInitials = (item?: any) => {
   font-size: 20px;
   color: #fff;
 }
+
+.item-feed{
+  border-radius: 15px;
+  margin: 15px;
+  padding: 5px;
+  color: grey;
+  background: rgb(255, 251, 98);
+  background: linear-gradient(96deg, rgba(255, 251, 98, 0.4206057422969187) 0%, rgba(255, 243, 186, 1) 100%);
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
 </style>
 
 

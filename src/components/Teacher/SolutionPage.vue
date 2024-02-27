@@ -35,9 +35,7 @@ const points = reactive({
   5: '5',
 })
 let valueSliderPoint = ref(0)
-
 const viewMode = ref(false)
-
 const findSolutionsUsers = async () => {
   await SolutionStore.findSolutionsUsers(MessageStore.msgId)
 }
@@ -47,7 +45,6 @@ onMounted(() => {
 })
 
 const findPointsUsers = () => {
-
   const solutionsId = SolutionStore.complettedSolutions.map(point => point.id)
   solutionsId.forEach(solutionId => {
     SolutionStore.findSolutionByIdPoints(solutionId)
@@ -75,30 +72,55 @@ const displayText = computed(() => {
   return valueSliderPoint.value === 0 ? 'Без оцінки' : points[valueSliderPoint.value];
 });
 
-const addCommentText = reactive({
+const addCommentTextMessage = reactive({
   text: ''
 })
-const addComment = async () => {
-  await CommentStore.commentMessage(MessageStore.msgId, addCommentText)
-  addCommentText.text = ''
-  await getComments()
+
+const addCommentTextSolution = reactive({
+  text: ''
+})
+const addCommentMessage = async () => {
+  await CommentStore.commentMessage(MessageStore.msgId, addCommentTextMessage)
+  addCommentTextMessage.text = ''
+  await getCommentsMessage()
 }
 
-const updateComment = async (changedText: string) => {
+const textCommentUpdate = reactive({
+  text: CommentStore.nowComment.text
+})
+
+const updateCommentMessage = async (changedText: string) => {
   await CommentStore.updateComment(CommentStore.commentId, {text: changedText})
   changeComment.value = false
-  await getComments()
+  await getCommentsMessage()
+  await getCommentSolution()
+
 }
-const getComments = async () => {
+const getCommentsMessage = async () => {
   await CommentStore.findByMessageId(MessageStore.msgId)
 }
-getComments()
+getCommentsMessage()
 
-const deleteComment = async () => {
+const deleteCommentMessage = async () => {
   await CommentStore.deleteComment(CommentStore.commentId)
   deleteCommentSheet.value = false
-  await getComments()
+  await getCommentsMessage()
+  await getCommentSolution()
 }
+
+//Solution comment
+
+const getCommentSolution = async () => {
+  await CommentStore.findBySolutionId(SolutionStore.solutionId)
+}
+getCommentSolution()
+
+const addCommentSolution = async () => {
+  await CommentStore.commentSolution(SolutionStore.solutionId, addCommentTextSolution)
+  addCommentTextSolution.text = ''
+  await getCommentSolution()
+}
+
 
 function isFutureDate(targetDate) {
   const currentDate = new Date();
@@ -153,11 +175,22 @@ const menuComment = [{title: 'Редагувати'}, {title: 'Видалити'
 
 const eventClickMenuComment = (item: any) => {
   if (item.title === 'Редагувати') {
+    textCommentUpdate.text = CommentStore.nowComment.text
     changeComment.value = true
   }
   if (item.title === 'Видалити') {
     deleteCommentSheet.value = true
   }
+}
+
+const randomColor = () => {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16)
+}
+
+const userInitials = () => {
+  const nameParts = auth().user.user.name.split(' ');
+  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
+  return initials
 }
 </script>
 
@@ -236,7 +269,7 @@ const eventClickMenuComment = (item: any) => {
 
 
           <v-list>
-            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item" >
+            <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item">
               <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
                    :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
 
@@ -246,11 +279,13 @@ const eventClickMenuComment = (item: any) => {
                     <div class="comment-header">
 
                       <div class="avatar-wrapper">
-                        <v-avatar v-if="AuthStore.user.user.id !== i.userId">
-                          <img src="../../assets/Vchusia.png" alt="">
+                        <v-avatar :style="{ backgroundColor: randomColor() }" v-if="AuthStore.user.user.id !== i.userId">
+                          <img :src="image_URL+i.userAvatar" v-if='i.userAvatar !== ""'>
+                          <span class="initials" v-else>{{ userInitials() }}</span>
+
                         </v-avatar>
                       </div>
-                      <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">User Name</span>
+                      <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">{{i.userName}}</span>
                     </div>
                     <div class="text-block">
                       <p>{{ i.text }}</p>
@@ -294,6 +329,8 @@ const eventClickMenuComment = (item: any) => {
             </v-list-item>
           </v-list>
 
+
+
         </div>
 
       </div>
@@ -309,7 +346,7 @@ const eventClickMenuComment = (item: any) => {
           <div class="d-flex align-center">
             <ion-item class="w-100">
               <ion-textarea
-                  v-model="CommentStore.nowComment.text"
+                  v-model="textCommentUpdate.text"
                   :rows="1"
                   :auto-grow="true"
                   placeholder="Напишіть коментар"
@@ -317,7 +354,7 @@ const eventClickMenuComment = (item: any) => {
               </ion-textarea>
             </ion-item>
             <v-btn class="bg-transparent" icon="mdi-send" elevation="0"
-                   @click="updateComment(CommentStore.nowComment.text)"></v-btn>
+                   @click="updateCommentMessage(textCommentUpdate.text)"></v-btn>
           </div>
         </v-card>
       </v-bottom-sheet>
@@ -335,7 +372,7 @@ const eventClickMenuComment = (item: any) => {
 
                 <v-row class="d-flex justify-space-between">
                   <v-col>
-                    <v-btn @click="deleteComment()">Так</v-btn>
+                    <v-btn @click="deleteCommentMessage()">Так</v-btn>
                   </v-col>
                   <v-col>
                     <v-btn @click="deleteCommentSheet = !deleteCommentSheet">
@@ -353,19 +390,19 @@ const eventClickMenuComment = (item: any) => {
       <div class="d-flex align-center">
         <ion-item class="w-100">
           <ion-textarea
-              v-model="addCommentText.text"
+              v-model="addCommentTextMessage.text"
               :rows="1"
               :auto-grow="true"
               placeholder="Напишіть коментар"
           >
           </ion-textarea>
         </ion-item>
-        <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="addComment()"></v-btn>
+        <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="addCommentMessage()"></v-btn>
       </div>
 
       <div class="text-center">
         <v-bottom-sheet v-model="group_solution">
-          <v-card height="700">
+          <v-card height="850">
             <div class="solution_student" v-if="SolutionStore.submittedSolutionsId.length > 0">
               <div class="pb-3 ma-6">
                 <p>{{ SolutionStore.nowSolution.description }}</p>
@@ -376,16 +413,69 @@ const eventClickMenuComment = (item: any) => {
                          @click="imageChange = !imageChange; SolutionStore.imageURL = image_URL+i.name; ImageStore.imgId = i.id"></v-img>
                 </div>
               </div>
+
+              <ion-content class="h-50">
+                <v-list>
+                  <v-list-item v-for="i in CommentStore.commentsSolution" class="comment_item">
+                    <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
+                         :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                      <div class="content-wrapper">
+                        <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                          <div class="text-block">
+                            <p>{{ i.text }}</p>
+                          </div>
+
+                          <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                            <small>13:00</small>
+
+                            <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                              <v-menu
+
+                              >
+                                <template v-slot:activator="{ props }">
+                                  <v-icon
+                                      color="grey"
+                                      v-bind="props"
+                                      @click="CommentStore.commentId = i.id, CommentStore.nowComment = i"
+                                  >
+                                    mdi-dots-horizontal-circle-outline
+                                  </v-icon>
+                                </template>
+
+                                <v-list>
+                                  <v-list-item
+                                      v-for="(item, index) in menuComment"
+                                      :key="index"
+                                      @click="eventClickMenuComment(item)"
+                                  >
+                                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                  </v-list-item>
+                                </v-list>
+                              </v-menu>
+                            </div>
+
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </v-list-item>
+                </v-list>
+              </ion-content>
+
               <div class="result_solution">
                 <div class="mark_solution">
                   <div class="comment_for_solution">
                     <ion-item class="w-100">
                       <ion-textarea
                           :rows="1"
+                          v-model="addCommentTextSolution.text"
                           :auto-grow="true"
                           placeholder="Напишіть коментар"
                       >
                       </ion-textarea>
+                      <v-btn icon="mdi-send" elevation="0" @click="addCommentSolution()"></v-btn>
                     </ion-item>
                   </div>
                 </div>
@@ -708,8 +798,8 @@ const eventClickMenuComment = (item: any) => {
 .comment-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
   margin-left: 15px;
 }
 
@@ -726,7 +816,7 @@ const eventClickMenuComment = (item: any) => {
 }
 
 .comment-time {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -736,12 +826,8 @@ const eventClickMenuComment = (item: any) => {
   text-align: right;
 }
 
-.my-comment {
 
-  margin-right: 9px;
-}
-
-.text-block{
+.text-block {
   margin-left: 15px;
 }
 
@@ -786,5 +872,11 @@ const eventClickMenuComment = (item: any) => {
   height: 2px;
   background: grey;
   width: 100%;
+}
+
+.initials{
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
 }
 </style>

@@ -2,12 +2,14 @@ import {defineStore} from "pinia";
 import ImageApi from '../http/modules/image'
 
 interface State {
-    imgId: number
+    imgId: number,
+    nowImageFromTeacher: any
 }
 
 export const image = defineStore('image', {
     state: (): State => ({
         imgId: 0,
+        nowImageFromTeacher: []
     }),
 
     actions: {
