@@ -216,16 +216,11 @@ const selectAll = () => {
 };
 
 const isSelectedUser = (infoUser: any, index: number) => {
-  setTimeout(() => {
-    if (checkboxes.value[index] === false) {
-      sharedStudents = sharedStudents.filter((s) => {
-        return s != infoUser.id
-      })
-    } else {
-      sharedStudents.push(infoUser.id)
-    }
-
-  }, 50)
+  if (checkboxes.value[index] === false) {
+    sharedStudents = sharedStudents.filter((id) => id !== infoUser.id);
+  } else {
+    sharedStudents.push(infoUser.id);
+  }
 
 }
 

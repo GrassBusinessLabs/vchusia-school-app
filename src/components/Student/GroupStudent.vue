@@ -68,16 +68,22 @@ onMounted(() => {myGroupsList()})
 
             </template>
           </v-list-item>
+
         </v-list>
+    </div>
+    <p class="text-center mt-2" v-if="GroupStore.myGroups.length < 1">Приєднайтесь до групи</p>
+
+    <div class="block_btn_add_course">
+      <v-btn class="btn-add-course mb-1" icon="mdi-plus" size="70" @click="sheet = !sheet"></v-btn>
     </div>
   </ion-content>
 
   <ion-footer class="ion-no-border">
     <div class="text-center">
 
-      <v-btn class="btn-join-group mb-6" size="large" @click="sheet = !sheet">
-        <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
-      </v-btn>
+<!--      <v-btn class="btn-join-group mb-6" size="large" @click="sheet = !sheet">-->
+<!--        <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
+<!--      </v-btn>-->
 
       <v-bottom-sheet v-model="sheet">
         <v-card class="text-center" height="300">
@@ -156,5 +162,22 @@ onMounted(() => {myGroupsList()})
 }
 .list_groups{
   padding: 0;
+}
+
+.block_btn_add_course{
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+
+}
+
+.btn-add-course {
+  min-height: 100%;
+  border-radius: 100%;
+  min-width: 60%;
+  margin: 0 auto;
+  background: grey;
+  color: #fff;
+  font-size: 25px;
 }
 </style>

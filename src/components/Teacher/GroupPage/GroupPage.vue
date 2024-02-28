@@ -212,8 +212,8 @@ onMounted(() => {
         </v-card>
       </v-layout>
 
-      <v-layout class="mt-4">
-        <v-card class="content_people" elevation="4">
+
+        <v-card class="content_people mt-4" elevation="4" v-if="GroupStore.usersInGroup[0] && GroupStore.usersInGroup[0].length > 0">
           <p class="title_user_list">Учасники групи</p>
           <v-list class="list_users">
             <div v-for="i of GroupStore.usersInGroup">
@@ -224,9 +224,11 @@ onMounted(() => {
             </div>
           </v-list>
         </v-card>
-      </v-layout>
 
 
+      <div class="block_btn_add_course">
+        <v-btn class="btn-add-course mb-1" icon="mdi-plus" size="70" @click="courseAddInGroup = !courseAddInGroup"></v-btn>
+      </div>
     </ion-content>
 
     <ion-footer class="ion-no-border">
@@ -261,9 +263,11 @@ onMounted(() => {
       </div>
 
       <div class="text-center">
-        <v-btn class="btn-add-course mb-1" size="large">
-          <ion-icon :icon="add" color="danger" id="open-modal" @click="courseAddInGroup = !courseAddInGroup"></ion-icon>
-        </v-btn>
+<!--        <v-btn class="btn-add-course mb-1" size="large">-->
+<!--          <ion-icon :icon="add" color="danger" id="open-modal" @click="courseAddInGroup = !courseAddInGroup"></ion-icon>-->
+<!--        </v-btn>-->
+
+
 
         <v-bottom-sheet v-model="courseAddInGroup">
           <v-card height="300">
@@ -452,4 +456,21 @@ onMounted(() => {
   background: rgb(85, 255, 216);
   background: linear-gradient(207deg, rgba(85, 255, 216, 1) 16%, rgba(214, 255, 255, 1) 100%);
 }
+.block_btn_add_course{
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+
+}
+
+.btn-add-course {
+  min-height: 100%;
+  border-radius: 100%;
+  min-width: 60%;
+  margin: 0 auto;
+  background: grey;
+  color: #fff;
+  font-size: 25px;
+}
+
 </style>

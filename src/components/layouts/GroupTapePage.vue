@@ -46,6 +46,15 @@ function replaceGroup(){
     router.replace('/main/groups-student')
   }
 }
+
+function replaceFeed(){
+  checkRole()
+  if(role === 'TEACHER') {
+    router.replace('/main/feed')
+  } else{
+    router.replace('/main/feed-student')
+  }
+}
 </script>
 
 <template>
@@ -66,17 +75,17 @@ function replaceGroup(){
       <v-card>
         <v-layout>
           <v-navigation-drawer
-              class="nav-menu"
+              class="nav-menu w-100"
               permanent
           >
             <v-divider></v-divider>
 
             <v-list nav class="list-menu">
               <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
+              <v-list-item title="Стрічка" @click="replaceFeed(), activePage='Стрічка'" prepend-icon="mdi-calendar-check-outline"></v-list-item>
               <v-list-item title="Курси" value="course" @click="replaceCourse(), activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
-              <v-list-item title="Завдання" value="task" @click="$router.replace('/main/tasks'), activePage='Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
               <v-list-item title="Групи" value="groups" @click="replaceGroup(), activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
-              <v-list-item title="Учні" value="pupils" @click="$router.replace('/main/tasks'), activePage='Учні'" prepend-icon="mdi-school-outline"></v-list-item>
+
 
             </v-list>
             <v-footer class="footerMenu">

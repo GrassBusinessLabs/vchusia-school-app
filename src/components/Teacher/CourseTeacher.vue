@@ -9,7 +9,7 @@
 
 
     <ion-content class="content">
-      <div v-for="value in CourseStore.items" class="course" @click="redirect(value)">
+      <div v-for="value in CourseStore.items" class="course" @click="redirect(value)" v-if="CourseStore.items.length !== 0">
 
         <div v-for="(name, value, index) in value"
              v-show="value != 'id' && value != 'userid' && value != 'Опис курсу' && value != 'Завдання' && value != 'Ідентифікатор'"
@@ -19,12 +19,14 @@
 
       </div>
 
+      <div v-else>
+        <p class="text-center mt-3">Курсів не створено</p>
+      </div>
+
 
     </ion-content>
     <div class="block_btn_add_course">
-      <v-btn class="btn-add-course mb-1" @click="sheet = !sheet">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <v-btn class="btn-add-course mb-1" icon="mdi-plus" size="70" @click="sheet = !sheet"></v-btn>
     </div>
     <ion-footer class="footer_course_teacher">
 
@@ -254,8 +256,8 @@ v-btn {
   min-width: 60%;
   margin: 0 auto;
   background: grey;
-  outline: 1px solid cyan;
   color: #fff;
+  font-size: 25px;
 }
 
 .btnAddCourse {
@@ -264,14 +266,9 @@ v-btn {
 }
 
 .block_btn_add_course{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 7%;
-  width: 10%;
   position: absolute;
-  top: 85%;
-  left: 80%;
+  bottom: 5%;
+  right: 5%;
 
 }
 

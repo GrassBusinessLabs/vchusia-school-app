@@ -11,6 +11,7 @@ import {add} from "ionicons/icons";
 import {auth} from "@/stores/auth";
 import {image} from "@/stores/image";
 
+const showAddCommentSolution = ref(false)
 const SolutionStore = solution()
 const MessageStore = message()
 const CommentStore = comment()
@@ -25,6 +26,8 @@ const ImageStore = image()
 const imageChange = ref(false)
 const changeComplettedSolution = ref(false)
 const image_URL = 'https://vchusia.grassbusinesslabs.tk/static/'
+const showEditCommentField = ref(false)
+
 
 const points = reactive({
   0: '',
@@ -53,7 +56,7 @@ const findPointsUsers = () => {
 }
 
 const findSolutionById = async () => {
-  await SolutionStore.findSolutionById(SolutionStore.submittedSolutionsId[0])
+  await SolutionStore.findSolutionById(SolutionStore.submittedSolutionsId[0].id)
 }
 
 const findCompletedSolution = async (studentIndex: number) => {
@@ -63,8 +66,8 @@ const findCompletedSolution = async (studentIndex: number) => {
 }
 const markSolution = async (status: string) => {
   console.log(SolutionStore.nowPoint)
-  await SolutionStore.markSolution(SolutionStore.submittedSolutionsId[0], status, {points: SolutionStore.nowPoint})
-  findSolutionsUsers()
+  await SolutionStore.markSolution(SolutionStore.submittedSolutionsId[0].id, status, {points: SolutionStore.nowPoint})
+  await findSolutionsUsers()
 }
 
 const displayText = computed(() => {
@@ -92,6 +95,9 @@ const textCommentUpdate = reactive({
 const updateCommentMessage = async (changedText: string) => {
   await CommentStore.updateComment(CommentStore.commentId, {text: changedText})
   changeComment.value = false
+  showEditCommentField.value = false
+  showAddCommentSolution.value = false
+  textCommentUpdate.text = CommentStore.nowComment.text
   await getCommentsMessage()
   await getCommentSolution()
 
@@ -121,6 +127,9 @@ const addCommentSolution = async () => {
   await getCommentSolution()
 }
 
+const updateCommentTextSolution = reactive({
+  text: CommentStore.nowComment.text
+})
 
 function isFutureDate(targetDate) {
   const currentDate = new Date();
@@ -156,7 +165,18 @@ const formatDate = (dateString) => {
   }
 };
 
+const formatTime = (dateString: any) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
 
+  const formattedTime = new Date(dateString).toLocaleString('ua-UA', options);
+  return formattedTime;
+};
 const dayOfWeek = () => {
   const datesStringName = {
     1: 'Понеділок',
@@ -176,7 +196,19 @@ const menuComment = [{title: 'Редагувати'}, {title: 'Видалити'
 const eventClickMenuComment = (item: any) => {
   if (item.title === 'Редагувати') {
     textCommentUpdate.text = CommentStore.nowComment.text
-    changeComment.value = true
+    // changeComment.value = true
+    showEditCommentField.value = true
+  }
+  if (item.title === 'Видалити') {
+    deleteCommentSheet.value = true
+  }
+}
+
+const eventClickMenuCommentSolution = (item: any) => {
+  if (item.title === 'Редагувати') {
+    updateCommentTextSolution.text = CommentStore.nowComment.text
+    // changeComment.value = true
+    showAddCommentSolution.value = true
   }
   if (item.title === 'Видалити') {
     deleteCommentSheet.value = true
@@ -222,9 +254,9 @@ const userInitials = () => {
                   Очікують перевірки
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.submittedSolutionsId.length"
+                  <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.submittedSolutionsId"
                             v-if="SolutionStore.submittedSolutionsId.length > 0">
-                    <img src="../../assets/Vchusia.png" alt="Avatar">
+                    <img :src="image_URL+i.avatar" alt="Avatar">
                   </v-avatar>
                   <div v-else>
                     <h2>Немає рішень</h2>
@@ -237,9 +269,9 @@ const userInitials = () => {
                   Очікуються
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.draftReturnSolutions.length"
+                  <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.draftReturnSolutions"
                             v-if="SolutionStore.draftReturnSolutions.length > 0">
-                    <img src="../../assets/Vchusia.png" alt="Avatar">
+                    <img :src="image_URL+i.avatar" alt="Avatar">
                   </v-avatar>
                   <div v-else>
                     <h2>Немає очікуваних</h2>
@@ -252,9 +284,9 @@ const userInitials = () => {
                   Перевірені
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                  <v-avatar rounded="1" class=" ml-2" v-for="i in SolutionStore.complettedSolutions.length"
+                  <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.complettedSolutions"
                             v-if="SolutionStore.complettedSolutions.length > 0">
-                    <img src="../../assets/Vchusia.png" alt="Avatar">
+                    <img :src="image_URL+i.avatar"  alt="Avatar">
                   </v-avatar>
                   <div v-else>
                     <h2>Немає рішень</h2>
@@ -271,30 +303,30 @@ const userInitials = () => {
           <v-list>
             <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item">
               <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
-                   :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                   :class="{ 'my-comment': AuthStore.user.id === i.userId, 'other-comment': AuthStore.user.id !== i.userId }">
+                <div class="avatar-wrapper">
+                  <v-avatar :style="{ backgroundColor: randomColor() }" class="avatar-comment-user" v-if="AuthStore.user.id !== i.userId">
+                    <img :src="image_URL+i.userAvatar" v-if='i.userAvatar !== ""'>
+                    <span class="initials" v-else>{{ userInitials() }}</span>
 
+                  </v-avatar>
+                </div>
                 <div class="content-wrapper">
 
-                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.id === i.userId}">
                     <div class="comment-header">
 
-                      <div class="avatar-wrapper">
-                        <v-avatar :style="{ backgroundColor: randomColor() }" v-if="AuthStore.user.user.id !== i.userId">
-                          <img :src="image_URL+i.userAvatar" v-if='i.userAvatar !== ""'>
-                          <span class="initials" v-else>{{ userInitials() }}</span>
 
-                        </v-avatar>
-                      </div>
-                      <span class="user-name" v-if="AuthStore.user.user.id !== i.userId">{{i.userName}}</span>
+                      <span class="user-name" v-if="AuthStore.user.id !== i.userId">{{i.userName}}</span>
                     </div>
                     <div class="text-block">
-                      <p>{{ i.text }}</p>
+                      <pre>{{ i.text }}</pre>
                     </div>
 
-                    <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
-                      <small>13:00</small>
+                    <div class="comment-time" :class="{ 'justify-end': AuthStore.user.id !== i.userId }">
+                      <small>{{formatTime(i.createdDate)}}</small>
 
-                      <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                      <div class="text-center" v-if="AuthStore.user.id === i.userId">
                         <v-menu
 
                         >
@@ -335,29 +367,55 @@ const userInitials = () => {
 
       </div>
 
+
     </ion-content>
 
     <!--    FOOTER-->
 
     <ion-footer>
+      <div class="d-flex align-center" v-if="showEditCommentField">
+        <ion-item class="w-100">
+          <ion-textarea
+              v-model="textCommentUpdate.text"
+              :rows="1"
+              :auto-grow="true"
+              placeholder="Напишіть коментар"
+          >
+          </ion-textarea>
+        </ion-item>
+        <v-btn class="bg-transparent" icon="mdi-send" elevation="0"
+               @click="updateCommentMessage(textCommentUpdate.text)"></v-btn>
+      </div>
 
-      <v-bottom-sheet v-model="changeComment">
-        <v-card class="d-flex justify-center">
-          <div class="d-flex align-center">
-            <ion-item class="w-100">
-              <ion-textarea
-                  v-model="textCommentUpdate.text"
-                  :rows="1"
-                  :auto-grow="true"
-                  placeholder="Напишіть коментар"
-              >
-              </ion-textarea>
-            </ion-item>
-            <v-btn class="bg-transparent" icon="mdi-send" elevation="0"
-                   @click="updateCommentMessage(textCommentUpdate.text)"></v-btn>
-          </div>
-        </v-card>
-      </v-bottom-sheet>
+      <div class="d-flex align-center" v-if="!showEditCommentField">
+        <ion-item class="w-100">
+          <ion-textarea
+              v-model="addCommentTextMessage.text"
+              :rows="1"
+              :auto-grow="true"
+              placeholder="Напишіть коментар"
+          >
+          </ion-textarea>
+        </ion-item>
+        <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="addCommentMessage()"></v-btn>
+      </div>
+<!--      <v-bottom-sheet v-model="changeComment">-->
+<!--        <v-card class="d-flex justify-center">-->
+<!--          <div class="d-flex align-center">-->
+<!--            <ion-item class="w-100">-->
+<!--              <ion-textarea-->
+<!--                  v-model="textCommentUpdate.text"-->
+<!--                  :rows="1"-->
+<!--                  :auto-grow="true"-->
+<!--                  placeholder="Напишіть коментар"-->
+<!--              >-->
+<!--              </ion-textarea>-->
+<!--            </ion-item>-->
+<!--            <v-btn class="bg-transparent" icon="mdi-send" elevation="0"-->
+<!--                   @click="updateCommentMessage(textCommentUpdate.text)"></v-btn>-->
+<!--          </div>-->
+<!--        </v-card>-->
+<!--      </v-bottom-sheet>-->
 
       <v-bottom-sheet v-model="deleteCommentSheet">
         <v-card>
@@ -387,18 +445,7 @@ const userInitials = () => {
       </v-bottom-sheet>
 
 
-      <div class="d-flex align-center">
-        <ion-item class="w-100">
-          <ion-textarea
-              v-model="addCommentTextMessage.text"
-              :rows="1"
-              :auto-grow="true"
-              placeholder="Напишіть коментар"
-          >
-          </ion-textarea>
-        </ion-item>
-        <v-btn class="bg-transparent" icon="mdi-send" elevation="0" @click="addCommentMessage()"></v-btn>
-      </div>
+
 
       <div class="text-center">
         <v-bottom-sheet v-model="group_solution">
@@ -418,17 +465,17 @@ const userInitials = () => {
                 <v-list>
                   <v-list-item v-for="i in CommentStore.commentsSolution" class="comment_item">
                     <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
-                         :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                         :class="{ 'my-comment': AuthStore.user.id === i.userId, 'other-comment': AuthStore.user.id !== i.userId }">
                       <div class="content-wrapper">
-                        <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                        <div class="comment-text" :class="{'textMyComment' : AuthStore.user.id === i.userId}">
                           <div class="text-block">
-                            <p>{{ i.text }}</p>
+                            <pre>{{ i.text }}</pre>
                           </div>
 
-                          <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
-                            <small>13:00</small>
+                          <div class="comment-time" :class="{ 'justify-end': AuthStore.user.id !== i.userId }">
+                            <small>{{formatTime(i.createdDate)}}</small>
 
-                            <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                            <div class="text-center" v-if="AuthStore.user.id === i.userId">
                               <v-menu
 
                               >
@@ -446,7 +493,7 @@ const userInitials = () => {
                                   <v-list-item
                                       v-for="(item, index) in menuComment"
                                       :key="index"
-                                      @click="eventClickMenuComment(item)"
+                                      @click="eventClickMenuCommentSolution(item)"
                                   >
                                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                                   </v-list-item>
@@ -466,7 +513,7 @@ const userInitials = () => {
 
               <div class="result_solution">
                 <div class="mark_solution">
-                  <div class="comment_for_solution">
+                  <div class="comment_for_solution" v-if="!showAddCommentSolution">
                     <ion-item class="w-100">
                       <ion-textarea
                           :rows="1"
@@ -476,6 +523,19 @@ const userInitials = () => {
                       >
                       </ion-textarea>
                       <v-btn icon="mdi-send" elevation="0" @click="addCommentSolution()"></v-btn>
+                    </ion-item>
+                  </div>
+
+                  <div class="comment_for_solution" v-if="showAddCommentSolution">
+                    <ion-item class="w-100">
+                      <ion-textarea
+                          :rows="1"
+                          v-model="updateCommentTextSolution.text"
+                          :auto-grow="true"
+                          placeholder="Напишіть коментар"
+                      >
+                      </ion-textarea>
+                      <v-btn icon="mdi-send" elevation="0" @click="updateCommentMessage(updateCommentTextSolution.text)"></v-btn>
                     </ion-item>
                   </div>
                 </div>
@@ -539,16 +599,13 @@ const userInitials = () => {
 
                     <div class="d-flex align-center">
                       <v-avatar class="border ma-2">
-                        <img src="../../assets/Vchusia.png" alt="Avatar">
+                        <img :src="image_URL+i.avatar" alt="Avatar">
                       </v-avatar>
                       <div>
                         <v-list-item-title>
                           {{ i.userName }}
                         </v-list-item-title>
 
-                        <v-list-item-subtitle>
-                          {{ i.status }}
-                        </v-list-item-subtitle>
                       </div>
                     </div>
                   </div>
@@ -578,7 +635,7 @@ const userInitials = () => {
 
                     <div class="d-flex align-center">
                       <v-avatar class="border ma-2">
-                        <img src="../../assets/Vchusia.png" alt="Avatar">
+                        <img :src="image_URL+student.avatar" alt="Avatar">
                       </v-avatar>
 
                       <div>
@@ -586,9 +643,6 @@ const userInitials = () => {
                           {{ student.userName }}
                         </v-list-item-title>
 
-                        <v-list-item-subtitle>
-                          {{ student.status }}
-                        </v-list-item-subtitle>
                       </div>
 
                     </div>
@@ -615,6 +669,20 @@ const userInitials = () => {
           <v-card height="600">
             <div>
 
+              <div v-for="i of SolutionStore.complettedSolutions">
+                <div v-if="i.id === SolutionStore.nowSolution.id" class="d-flex align-center ma-4">
+                  <div>
+                    <v-avatar>
+                      <img :src="image_URL+i.avatar" alt="">
+                    </v-avatar>
+                  </div>
+                  <div class="ml-2">
+                    {{i.userName}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="hr w-100"></div>
               <div class="pb-3 ma-6">
                 <p>{{ SolutionStore.nowSolution.description }}</p>
               </div>
@@ -626,19 +694,6 @@ const userInitials = () => {
                 </div>
               </div>
 
-              <div class="mark_solution">
-                <div class="comment_for_solution">
-                  <ion-item class="w-100">
-                    <ion-textarea
-                        :rows="1"
-                        :auto-grow="true"
-                        placeholder="Напишіть коментар"
-
-                    >
-                    </ion-textarea>
-                  </ion-item>
-                </div>
-              </div>
 
               <div>
                 <div class="d-flex justify-center ma-5 point-content">
@@ -660,11 +715,6 @@ const userInitials = () => {
                 </v-slider>
               </div>
 
-              <div class="w-75 mx-auto ma-5">
-                <v-btn class="w-100 mt-4" color="grey">
-                  Редагувати
-                </v-btn>
-              </div>
 
 
             </div>
@@ -878,5 +928,11 @@ const userInitials = () => {
   font-weight: bold;
   font-size: 20px;
   color: #fff;
+}
+.avatar-comment-user{
+  outline: 1px solid #c4c4c4;
+}
+.hr{
+  border-bottom: 1px solid #c9c9c9;
 }
 </style>

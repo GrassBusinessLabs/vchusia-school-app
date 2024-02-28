@@ -43,7 +43,7 @@ export const auth = defineStore('auth', {
                 const response: any = await AuthApi.login(body)
                 localStorage.setItem('token', response.token)
                 localStorage.setItem('user', JSON.stringify(response.user))
-                this.user = response
+                this.user = response.user
                 this.token = response.token
                 const userData = JSON.parse(localStorage.getItem('user'));
                 if (userData.role === "TEACHER") {
@@ -87,7 +87,7 @@ export const auth = defineStore('auth', {
         async getMe(){
           try {
               const response = await AuthApi.getMe()
-              this.user.user = response
+              this.user = response
               console.log(response)
           }  catch (e) {
               console.log(e)
@@ -98,13 +98,14 @@ export const auth = defineStore('auth', {
             try {
                 const response: any = await AuthApi.signup(body)
                 this.user = response.user
+                this.token = response.token
                 localStorage.setItem('token', response.token)
                 localStorage.setItem('user', JSON.stringify(response.user))
                 console.log(response)
                 if (response.user.role === "TEACHER") {
                     await router.replace('/main/courses')
                 } else {
-                    await router.replace('/main/courses')
+                    await router.replace('/main/feed-student')
 
                 }
             } catch (e) {

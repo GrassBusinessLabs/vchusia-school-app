@@ -3,17 +3,17 @@
     <ion-header class="ion-no-border">
       <ion-list>
 
-        <ion-avatar class="ion-avatar-account" v-if="auth().user.user.avatar">
-          <img :src='URL_IMG+auth().user.user.avatar' alt="Avatar" >
+        <ion-avatar class="ion-avatar-account" v-if="auth().user.avatar">
+          <img :src='URL_IMG+auth().user.avatar' alt="Avatar" >
         </ion-avatar>
 
-        <ion-avatar :style="{ backgroundColor: randomColor() }" class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.user.avatar">
+        <ion-avatar :style="{ backgroundColor: randomColor() }" class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
           <span class="initials">{{ userInitials() }}</span>
         </ion-avatar>
 
         <InputAvatarDialog class="mt-4"/>
 
-        <ion-buttons class="text-center d-flex justify-center mb-3" v-if="auth().user.user.avatar">
+        <ion-buttons class="text-center d-flex justify-center mb-3" v-if="auth().user.avatar">
           <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
         </ion-buttons>
 
@@ -174,8 +174,8 @@ onMounted(() => {
 })
 
 const user = reactive({
-  name: auth().user.user.name,
-  email: auth().user.user.email
+  name: auth().user.name,
+  email: auth().user.email
 })
 let nameMe = user.name;
 
@@ -196,8 +196,8 @@ const confirmMe = async () => {
   sheet_change_me.value = false
   nameMe = ""
   await auth().getMe()
-  user.name = auth().user.user.name
-  user.email = auth().user.user.email
+  user.name = auth().user.name
+  user.email = auth().user.email
 }
 
 const deleteAccount = () => {
@@ -209,7 +209,7 @@ const deleteAvatar = () => {
 }
 
 const userInitials = () => {
-  const nameParts = auth().user.user.name.split(' ');
+  const nameParts = auth().user.name.split(' ');
   const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
   return initials
 }

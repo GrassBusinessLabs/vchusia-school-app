@@ -112,7 +112,7 @@ export const solution = defineStore('solution', {
             try {
                 const response = await SolutionApi.findSolutionsUsers(msgId)
                 this.solutionsUsers = response.solutions
-                this.submittedSolutionsId = (this.solutionsUsers.filter(solution => solution.status === 'SUBMITTED').map(sol => sol.id))
+                this.submittedSolutionsId = (this.solutionsUsers.filter(solution => solution.status === 'SUBMITTED'))
                 this.complettedSolutions = this.solutionsUsers.filter(solution => solution.status === 'COMPLETED')
                 this.draftReturnSolutions = this.solutionsUsers.filter(solution => solution.status === 'DRAFT' || solution.status === 'RETURNED')
                 console.log(response)

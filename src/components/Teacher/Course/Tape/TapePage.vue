@@ -2,28 +2,40 @@
 
 import {IonContent, IonPage, IonFooter, IonIcon, onIonViewWillEnter, IonInput, IonItem, IonTextarea} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
-import {onBeforeMount, onMounted, onUpdated, ref} from "vue";
+import {onBeforeMount, onMounted, onUpdated, reactive, ref} from "vue";
 import {add} from "ionicons/icons";
 import {group} from "@/stores/group";
 import {course} from "@/stores/course";
 import {post} from "@/stores/post";
 import {message} from "@/stores/message";
+import {comment} from "@/stores/comment";
+import {auth} from "@/stores/auth";
+import router from "@/router";
 
 const sheet_comment = ref(false)
-const comment = ref('')
 const GroupStore = group()
 const CourseStore = course()
 const PostStore = post()
 const MessageStore = message()
+const CommentStore = comment()
+const AuthStore = auth()
 
 const pagination = {
   page: 1,
   count: 10
 }
 
+
 async function userMessages() {
   await MessageStore.userMessages(CourseStore.courseId, GroupStore.idGroup)
 }
+
+const selectMessage = (message: any) => {
+  MessageStore.thisMessage = message;
+  MessageStore.msgId = message.id;
+  router.replace('/main/solutions');
+}
+
 
 onIonViewWillEnter(() => {
   userMessages();
@@ -38,7 +50,7 @@ onIonViewWillEnter(() => {
   <ion-content>
     <v-card elevation="0">
       <v-list class="tape_list" v-for="i of MessageStore.allMessages">
-        <v-list-item class="tape_list_item">
+        <v-list-item class="tape_list_item" @click="AuthStore.activePage = 'Рішення'; selectMessage(i)">
           <v-list-item-title>
             {{i.text}}
           </v-list-item-title>
@@ -59,16 +71,6 @@ onIonViewWillEnter(() => {
   </ion-content>
 
   <ion-footer class="d-flex align-center">
-    <ion-item class="w-100">
-      <ion-textarea
-          :rows="1"
-          :auto-grow="true"
-          placeholder="Напишіть коментар"
-      >
-      </ion-textarea>
-
-    </ion-item>
-    <v-btn icon="mdi-send" elevation="0"></v-btn>
 
 
   </ion-footer>

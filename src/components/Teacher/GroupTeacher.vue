@@ -5,7 +5,7 @@
     <ion-content>
       <v-list lines="one">
         <div v-for="i of GroupStore.allGroups">
-          <v-list-item v-for="j of i" class="listGroupItem">
+          <v-list-item v-for="j of i"  class="listGroupItem">
             <div  @click="replaceToPageGroup(j)">
               <v-list-item-title>
                 {{ j.name }}
@@ -28,19 +28,26 @@
               ></v-btn>
             </template>
           </v-list-item>
+
+          <p class="text-center mt-2" v-if="i === null || i.length === 0">Створіть групу</p>
         </div>
 
       </v-list>
 
 
+      <div class="block_btn_add_course">
+        <v-btn class="btn-add-course mb-1" icon="mdi-plus" size="70" @click="sheet = !sheet"></v-btn>
+      </div>
     </ion-content>
 
 
     <ion-footer class="ion-no-border">
       <div class="text-center">
-        <v-btn class="btn-add-group mb-6" size="large" @click="sheet = !sheet">
-          <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>
-        </v-btn>
+<!--        <v-btn class="btn-add-group mb-6" size="large" @click="sheet = !sheet">-->
+<!--          <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
+<!--        </v-btn>-->
+
+
 
         <v-bottom-sheet v-model="sheet">
           <v-card
@@ -209,6 +216,22 @@ localStorage.setItem('allGroups', JSON.stringify([GroupStore.allGroups]))
   border-radius: 15px;
   background: rgb(223,226,216);
   background: linear-gradient(110deg, rgba(223,226,216,1) 0%, rgba(225,255,249,1) 100%);
+}
+
+.block_btn_add_course{
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.btn-add-course {
+  min-height: 100%;
+  border-radius: 100%;
+  min-width: 60%;
+  margin: 0 auto;
+  background: grey;
+  color: #fff;
+  font-size: 25px;
 }
 
 </style>

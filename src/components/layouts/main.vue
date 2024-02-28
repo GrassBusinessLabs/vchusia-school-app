@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <ion-menu content-id="main-content" class="menu" side="end">
+    <ion-menu content-id="main-content" class="menu" side="end" ref="menu">
       <ion-header class="ion-no-border">
         <v-toolbar
             dark
@@ -17,17 +17,16 @@
       <v-card>
         <v-layout>
           <v-navigation-drawer
-              class="nav-menu"
+              class="nav-menu w-100"
               permanent
           >
             <v-divider></v-divider>
 
             <v-list nav class="list-menu">
-              <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), this.authStore.activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
-              <v-list-item title="Курси" value="course" @click="replaceCourse(), this.authStore.activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
-              <v-list-item title="Завдання" value="task" @click="$router.replace('/main/tasks'), this.authStore.activePage='Завдання'" prepend-icon="mdi-briefcase-outline"></v-list-item>
+              <v-list-item  title="Обліковий запис" value="account" @click="replaceAccount(), this.authStore.activePage='Обліковий запис';" prepend-icon="mdi-account-circle-outline"></v-list-item>
+              <v-list-item v-if="this.user.role !== 'STUDENT'" title="Курси" value="course" @click="replaceCourse(), this.authStore.activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
+              <v-list-item title="Стрічка" @click="replaceFeed(), this.authStore.activePage='Стрічка'" prepend-icon="mdi-calendar-check-outline"></v-list-item>
               <v-list-item title="Групи" value="groups" @click="replaceGroup(), this.authStore.activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
-              <v-list-item title="Учні" value="pupils" @click="$router.replace('/main/tasks'), this.authStore.activePage='Учні'" prepend-icon="mdi-school-outline"></v-list-item>
 
             </v-list>
             <v-footer class="footerMenu">
@@ -69,11 +68,11 @@
         <v-bottom-navigation class="bottom-nav rounded custom"
                              v-model="value"
                              :bg-color="color"
-                             :grow='true'
+
 
         >
           <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceFeed(), this.authStore.activePage='Стрічка'">
-            <v-icon icon="mdi-book-outline" class="icon-course"/>
+            <v-icon icon="mdi-calendar-check-outline" class="icon-course"/>
             <span>Стрічка</span>
           </v-btn>
           <v-btn class="btn-course-bottom btn-bottom-nav" @click="replaceCourse(), this.authStore.activePage='Курси'" v-if="this.user.role !== 'STUDENT'">
@@ -84,13 +83,13 @@
 
           <v-btn class="btn-bottom-nav" @click="replaceGroup(), this.authStore.activePage='Групи'">
             <v-icon icon="mdi-account-group-outline"></v-icon>
-
             <span>Групи</span>
           </v-btn>
 
-          <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content">
+          <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content" >
             <ion-menu-button color="dark" class="pa-0"></ion-menu-button>
           </v-btn>
+
         </v-bottom-navigation>
       </v-layout>
 
@@ -189,6 +188,9 @@ export default defineComponent({
 
 
   methods: {
+    closeMenu() {
+      this.$refs.menu.close();
+    },
     changePage(page: string){
       this.authStore.activePage = page;
     },

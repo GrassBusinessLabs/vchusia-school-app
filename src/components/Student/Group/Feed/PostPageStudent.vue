@@ -21,7 +21,9 @@ const viewPrivateComment = ref(false)
 const check = ref(false)
 const updateCommentSheet = ref(false)
 const deleteCommentSheet = ref(false)
-const descriptionSolution = ref(SolutionStore.nowSolution.description);
+const descriptionSolution = reactive({
+  description: SolutionStore.nowSolution.description
+});
 const imgURL = 'https://vchusia.grassbusinesslabs.tk/static/'
 
 const showPrivateCommentField = ref(false)
@@ -90,6 +92,8 @@ onMounted(async () => {
   await findSolutionByMsgId()
   await findSolutionById()
   await getCommentsMessages()
+  await getCommentSolution()
+
 
   descriptionSolution.value = SolutionStore.nowSolution.description
 })
@@ -132,7 +136,6 @@ const deleteComment = async () => {
 const getCommentSolution = async () => {
   await CommentStore.findBySolutionId(SolutionStore.solutionId)
 }
-getCommentSolution()
 
 const addCommentSolution = async () => {
   await CommentStore.commentSolution(SolutionStore.solutionId, addCommentTextSolution)
@@ -189,7 +192,7 @@ const randomColor = () => {
 }
 
 const userInitials = () => {
-  const nameParts = auth().user.user.name.split(' ');
+  const nameParts = auth().user.name.split(' ');
   const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
   return initials
 }
@@ -225,11 +228,11 @@ const userInitials = () => {
             <v-list>
               <v-list-item v-for="i in CommentStore.commentsSolution" class="comment_item">
                 <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
-                     :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                     :class="{ 'my-comment': AuthStore.user.id === i.userId, 'other-comment': AuthStore.user.id !== i.userId }">
 
                   <div class="content-wrapper">
 
-                    <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                    <div class="comment-text" :class="{'textMyComment' : AuthStore.user.id === i.userId}">
                       <div class="comment-header">
 
                       </div>
@@ -237,10 +240,10 @@ const userInitials = () => {
                         <pre>{{ i.text }}</pre>
                       </div>
 
-                      <div class="comment-time" :class="{ 'justify-end': AuthStore.user.user.id !== i.userId }">
+                      <div class="comment-time" :class="{ 'justify-end': AuthStore.user.id !== i.userId }">
                         <small>{{formatTime(i.createdDate)}}</small>
 
-                        <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                        <div class="text-center" v-if="AuthStore.user.id === i.userId">
                           <v-menu
 
                           >
@@ -287,16 +290,16 @@ const userInitials = () => {
           <v-list>
             <v-list-item v-for="i in CommentStore.commentsMessage" class="comment_item">
               <div @click="CommentStore.commentId = i.id, CommentStore.nowComment = i" class="comment-wrapper"
-                   :class="{ 'my-comment': AuthStore.user.user.id === i.userId, 'other-comment': AuthStore.user.user.id !== i.userId }">
+                   :class="{ 'my-comment': AuthStore.user.id === i.userId, 'other-comment': AuthStore.user.id !== i.userId }">
                 <div class="avatar-wrapper">
-                  <v-avatar v-if="AuthStore.user.user.id !== i.userId" class="avatar-comment-user" :style="{ backgroundColor: randomColor() }">
+                  <v-avatar v-if="AuthStore.user.id !== i.userId" class="avatar-comment-user" :style="{ backgroundColor: randomColor() }">
                     <img :src='imgURL+i.userAvatar' v-if='i.userAvatar !== ""'>
                     <span class="initials" v-else>{{ userInitials() }}</span>
                   </v-avatar>
                 </div>
                 <div class="content-wrapper">
 
-                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.user.id === i.userId}">
+                  <div class="comment-text" :class="{'textMyComment' : AuthStore.user.id === i.userId}">
                     <div class="comment-header">
 
 
@@ -308,7 +311,7 @@ const userInitials = () => {
                     <div class="comment-time " >
                       <small>{{formatTime(i.createdDate)}}</small>
 
-                      <div class="text-center" v-if="AuthStore.user.user.id === i.userId">
+                      <div class="text-center" v-if="AuthStore.user.id === i.userId">
                         <v-menu
 
                         >
@@ -459,8 +462,8 @@ const userInitials = () => {
       <div class="text-center" v-if="displayFooter">
 
         <div class="d-flex align-center container_comment_solution">
-          <v-text-field class="description_text" @change="updateSolution" variant="outlined" label="Коментар"
-                        v-model="descriptionSolution"></v-text-field>
+          <v-text-field class="description_text" @input="updateSolution" variant="outlined" label="Коментар"
+                        v-model="descriptionSolution.description"></v-text-field>
         </div>
 
 

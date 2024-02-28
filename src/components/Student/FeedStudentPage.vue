@@ -187,7 +187,7 @@ const randomColor = (authorName: any) => {
 
 <!--      </div>-->
 
-      <v-card>
+      <v-card v-if="MessagesStore.allMessages.length > 0">
         <v-card-text>
           <div>
             <v-list>
@@ -207,6 +207,8 @@ const randomColor = (authorName: any) => {
           </div>
         </v-card-text>
       </v-card>
+
+      <p v-else class="mt-4 text-center">Завдань немає</p>
 
 
 

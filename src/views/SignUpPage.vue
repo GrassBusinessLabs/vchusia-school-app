@@ -46,7 +46,16 @@
                 @click:append-inner="visible = !visible"
                 :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                 :type="visible ? 'text' : 'password'"
-            ></v-text-field>
+                validate-on="input"
+                :error="password.length < 4 && password.length > 0"
+            >
+              <template v-slot:details>
+                <span v-if="password.length < 4 && password.length > 0" class="error-valid">Пароль повинен містити не менш ніж 4 символи</span>
+              </template>
+
+            </v-text-field>
+
+
             <div class="text-subtitle-1 text-medium-emphasis">Роль</div>
 
 
@@ -139,6 +148,11 @@ export default defineComponent({
   },
   methods: {
     async regSend() {
+      if (this.password.length < 4) {
+        console.error('Пароль повинен містити принаймні 4 символи.');
+        return;
+      }
+
       let data = JSON.stringify({
         "email": this.email,
         "password": this.password,
@@ -221,5 +235,9 @@ ion-text {
   margin: 0 auto;
   width: 85%;
   border-radius: 15px;
+}
+
+.error-valid{
+  color: darkred;
 }
 </style>

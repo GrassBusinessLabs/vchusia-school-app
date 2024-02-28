@@ -88,7 +88,7 @@ const formatDate = (dateString: any) => {
 
   </ion-header>
   <ion-content>
-    <v-card class="d-flex flex-column align-center">
+    <v-card class="d-flex flex-column align-center" v-if="MessageStore.allMessages.length > 0">
       <v-card-text class="w-100">
             <v-list class="list_feed">
               <template  class="subheader_date" v-for="(messages, date) in groupedMessages">
@@ -105,6 +105,7 @@ const formatDate = (dateString: any) => {
             </v-list>
       </v-card-text>
     </v-card>
+    <p v-else class="mt-4 text-center">Немає пошарених завдань</p>
   </ion-content>
 </ion-page>
 </template>

@@ -162,7 +162,7 @@ const userInitials = (item?: any) => {
 <!--        </v-list>-->
 
 <!--      </div>-->
-      <v-card>
+      <v-card v-if="MessageStore.allMessages.length > 0">
         <v-card-text>
           <div>
             <v-list>
@@ -182,6 +182,9 @@ const userInitials = (item?: any) => {
           </div>
         </v-card-text>
       </v-card>
+      <p v-else class="mt-4 text-center">Завдань немає</p>
+
+
     </ion-content>
 
   </ion-page>
