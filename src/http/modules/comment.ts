@@ -14,10 +14,10 @@ function deleteComment(commentId: number) {
    return axios.delete(`/comments/${commentId}`)
 }
 function findByMessageId(msgId: number) {
-    return axios.get(`/comments/message/${msgId}?page=1&count=10`)
+    return axios.get(`/comments/message/${msgId}`)
 }
 function findBySolutionId(solutionId: number) {
-    return axios.get(`/comments/solution/${solutionId}?page=1&count=10`)
+    return axios.get(`/comments/solution/${solutionId}`)
 }
 function findById(commentId: number) {
     return axios.get(`/comments/${commentId}`)

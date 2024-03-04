@@ -121,9 +121,10 @@ function replaceFeed(){
 
       </ion-content>
       <v-layout class="overflow-visible layout-footer">
-        <v-bottom-navigation class="bottom-nav rounded custom"
+        <v-bottom-navigation class="bottom-nav rounded custom "
                              v-model="value"
-                             :grow='true'
+
+
 
         >
           <v-btn class="btn-course-bottom btn-bottom-nav" @click="router.replace('/main/courses')">
@@ -218,6 +219,7 @@ function replaceFeed(){
 </template>
 
 <style scoped>
+
 ion-item {
   cursor: pointer;
 }
@@ -245,7 +247,7 @@ ion-item:hover {
 }
 
 .btn-bottom-nav {
-  color: #000;
+  color: #fff;
 }
 .btn-bottom-nav span{
   font-weight: 900;
@@ -266,6 +268,7 @@ ion-menu-button{
 
                    .custom {
                      min-height: 7vh;
+
                    }
 
 span {

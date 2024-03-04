@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import {IonContent, IonFooter, IonItem, IonPage, IonTextarea, IonInput, onIonViewWillEnter} from "@ionic/vue";
+import {
+  IonContent,
+  IonFooter,
+  IonItem,
+  IonPage,
+  IonTextarea,
+  IonInput,
+  onIonViewWillEnter,
+  IonAvatar
+} from "@ionic/vue";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {computed, onMounted, reactive, ref} from "vue";
 import DrawingCanvas from "@/components/parts/DrawingCanvas.vue";
@@ -219,11 +228,16 @@ const randomColor = () => {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
 
-const userInitials = () => {
-  const nameParts = auth().user.user.name.split(' ');
-  const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
-  return initials
+const userInitials = (name: string | undefined) => {
+  if (!name) {
+    return ''; // Return an empty string if name is undefined
+  }
+
+  const userName = name.split(' ');
+  const initials = userName.map(part => part.charAt(0)).join('').toUpperCase();
+  return initials;
 }
+
 </script>
 
 <template>
@@ -256,7 +270,11 @@ const userInitials = () => {
                 <v-list-item-subtitle>
                   <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.submittedSolutionsId"
                             v-if="SolutionStore.submittedSolutionsId.length > 0">
-                    <img :src="image_URL+i.avatar" alt="Avatar">
+                    <img :src="image_URL+i.avatar"  alt="Avatar" v-if="i.avatar && i.avatar !== ''">
+                    <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                      <span class="initials">{{ userInitials(i.userName) }}</span>
+                    </ion-avatar>
                   </v-avatar>
                   <div v-else>
                     <h2>Немає рішень</h2>
@@ -271,7 +289,11 @@ const userInitials = () => {
                 <v-list-item-subtitle>
                   <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.draftReturnSolutions"
                             v-if="SolutionStore.draftReturnSolutions.length > 0">
-                    <img :src="image_URL+i.avatar" alt="Avatar">
+                    <img :src="image_URL+i.avatar"  alt="Avatar" v-if="i.avatar && i.avatar !== ''">
+                    <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                      <span class="initials">{{ userInitials(i.userName) }}</span>
+                    </ion-avatar>
                   </v-avatar>
                   <div v-else>
                     <h2>Немає очікуваних</h2>
@@ -286,7 +308,11 @@ const userInitials = () => {
                 <v-list-item-subtitle>
                   <v-avatar rounded="1" class=" ml-2" v-for="i of SolutionStore.complettedSolutions"
                             v-if="SolutionStore.complettedSolutions.length > 0">
-                    <img :src="image_URL+i.avatar"  alt="Avatar">
+                    <img :src="image_URL+i.avatar"  alt="Avatar" v-if="i.avatar && i.avatar !== ''">
+                    <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                      <span class="initials">{{ userInitials(i.userName) }}</span>
+                    </ion-avatar>
                   </v-avatar>
                   <div v-else>
                     <h2>Немає рішень</h2>
@@ -307,7 +333,7 @@ const userInitials = () => {
                 <div class="avatar-wrapper">
                   <v-avatar :style="{ backgroundColor: randomColor() }" class="avatar-comment-user" v-if="AuthStore.user.id !== i.userId">
                     <img :src="image_URL+i.userAvatar" v-if='i.userAvatar !== ""'>
-                    <span class="initials" v-else>{{ userInitials() }}</span>
+                    <span class="initials" v-else>{{ userInitials(i.userName) }}</span>
 
                   </v-avatar>
                 </div>
@@ -599,7 +625,11 @@ const userInitials = () => {
 
                     <div class="d-flex align-center">
                       <v-avatar class="border ma-2">
-                        <img :src="image_URL+i.avatar" alt="Avatar">
+                        <img :src="image_URL+i.avatar"  alt="Avatar" v-if="i.avatar && i.avatar !== ''">
+                        <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                    class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                          <span class="initials">{{ userInitials(i.userName) }}</span>
+                        </ion-avatar>
                       </v-avatar>
                       <div>
                         <v-list-item-title>
@@ -635,7 +665,11 @@ const userInitials = () => {
 
                     <div class="d-flex align-center">
                       <v-avatar class="border ma-2">
-                        <img :src="image_URL+student.avatar" alt="Avatar">
+                        <img :src="image_URL+student.avatar"  alt="Avatar" v-if="student.avatar && student.avatar !== ''">
+                        <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                    class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                          <span class="initials">{{ userInitials(student.userName) }}</span>
+                        </ion-avatar>
                       </v-avatar>
 
                       <div>
@@ -673,7 +707,11 @@ const userInitials = () => {
                 <div v-if="i.id === SolutionStore.nowSolution.id" class="d-flex align-center ma-4">
                   <div>
                     <v-avatar>
-                      <img :src="image_URL+i.avatar" alt="">
+                      <img :src="image_URL+i.avatar"  alt="Avatar" v-if="i.avatar && i.avatar !== ''">
+                      <ion-avatar v-else :style="{ backgroundColor: randomColor() }"
+                                  class="ion-avatar-account d-flex justify-center align-center" v-if="!auth().user.avatar">
+                        <span class="initials">{{ userInitials(i.userName) }}</span>
+                      </ion-avatar>
                     </v-avatar>
                   </div>
                   <div class="ml-2">

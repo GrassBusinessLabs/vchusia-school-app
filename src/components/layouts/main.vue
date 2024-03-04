@@ -64,7 +64,7 @@
 
       </ion-content>
 
-      <v-layout class="overflow-visible layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
+      <v-layout class="layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">
         <v-bottom-navigation class="bottom-nav rounded custom"
                              v-model="value"
                              :bg-color="color"
@@ -244,6 +244,7 @@ export default defineComponent({
   justify-content: center;
   margin-top: 30px;
   margin-bottom: 30px;
+
 }
 
 ion-item {
@@ -278,8 +279,13 @@ ion-item:hover {
 .bottom-nav {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
+.btn-bottom-nav span {
+  padding-top: 3px; /* Adjust padding for smaller screens */
+  font-weight: 700; /* Reduce font weight if needed */
+}
 .btn-bottom-nav {
   color: #000;
 }
@@ -293,4 +299,5 @@ ion-item:hover {
 .icon-course{
   margin-left: 20px;
 }
+
 </style>

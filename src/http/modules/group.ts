@@ -33,7 +33,7 @@ function deleteGroup(id: any) {
 }
 
 function getUsersInGroup(id: any) {
-    return axios.get(`/groups/${id}/users?page=1&count=10`)
+    return axios.get(`/groups/${id}/users`)
 }
 
 function addCourseToGroup(groupId: any, courseId: any) {

@@ -24,9 +24,9 @@ export const  message = defineStore('message', {
             }
         },
 
-        async userMessages(courseId?: number, groupId?: number){
+        async userMessages(filter: string){
             try {
-                const response = await MessageApi.userMessages(courseId, groupId)
+                const response = await MessageApi.userMessages(filter)
                 this.allMessages = [...response.items]
                 console.log(response)
             } catch (e) {

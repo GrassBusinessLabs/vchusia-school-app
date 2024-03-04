@@ -8,14 +8,14 @@ import {auth} from "@/stores/auth";
 const MessageStore = message()
 const tab = ref(null)
 const AuthStore = auth()
-const userMessages = async () => {
-  await MessageStore.userMessages()
+const userMessages = async (filter: string) => {
+  await MessageStore.userMessages(filter)
 }
 onIonViewWillEnter(() => {
-  userMessages()
+  userMessages('deadline')
 })
 
-const filterTags = ['Дедлайн', 'Останнні', 'Групи']
+const filterTags = [{ ua: 'Дедлайн', en: 'deadline'}, { ua: 'Останнні', en: 'solution'}, { ua: 'Групи', en: 'group'}]
 const selectMessage = (message: any) => {
   MessageStore.thisMessage = message;
   MessageStore.msgId = message.id;
@@ -77,7 +77,7 @@ const formatDate = (dateString: any) => {
         <div class="d-flex justify-center">
           <v-chip-group  mandatory
                          selected-class="text-primary">
-            <v-chip class="filterItem" v-for="tag of filterTags" :key="tag"> {{ tag }} </v-chip>
+            <v-chip class="filterItem" @click="userMessages(tag.en)" v-for="tag of filterTags" :key="tag.ua" > {{ tag.ua }} </v-chip>
 
           </v-chip-group>
         </div>

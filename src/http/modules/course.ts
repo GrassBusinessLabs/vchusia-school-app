@@ -37,7 +37,7 @@ function coursesByGroupId(groupId: any, page?: {page: number, count: number}) {
 
 function groupsByCourseId() {
     let courseId = localStorage.getItem('courseId')
-    return axios.get(`/groups/${courseId}?page=1&count=10`)
+    return axios.get(`/groups/${courseId}`)
 }
 export default {
     createCourse,
