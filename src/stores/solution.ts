@@ -89,6 +89,7 @@ export const solution = defineStore('solution', {
             try {
                 const response = await SolutionApi.findSolutionById(solutionId)
                 this.nowSolution = response
+                this.solutionId = response.id
                 console.log(response)
             } catch (e) {
                 console.log(e)

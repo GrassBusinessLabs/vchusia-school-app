@@ -21,7 +21,7 @@ export const auth = defineStore('auth', {
         activePage: 'Стрічка'
     }),
     actions: {
-        errorLogin(text){
+        errorLogin(text: string): void{
             toast.error(text, {
                 position: "top-right",
                 timeout: 3048,
@@ -37,6 +37,24 @@ export const auth = defineStore('auth', {
                 rtl: false
             });
         },
+
+        successFunc(text: string): void {
+            toast.success(text, {
+                position: "top-right",
+                timeout: 3048,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+            });
+        }
+        ,
 
         async login(body: Auth) {
             try {
@@ -112,6 +130,9 @@ export const auth = defineStore('auth', {
                 if (e.response.data.error == "invalid credentials"){
                     this.errorLogin('Такий обліковий запис уже зареєстровано!')
                 }
+                if (e.response.data.error === 'invalid request body'){
+                    this.errorLogin('Пошта введено невірно!\nПриклад: name@email.com')
+                }
                 console.log(e)
             }
         },
@@ -119,8 +140,12 @@ export const auth = defineStore('auth', {
         async changePassword(body: changePassword) {
             try {
                 const response: any = await AuthApi.changePassword(body)
+                this.successFunc("Пароль успішно змінено!")
                 console.log(response)
             } catch (e) {
+                if (e.response.data.error == "invalid credentials"){
+                    this.errorLogin('Старий пароль введено невірно!')
+                }
                 console.log(e)
             }
         },

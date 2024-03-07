@@ -14,7 +14,7 @@
         <InputAvatarDialog class="mt-4"/>
 
         <ion-buttons class="text-center d-flex justify-center mb-3" v-if="auth().user.avatar">
-          <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
+          <ion-button @click="deleteAvatarSheet = true" color="danger">Видалити аватар</ion-button>
         </ion-buttons>
 
         <v-layout class="d-flex ma-2  justify-center">
@@ -50,7 +50,7 @@
 
               <v-text-field
                   prepend-icon="mdi-lock-outline"
-                v-model="oldPassword"
+                v-model="oldPassword.password"
                 ref="input"
                 type="password"
                 color="primary"
@@ -58,13 +58,14 @@
                 placeholder="********"
                 variant="outlined"
                 class="input-password"
+                  :error="oldPassword.password.length < 4 && oldPassword.password.length > 0"
                 ></v-text-field>
 
 
                 <v-text-field
                     prepend-icon="mdi-lock-outline"
 
-                    v-model="newPassword"
+                    v-model="newPassword.password"
                     type="password"
                     ref="input"
                     color="primary"
@@ -72,7 +73,14 @@
                     placeholder="********"
                     variant="outlined"
                     class="input-password"
-                ></v-text-field>
+                    :error="newPassword.password.length < 4 && newPassword.password.length > 0"
+                >
+                  <template v-slot:details>
+                    <span v-if="newPassword.password.length < 4 && newPassword.password.length > 0" class="error-valid">Мінімальна длина паролю 4 символи!</span>
+                  </template>
+                </v-text-field>
+
+
 
 
               <v-btn variant="tonal" color="indigo" @click="confirm()"
@@ -123,6 +131,13 @@
         </v-bottom-sheet>
       </div>
 
+      <v-bottom-sheet v-model="deleteAvatarSheet">
+        <v-card title="Ви хочете видалити аватар?">
+          <v-btn color="red" @click="deleteAvatar()">Так</v-btn>
+          <v-btn @click="deleteAvatarSheet = false">Ні</v-btn>
+        </v-card>
+      </v-bottom-sheet>
+
     </ion-footer>
   </ion-page>
 
@@ -162,9 +177,13 @@ const modal = ref();
 const modalMe = ref();
 const input = ref();
 const inputMe = ref();
-
-let oldPassword = "";
-let newPassword = "";
+const deleteAvatarSheet = ref(false)
+let oldPassword = reactive({
+  password: ""
+});
+let newPassword = reactive({
+  password: ""
+});
 const URL_IMG = 'https://vchusia.grassbusinesslabs.tk/static/'
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
 const cancelMe = () => modalMe.value.$el.dismiss(null, 'cancel');
@@ -182,12 +201,12 @@ let nameMe = user.name;
 const token = localStorage.getItem('token')
 const confirm = () => {
   auth().changePassword({
-    "oldPassword": oldPassword,
-    "newPassword": newPassword
+    "oldPassword": oldPassword.password,
+    "newPassword": newPassword.password
   })
   sheet_change_password.value = false
-  oldPassword = "";
-  newPassword = "";
+  oldPassword.password = "";
+  newPassword.password = "";
 
 }
 
@@ -206,6 +225,7 @@ const deleteAccount = () => {
 
 const deleteAvatar = () => {
   auth().removeAvatar()
+  deleteAvatarSheet.value = false
 }
 
 const userInitials = () => {
@@ -257,4 +277,8 @@ ion-header {
   font-size: 50px;
   color: #fff;
 }
+.error-valid{
+  color: darkred;
+}
+
 </style>

@@ -6,19 +6,16 @@
           <vue-cropper
               ref="cropper"
               class="image-container"
-              :aspect-ratio="null"
+              :aspect-ratio="1"
               :guides="true"
               :background="false"
-              :view-mode="0"
-              drag-mode="move"
+              :view-mode="2"
               :src="chosenImage"
               alt="Image not available"
+              :centerBox="true"
+              :fixedNumber="[1/1]"
           >
           </vue-cropper>
-          <div class="rotate_btns">
-            <v-btn @click="rotateLeft" icon="mdi-rotate-left" class="rotate-left"></v-btn>
-            <v-btn @click="rotateRight" icon="mdi-rotate-right" class="rotate-right"></v-btn>
-          </div>
 
         </v-card-text>
         <v-card-actions class="py-0 mx-10">

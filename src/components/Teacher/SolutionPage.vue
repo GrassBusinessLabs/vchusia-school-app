@@ -66,6 +66,7 @@ const findPointsUsers = () => {
 
 const findSolutionById = async () => {
   await SolutionStore.findSolutionById(SolutionStore.submittedSolutionsId[0].id)
+  await getCommentSolution()
 }
 
 const findCompletedSolution = async (studentIndex: number) => {
@@ -128,7 +129,7 @@ const deleteCommentMessage = async () => {
 const getCommentSolution = async () => {
   await CommentStore.findBySolutionId(SolutionStore.solutionId)
 }
-getCommentSolution()
+
 
 const addCommentSolution = async () => {
   await CommentStore.commentSolution(SolutionStore.solutionId, addCommentTextSolution)

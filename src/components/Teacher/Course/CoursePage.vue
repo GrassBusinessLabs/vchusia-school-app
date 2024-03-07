@@ -780,6 +780,7 @@ CourseStore.groupsByCourseId()
   border-radius: 15px;
   outline: cyan 1px ridge;
   display: flex;
+  position: relative;
 
 
 }
@@ -875,6 +876,8 @@ ion-col {
 .setting_course {
   padding: 0;
   margin: 0;
+  position: absolute;
+  right: 0;
 }
 
 .btn_setting_course {

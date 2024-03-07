@@ -3,7 +3,9 @@ import {Group, JoinGroup} from "@/models/Group";
 import GroupApi from "@/http/modules/group"
 import router from "@/router";
 import CourseApi from "@/http/modules/course";
+import { useToast } from "vue-toastification";
 
+const toast = useToast()
 interface State {
     items: any,
     createdGroup: any,
@@ -32,12 +34,29 @@ export const group = defineStore('group', {
 
 
     actions: {
+        errorMessage(text: string): void{
+            toast.error(text, {
+                position: "top-right",
+                timeout: 3048,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: false,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: true,
+                rtl: false
+            });
+        },
+
         async createGroup(body: Group): Promise <void>{
             try {
                 this.allGroups = []
                 const response = await GroupApi.createGroup(body)
                 this.createdGroup.push(response)
-                this.getCreatedGroupsList()
+                await this.getCreatedGroupsList()
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -50,7 +69,9 @@ export const group = defineStore('group', {
                 console.log(response)
 
             } catch (e) {
-                console.log(e)
+               if (e.response.data.error === "Key: 'GroupRequest.Identifier' Error:Field validation for 'Identifier' failed on the 'len' tag"){
+                    this.errorMessage('Такий ідентифікатор групи не знайдено!')
+                }
             }
         },
 
