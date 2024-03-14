@@ -300,14 +300,12 @@ onMounted(() => {
 
       <div class="text-center">
         <v-bottom-sheet v-model="sheet_del">
-          <v-card class="text-center" height="200">
+          <v-card height="100" class="text-center justify-center d-flex align-center">
 
-            <br>
-            <br>
-            <div class="sheet_del">
+            <div class="w-75 d-flex justify-center align-center">
 
               <v-btn prepend-icon="mdi-delete-outline" color="red" @click="sheet_del = !sheet_del, deleteGroup(groupId)"
-                     class="btn_del">
+                     :block="true">
                 Видалити групу
               </v-btn>
 

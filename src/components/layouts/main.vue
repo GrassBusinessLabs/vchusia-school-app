@@ -24,9 +24,9 @@
 
             <v-list nav class="list-menu">
               <v-list-item  title="Обліковий запис" value="account" @click="replaceAccount(), this.value = 'default';this.authStore.activePage='Обліковий запис';" prepend-icon="mdi-account-circle-outline"></v-list-item>
-              <v-list-item v-if="this.user.role !== 'STUDENT'" title="Курси" value="course" @click="replaceCourse(), this.value = 1; this.authStore.activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
+              <v-list-item v-if="this.user.role !== 'STUDENT'" title="Курси" value="course" @click="replaceCourse(), this.value = 2; this.authStore.activePage='Курси'" prepend-icon="mdi-bookshelf"></v-list-item>
               <v-list-item title="Стрічка" @click="replaceFeed(), this.authStore.activePage='Стрічка'; this.value = 0;" prepend-icon="mdi-calendar-check-outline"></v-list-item>
-              <v-list-item title="Групи" value="groups" @click="replaceGroup(), this.authStore.activePage='Групи'; this.value = 2;" prepend-icon="mdi-account-group-outline" ></v-list-item>
+              <v-list-item title="Групи" value="groups" @click="replaceGroup(), this.authStore.activePage='Групи'; this.value = 1;" prepend-icon="mdi-account-group-outline" ></v-list-item>
 
             </v-list>
             <v-footer class="footerMenu">
@@ -268,7 +268,7 @@ ion-item:hover {
 }
 
 .list-menu {
-  margin-top: 30%;
+  margin-top: 20%;
 }
 
 .layout-footer {

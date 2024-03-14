@@ -2,7 +2,7 @@
   <main class="d-flex flex-column justify-end">
     <div class="canvas-drawing w-100">
 
-      <div class="arrow_nav-left">
+      <div class="arrow_nav-left" @click="onCloseBottomSheet">
         <v-btn icon="mdi-arrow-left" class="arrow" elevation="1"></v-btn>
 
 
@@ -118,6 +118,10 @@ export default {
   },
 
   methods: {
+    onCloseBottomSheet() {
+      this.$emit('close-bottom-sheet');
+    },
+
     async fetchImageDimensions() {
       const imageUrl = 'https://vchusia.grassbusinesslabs.tk/static/32fe5013-cfda-4869-885f-ee074f721144.png';
       try {
@@ -273,18 +277,21 @@ export default {
     },
 
     async saveImage() {
-      // const canvas = this.$refs.canvas
-      // const dataUrl = canvas.toDataURL('image/png')
-      // const blob = await fetch(dataUrl).then(res => res.blob());
-      // const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
-      // await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
-
         const canvas = this.$refs.canvas
-        const dataUrl = canvas.toDataURL('image/png', 1.0); // Указываем качество 1.0
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
         const blob = await fetch(dataUrl).then(res => res.blob());
         const croppedFile = new File([blob], `cropped_image.${dataUrl.split('/')[1]}`);
         await this.ImageStore.addImageOnImage(this.ImageStore.imgId, croppedFile)
 
+      let ImgURL = 'https://vchusia.grassbusinesslabs.tk/static/';
+      if (!this.SolutionStore.imageIndex || this.SolutionStore.imageIndex >= this.SolutionStore.nowSolution.images.length) {
+        this.SolutionStore.imageIndex = 0;
+      }
+      const imageURL = ImgURL + this.SolutionStore.nowSolution.images[this.SolutionStore.imageIndex].name;
+      this.SolutionStore.imageURL = imageURL;
+      this.SolutionStore.imageIndex++;
+      const context = canvas.getContext('2d')
+      context.clearRect(0, 0, canvas.width, canvas.height)
     },
     beforeUnmount() {
       window.removeEventListener("resize", this.handleResize);

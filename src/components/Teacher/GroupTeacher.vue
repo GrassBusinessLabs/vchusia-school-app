@@ -13,12 +13,6 @@
             </div>
 
             <template v-slot:append>
-              <v-btn
-                  color="grey-lighten-1"
-                  icon="mdi-content-copy"
-                  variant="text"
-                  @click="copyIdentifier(j.identifier)"
-              ></v-btn>
 
               <v-btn
                   color="grey-lighten-1"
@@ -84,14 +78,20 @@
       </div>
 
       <div class="text-center">
+
         <v-bottom-sheet v-model="sheet_del_group">
-            <v-card height="200">
-              <v-card-text class="d-flex flex-column justify-center align-center">
-                <p class="ma-2">Ви точно хочете видалити групу?</p>
-                <v-btn class="ma-2" color="red" @click="deleteGroup(GroupStore.idGroup), sheet_del_group = !sheet_del_group">Видалити</v-btn>
-                <v-btn @click="sheet_del_group = !sheet_del_group">Відмінити</v-btn>
-              </v-card-text>
-            </v-card>
+          <v-card height="100" class="text-center justify-center d-flex align-center" >
+
+
+            <div class="w-75 d-flex justify-center align-center">
+
+              <v-btn :block="true" prepend-icon="mdi-delete-outline" color="red" @click="deleteGroup(GroupStore.idGroup), sheet_del_group = !sheet_del_group">
+                Видалити групу
+              </v-btn>
+
+            </div>
+
+          </v-card>
         </v-bottom-sheet>
       </div>
     </ion-footer>

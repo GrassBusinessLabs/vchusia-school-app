@@ -610,7 +610,7 @@ const userInitials = (name: string | undefined) => {
       <div class="text-center">
         <v-bottom-sheet v-model="imageChange" fullscreen>
           <v-card class="d-flex justify-center">
-            <DrawingCanvas/>
+            <DrawingCanvas @close-bottom-sheet="imageChange = false"/>
           </v-card>
         </v-bottom-sheet>
       </div>

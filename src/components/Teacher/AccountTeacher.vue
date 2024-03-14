@@ -71,25 +71,31 @@
             <v-card-text>
 
               <v-text-field
-                  v-model="oldPassword"
+                  v-model="oldPassword.password"
                   ref="input"
-                  type="password"
                   color="primary"
                   label="Введіть старий пароль"
                   placeholder="********"
                   variant="outlined"
                   class="input-password"
+                  :error="oldPassword.password.length < 4 && oldPassword.password.length > 0"
+                  :append-inner-icon="visibleOldPass ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="visibleOldPass ? 'text' : 'password'"
+                  @click:append-inner="visibleOldPass = !visibleOldPass"
               ></v-text-field>
 
               <v-text-field
-                  v-model="newPassword"
-                  type="password"
+                  v-model="newPassword.password"
                   ref="input"
                   color="primary"
                   label="Новий пароль"
                   placeholder="********"
                   variant="outlined"
+                  :error="newPassword.password.length < 4 && newPassword.password.length > 0"
                   class="input-password"
+                  :append-inner-icon="visibleNewPass ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="visibleNewPass ? 'text' : 'password'"
+                  @click:append-inner="visibleNewPass = !visibleNewPass"
               ></v-text-field>
 
               <v-btn prepend-icon="$vuetify" variant="tonal" color="indigo" @click="confirm()"
@@ -159,10 +165,16 @@ const modalMe = ref();
 const input = ref();
 const inputMe = ref();
 
+const visibleOldPass = ref(false)
+const visibleNewPass = ref(false)
 const dialogDelAccount = ref(false);
 const sheetChangeUser = ref(false);
-let oldPassword = "";
-let newPassword = "";
+let oldPassword = reactive({
+  password: ""
+});
+let newPassword = reactive({
+  password: ""
+});
 let nameMe = auth().user.name;
 
 const cancel = () => modal.value.$el.dismiss(null, 'cancel');
@@ -177,11 +189,12 @@ const token = localStorage.getItem('token')
 
 const confirm = () => {
   auth().changePassword({
-    "oldPassword": oldPassword,
-    "newPassword": newPassword
+    "oldPassword": oldPassword.password,
+    "newPassword": newPassword.password
   })
-  oldPassword = "";
-  newPassword = "";
+  sheetChangePass.value = false
+  oldPassword.password = "";
+  newPassword.password = "";
 
 }
 

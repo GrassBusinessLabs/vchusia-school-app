@@ -52,13 +52,15 @@
                   prepend-icon="mdi-lock-outline"
                 v-model="oldPassword.password"
                 ref="input"
-                type="password"
                 color="primary"
                 label="Введіть старий пароль"
                 placeholder="********"
                 variant="outlined"
                 class="input-password"
                   :error="oldPassword.password.length < 4 && oldPassword.password.length > 0"
+                  :append-inner-icon="visibleOldPass ? 'mdi-eye-off' : 'mdi-eye'"
+                  :type="visibleOldPass ? 'text' : 'password'"
+                  @click:append-inner="visibleOldPass = !visibleOldPass"
                 ></v-text-field>
 
 
@@ -66,7 +68,6 @@
                     prepend-icon="mdi-lock-outline"
 
                     v-model="newPassword.password"
-                    type="password"
                     ref="input"
                     color="primary"
                     label="Новий пароль"
@@ -74,6 +75,9 @@
                     variant="outlined"
                     class="input-password"
                     :error="newPassword.password.length < 4 && newPassword.password.length > 0"
+                    :append-inner-icon="visibleNewPass ? 'mdi-eye-off' : 'mdi-eye'"
+                    :type="visibleNewPass ? 'text' : 'password'"
+                    @click:append-inner="visibleNewPass = !visibleNewPass"
                 >
                   <template v-slot:details>
                     <span v-if="newPassword.password.length < 4 && newPassword.password.length > 0" class="error-valid">Мінімальна длина паролю 4 символи!</span>
@@ -178,6 +182,8 @@ const modalMe = ref();
 const input = ref();
 const inputMe = ref();
 const deleteAvatarSheet = ref(false)
+const visibleOldPass = ref(false)
+const visibleNewPass = ref(false)
 let oldPassword = reactive({
   password: ""
 });
