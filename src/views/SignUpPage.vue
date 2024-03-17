@@ -10,11 +10,12 @@
     </ion-header>
     <ion-content>
       <ion-list>
+<feed></feed>
         <div>
           <v-img
               class="mx-auto my-6"
               max-width="200"
-              src="/src/assets/Vchusia.png"
+              src="/Vchusia.png"
           ></v-img>
 
           <v-card
@@ -110,13 +111,12 @@ import {
   IonRadioGroup,
   IonText,
     IonTitle,
-    IonContent
+    IonContent,
 
 } from "@ionic/vue";
 import {defineComponent} from 'vue';
 import {auth} from "../stores/auth";
 // import router from "../router/index.js";
-
 
 export default defineComponent({
   components: {
@@ -132,7 +132,8 @@ export default defineComponent({
     IonBackButton,
     IonText,
     IonTitle,
-    IonContent
+    IonContent,
+
   },
   data() {
     return {

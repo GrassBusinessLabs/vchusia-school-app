@@ -12,7 +12,7 @@
         <v-img
             class="mx-auto my-6"
             max-width="228"
-            src="/src/assets/Vchusia.png"
+            src="/Vchusia.png"
         ></v-img>
 
         <v-card
