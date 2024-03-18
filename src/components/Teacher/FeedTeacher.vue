@@ -82,13 +82,9 @@ const formatDate = (dateString: any) => {
           </v-chip-group>
         </div>
 
-
-
-
-
   </ion-header>
   <ion-content>
-    <v-card class="d-flex flex-column align-center" v-if="MessageStore.allMessages.length > 0">
+    <v-card class="d-flex flex-column align-center " elevation="0" v-if="MessageStore.allMessages.length > 0">
       <v-card-text class="w-100">
             <v-list class="list_feed">
               <template  class="subheader_date" v-for="(messages, date) in groupedMessages">
@@ -111,6 +107,10 @@ const formatDate = (dateString: any) => {
 </template>
 
 <style scoped>
+
+
+
+
 .list_feed{
   padding: 10px;
 

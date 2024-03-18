@@ -65,83 +65,77 @@
       <!--          </v-toolbar>-->
       <!--        </div>-->
       <!--      </ion-header>-->
-      <ion-content class="ion-padding" >
+      <ion-content class="ion-padding">
         <ion-router-outlet class="margin-styled"/>
 
       </ion-content>
 
-<!--      <v-layout class="layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">-->
-<!--        <v-bottom-navigation class="navigation-bottom">-->
-<!--          <v-btn class="btn-course-bottom btn-bottom-nav"-->
-<!--                 @click="replaceFeed(), this.value = 0; this.authStore.activePage='Стрічка'">-->
-<!--            <v-icon icon="mdi-calendar-check-outline" class="icon-course"/>-->
-<!--            <span>Стрічка</span>-->
-<!--          </v-btn>-->
-<!--          <v-btn class="btn-bottom-nav" @click="replaceGroup(), this.value = 1; this.authStore.activePage='Групи'">-->
-<!--            <v-icon icon="mdi-account-group-outline"></v-icon>-->
-<!--            <span>Групи</span>-->
-<!--          </v-btn>-->
-<!--          <v-btn class="btn-course-bottom btn-bottom-nav"-->
-<!--                 @click="replaceCourse(), this.value = 2; this.authStore.activePage='Курси'"-->
-<!--                 v-if="this.user.role !== 'STUDENT'">-->
-<!--            <v-icon icon="mdi-book-outline" class="icon-course"/>-->
-<!--            <span>Курси</span>-->
-<!--          </v-btn>-->
+      <!--      <v-layout class="layout-footer" v-if="route.path !== '/tape/tape' && route.path !== '/tape/task'">-->
+      <!--        <v-bottom-navigation class="navigation-bottom">-->
+      <!--          <v-btn class="btn-course-bottom btn-bottom-nav"-->
+      <!--                 @click="replaceFeed(), this.value = 0; this.authStore.activePage='Стрічка'">-->
+      <!--            <v-icon icon="mdi-calendar-check-outline" class="icon-course"/>-->
+      <!--            <span>Стрічка</span>-->
+      <!--          </v-btn>-->
+      <!--          <v-btn class="btn-bottom-nav" @click="replaceGroup(), this.value = 1; this.authStore.activePage='Групи'">-->
+      <!--            <v-icon icon="mdi-account-group-outline"></v-icon>-->
+      <!--            <span>Групи</span>-->
+      <!--          </v-btn>-->
+      <!--          <v-btn class="btn-course-bottom btn-bottom-nav"-->
+      <!--                 @click="replaceCourse(), this.value = 2; this.authStore.activePage='Курси'"-->
+      <!--                 v-if="this.user.role !== 'STUDENT'">-->
+      <!--            <v-icon icon="mdi-book-outline" class="icon-course"/>-->
+      <!--            <span>Курси</span>-->
+      <!--          </v-btn>-->
 
 
-<!--          <v-btn class="btn-bottom-nav btn-menu-bottom" @click='this.value = 3;' content-id="main-content">-->
-<!--            <ion-menu-button color="dark" class="pa-0"></ion-menu-button>-->
-<!--          </v-btn>-->
+      <!--          <v-btn class="btn-bottom-nav btn-menu-bottom" @click='this.value = 3;' content-id="main-content">-->
+      <!--            <ion-menu-button color="dark" class="pa-0"></ion-menu-button>-->
+      <!--          </v-btn>-->
 
-        <div class="footer">
-          <div class="bottom-nav" >
+      <div class="footer">
+        <div class="bottom-nav">
 
-            <v-btn class="btn-bottom-nav"   size="x-small" :stacked="true" @click="replaceCourse(); this.authStore.activePage = 'Курси'">
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true"
+                 @click="replaceCourse(); this.authStore.activePage = 'Курси'">
+            <div>
+              <course class="svg"/>
+              <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Курси'}">Курси</span>
+            </div>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav" @click="replaceFeed(); this.authStore.activePage = 'Стрічка'" size="x-small"
+                 :stacked="true">
+            <div>
+              <feed class="svg"/>
+              <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Стрічка'}">Стрічка</span>
+            </div>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true"
+                 @click="replaceGroup(); this.authStore.activePage = 'Групи'">
+            <div>
+              <group class="svg"/>
+              <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Групи'}">Групи</span>
+            </div>
+          </v-btn>
+
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true">
+            <ion-menu-toggle>
               <div>
-                <course class="svg" />
-                <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Курси'}">Курси</span>
+                <menu-icon class="svg"/>
+                <span class="text-set">Меню</span>
               </div>
-            </v-btn>
-
-            <v-btn class="btn-bottom-nav"  @click="replaceFeed(); this.authStore.activePage = 'Стрічка'" size="x-small" :stacked="true">
-              <div>
-                <feed class="svg" />
-                <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Стрічка'}">Стрічка</span>
-              </div>
-            </v-btn>
-
-            <v-btn class="btn-bottom-nav"  size="x-small" :stacked="true" @click="replaceGroup(); this.authStore.activePage = 'Групи'">
-              <div>
-                <group class="svg" />
-                <span class="text-set" :class="{'isActive' : this.authStore.activePage === 'Групи'}">Групи</span>
-              </div>
-            </v-btn>
-
-            <v-btn class="btn-bottom-nav" size="x-small" :stacked="true" >
-              <ion-menu-toggle>
-                <div>
-                  <menu-icon class="svg" />
-                  <span class="text-set">Меню</span>
-                </div>
-              </ion-menu-toggle>
+            </ion-menu-toggle>
 
 
-            </v-btn>
-          </div>
+          </v-btn>
         </div>
+      </div>
 
 
-
-
-
-
-
-
-
-
-
-<!--        </v-bottom-navigation>-->
-<!--      </v-layout>-->
+      <!--        </v-bottom-navigation>-->
+      <!--      </v-layout>-->
 
     </ion-page>
   </ion-page>
@@ -292,7 +286,8 @@ export default defineComponent({
 .margin-styled {
   margin-bottom: 9vh;
 }
-.footer{
+
+.footer {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -300,56 +295,71 @@ export default defineComponent({
   display: flex;
   width: 100%;
   border-radius: 16px 16px 0px 0px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
   background: rgb(254, 245, 235);
 }
-.bottom-nav{
+
+.bottom-nav {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  gap: 16px;
   border-radius: 16px 16px 0px 0px;
 }
 
-.btn-bottom-nav{
+.btn-bottom-nav {
   border-radius: 9px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -1px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.15),0px -2px 4px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -1px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.15), 0px -2px 4px 2px rgba(0, 0, 0, 0.04);
   background: rgb(254, 245, 235);
-  margin: 3% 2%;
   text-transform: none;
   text-align: center;
+  min-height: calc(100% - 3vh);
 
-  & div{
+  & div {
     display: flex;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    & span{
-      
+    justify-content: flex-start;
+
+    & span {
+      font-size: 10px;
       font-weight: 400;
+      line-height: 12px;
+      text-align: left;
     }
   }
-  & .svg{
+
+  & .svg {
     width: 40px;
     height: 40px;
+
   }
 }
 
-.text-set{
+.text-set {
   color: rgb(66, 126, 154);
 }
 
-.isActive{
+.isActive {
   color: rgb(205, 150, 129);
 }
 
-
-
-
-
-
-
-
+@media screen and (max-width: 382px) {
+  .margin-styled {
+    margin-bottom: 10vh;
+  }
+  .footer {
+    height: 12vh;
+  }
+  .bottom-nav {
+    gap: 8px;
+  }
+  .btn-bottom-nav {
+    min-height: 80%;
+  }
+}
 
 
 .footerMenu {
@@ -382,10 +392,6 @@ ion-item:hover {
 .list-menu {
   margin-top: 20%;
 }
-
-
-
-
 
 
 </style>

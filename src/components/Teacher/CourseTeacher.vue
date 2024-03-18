@@ -3,32 +3,31 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
 
-
     <ion-content class="content">
-<!--      <div v-for="value in CourseStore.items" class="course" @click="redirect(value)" v-if="CourseStore.items.length !== 0">-->
+      <!--      <div v-for="value in CourseStore.items" class="course" @click="redirect(value)" v-if="CourseStore.items.length !== 0">-->
 
-<!--        <div v-for="(name, value, index) in value"-->
-<!--             v-show="value != 'id' && value != 'userid' && value != 'Опис курсу' && value != 'Завдання' && value != 'Ідентифікатор'"-->
-<!--             class="titlesCourse">-->
-<!--          {{ value = nameCourses[index] }} <span class="valueCourse"> {{ name }} </span>-->
-<!--        </div>-->
+      <!--        <div v-for="(name, value, index) in value"-->
+      <!--             v-show="value != 'id' && value != 'userid' && value != 'Опис курсу' && value != 'Завдання' && value != 'Ідентифікатор'"-->
+      <!--             class="titlesCourse">-->
+      <!--          {{ value = nameCourses[index] }} <span class="valueCourse"> {{ name }} </span>-->
+      <!--        </div>-->
 
-<!--      </div>-->
+      <!--      </div>-->
 
-<!--      <div v-else>-->
-<!--        <p class="text-center mt-3">Курсів не створено</p>-->
-<!--      </div>-->
+      <!--      <div v-else>-->
+      <!--        <p class="text-center mt-3">Курсів не створено</p>-->
+      <!--      </div>-->
       <div class="course-item" v-for="course of CourseStore.items" @click="redirect(course)">
         <div class="image-course">
-          <img src="../../assets/img.png" >
+          <img src="../../assets/img.png">
         </div>
 
         <div class="course-card-description">
           <h5>{{ course.discipline }}</h5>
-          <p><span>Автори: </span>Іван Петренко, Олена Іванова</p>
-          <p><span>Рік видання: </span>2023</p>
-          <p><span>Дата оновлення: </span>18.10.2023</p>
-          <p><span>Викладач: </span> Марина Ковальчук</p>
+          <p>Автори: <span>Іван Петренко, Олена Іванова</span></p>
+          <p>Рік видання: <span>2023</span></p>
+          <p>Дата оновлення: <span>18.10.2023</span></p>
+          <p>Викладач: <span>Марина Ковальчук</span></p>
         </div>
 
 
@@ -37,9 +36,6 @@
           <div class="info-counter-course">45 завдань</div>
           <div class="info-counter-course">14 годин</div>
         </div>
-
-
-
 
 
       </div>
@@ -53,7 +49,6 @@
 
 
       <div class="text-center">
-
 
 
         <v-bottom-sheet v-model="sheet">
@@ -230,82 +225,105 @@ CourseStore.groupsInCourse = []
 </script>
 
 <style lang="scss" scoped>
-ion-content::part(background){
-  background: #F3E9E0;
+ion-content::part(background) {
+  background: rgb(243, 233, 224);
+
 }
-ion-content{
+
+ion-content {
   --padding-top: 12px
 }
-.course-item{
+
+.course-item {
   border-radius: 16px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
   background: rgb(254, 245, 235);
   margin: 18px;
   padding-bottom: 24px;
 
 }
 
-.image-course{
+.image-course {
   margin: 2px 2px 0 2px;
   border-radius: 14px 14px 0px 0px;
-  & img{
+
+  & img {
     margin-top: 2px;
     width: 100%;
   }
-
 }
 
 
-.course-card-description{
+.course-card-description {
   margin: 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  & h5{
+
+  & h5 {
     color: rgb(66, 126, 154);
+    font-size: 16px;
+    margin-top: 0;
     font-weight: 600;
+    line-height: 19px;
+    text-align: left;
   }
-  & span{
-    color: rgb(98, 145, 161);
-    font-size: 15px;
+
+  & span {
+    color: rgb(58, 77, 83);
+    font-size: 12px;
     font-weight: 400;
     line-height: 15px;
+    text-align: left;
+    margin: 0px 8px;
+    order: 1;
+
   }
-  & p{
-    color: rgb(58, 77, 83);
-    font-size: 15px;
+
+  & p {
+    color: rgb(98, 145, 161);
+    font-size: 12px;
     font-weight: 400;
+    line-height: 15px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 4px 0;
+
   }
 }
-.card-counter{
-  margin: 0 16px;
+
+.card-counter {
+  margin: 2px 16px 0 16px;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 8px;
+  height: 31px;
   flex-wrap: wrap;
+
+  & .info-counter-course {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px 8px 16px;
+    color: rgb(255, 248, 237);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    background: rgb(66, 126, 154);
+  }
+
 }
-
-.info-counter-course{
-  position: static;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 16px 5px 16px;
-
-  border-radius: 16px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
-  background: rgb(66, 126, 154);
-  color: rgb(255, 248, 237);
-  font-weight: 400;
-
-
-}
-
-
-
-
-
 
 
 //.course {
@@ -358,7 +376,7 @@ ion-content{
   padding: 5px 15px;
 }
 
-.block_btn_add_course{
+.block_btn_add_course {
   position: absolute;
   bottom: 5%;
   right: 5%;
