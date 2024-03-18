@@ -7,9 +7,19 @@ import {AxiosResponse} from "axios";
 const token = localStorage.getItem('token')
 
 console.log(token)
-
+interface CourseItems {
+    description: string
+    discipline: string
+    grade: number
+    id: number
+    identifier: string
+    name: string
+    userId: number
+    yearsFrom: number
+    yearsTo: number
+}
 interface State {
-    items: any,
+    items: CourseItems [],
     total: number,
     thisCourse: any,
     courseInGroup: any,
@@ -19,7 +29,10 @@ interface State {
 }
 
 
+
 export const course = defineStore('course', {
+
+
     state: (): State => ({
         items: [],
         total: 0,
