@@ -21,7 +21,7 @@ interface CourseItems {
 interface State {
     items: CourseItems [],
     total: number,
-    thisCourse: any,
+    thisCourse: object,
     courseInGroup: any,
     groupsInCourse: any
     courseId: number,
@@ -36,7 +36,7 @@ export const course = defineStore('course', {
     state: (): State => ({
         items: [],
         total: 0,
-        thisCourse: [],
+        thisCourse: {},
         courseInGroup: [],
         groupsInCourse: [],
         courseId: 0,
@@ -76,7 +76,7 @@ export const course = defineStore('course', {
         async findCourseById(){
             try {
                 const response = await CourseApi.findCourseById()
-                this.thisCourse.push(response)
+                this.thisCourse = response
                 this.courseId = response.id
                 console.log(response)
             }catch (e) {

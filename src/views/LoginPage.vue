@@ -185,7 +185,6 @@ export default {
 .ion-page{
   background: rgb(255, 248, 237);
   overflow-y: auto;
-
 }
 .container{
   margin-top: 78px;
