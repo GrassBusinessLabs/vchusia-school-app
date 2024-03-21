@@ -5,12 +5,16 @@ import {
   IonFooter,
   IonContent,
   IonMenu,
-  IonRouterOutlet, IonHeader
+  IonRouterOutlet, IonHeader, IonMenuToggle
 } from "@ionic/vue";
 import router from "@/router";
 import {useRoute} from "vue-router";
 import {ref} from "vue";
 import {auth} from "@/stores/auth";
+import Feed from "@/components/icons/feed.vue";
+import Course from "@/components/icons/course.vue";
+import Group from "@/components/icons/group.vue";
+import MenuIcon from "@/components/icons/menuIcon.vue";
 const activePage = ref("Стрічка")
 const title = ref('Стрічка')
 const value = ref(1)
@@ -100,58 +104,84 @@ function replaceFeed(){
     </ion-menu>
 
     <ion-page id="main-content">
-      <ion-header class="ion-no-border">
-        <div>
-          <v-toolbar
-              dark
-              prominent
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
-          >
 
-
-            <v-toolbar-title>{{ title }}</v-toolbar-title>
-
-          </v-toolbar>
-        </div>
-      </ion-header>
       <ion-content class="ion-padding">
 
-        <ion-router-outlet/>
+        <ion-router-outlet class="margin-styled"/>
 
       </ion-content>
-      <v-layout class="overflow-visible layout-footer">
-        <v-bottom-navigation class="bottom-nav rounded custom"
-                             v-model="value"
-                             :grow='true'
+      <div class="footer">
+        <div class="bottom-nav">
 
-        >
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/main/groups-student')">
-            <template v-slot:append>
-              <v-icon icon="mdi-arrow-left" class="icon-course"/>
-            </template>
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true"
+                 @click="$router.replace('/main/groups-student')">
+            <div>
+              <v-icon icon="mdi-arrow-left" size="40" class="icon-course"/>
+              <span class="text-set">Назад</span>
+            </div>
           </v-btn>
 
-
-          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/group-info-student/feed-group-student'), title = 'Стрічка'">
-            <v-icon icon="mdi-tooltip-check-outline" class="icon-course"/>
-            <span>Стрічка</span>
-
+          <v-btn class="btn-bottom-nav" @click="$router.replace('/group-info-student/feed-group-student')" size="x-small"
+                 :stacked="true">
+            <div>
+              <feed class="svg"/>
+              <span class="text-set">Стрічка</span>
+            </div>
           </v-btn>
 
-          <v-btn class="btn-bottom-nav" @click="$router.replace('/group-info-student/task-group-student'), title = 'Завдання'">
-            <v-icon icon="mdi-calendar-check-outline"></v-icon>
-            <span>Завдання</span>
-
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true"
+                 @click="$router.replace('/group-info-student/task-group-student')">
+            <div>
+              <group class="svg"/>
+              <span class="text-set">Завдання</span>
+            </div>
           </v-btn>
 
-          <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content">
+          <v-btn class="btn-bottom-nav" size="x-small" :stacked="true">
+            <ion-menu-toggle>
+              <div>
+                <menu-icon class="svg"/>
+                <span class="text-set">Меню</span>
+              </div>
+            </ion-menu-toggle>
 
-            <ion-menu-button color="dark"></ion-menu-button>
-            <span>Меню</span>
 
           </v-btn>
-        </v-bottom-navigation>
-      </v-layout>
+        </div>
+      </div>
+<!--      <v-layout class="overflow-visible layout-footer">-->
+<!--        <v-bottom-navigation class="bottom-nav rounded custom"-->
+<!--                             v-model="value"-->
+<!--                             :grow='true'-->
+
+<!--        >-->
+<!--          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/main/groups-student')">-->
+<!--            <template v-slot:append>-->
+<!--              <v-icon icon="mdi-arrow-left" class="icon-course"/>-->
+<!--            </template>-->
+<!--          </v-btn>-->
+
+
+<!--          <v-btn class="btn-course-bottom btn-bottom-nav" @click="$router.replace('/group-info-student/feed-group-student'), title = 'Стрічка'">-->
+<!--            <v-icon icon="mdi-tooltip-check-outline" class="icon-course"/>-->
+<!--            <span>Стрічка</span>-->
+
+<!--          </v-btn>-->
+
+<!--          <v-btn class="btn-bottom-nav" @click="$router.replace('/group-info-student/task-group-student'), title = 'Завдання'">-->
+<!--            <v-icon icon="mdi-calendar-check-outline"></v-icon>-->
+<!--            <span>Завдання</span>-->
+
+<!--          </v-btn>-->
+
+<!--          <v-btn class="btn-bottom-nav btn-menu-bottom" content-id="main-content">-->
+
+<!--            <ion-menu-button color="dark"></ion-menu-button>-->
+<!--            <span>Меню</span>-->
+
+<!--          </v-btn>-->
+<!--        </v-bottom-navigation>-->
+<!--      </v-layout>-->
 
     </ion-page>
   </ion-page>
@@ -159,74 +189,96 @@ function replaceFeed(){
 </template>
 
 <style scoped>
-ion-item {
-  cursor: pointer;
+.margin-styled {
+  margin-bottom: 9vh;
 }
 
-ion-item:active {
-  color: #3a7be0;
-
-}
-
-ion-item:hover {
-  color: #7d7d7d;
-
-}
-
-
-.layout-footer {
-  max-height: 67px;
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 10vh;
+  display: flex;
   width: 100%;
-
+  border-radius: 16px 16px 0px 0px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(254, 245, 235);
 }
 
 .bottom-nav {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  border-radius: 16px 16px 0px 0px;
 }
 
 .btn-bottom-nav {
-  color: #000;
+  border-radius: 9px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -1px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.15), 0px -2px 4px 2px rgba(0, 0, 0, 0.04);
+  background: rgb(254, 245, 235);
+  text-transform: none;
+  text-align: center;
+  min-height: calc(100% - 3vh);
+
+  & div {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    & span {
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 12px;
+      text-align: left;
+    }
+  }
+
+  & .svg {
+    width: 40px;
+    height: 40px;
+
+  }
 }
-.btn-bottom-nav span{
-  font-weight: 900;
+
+.text-set {
+  color: rgb(66, 126, 154);
 }
-.btn-course-bottom span{
-  margin-left: 20px;
+
+.isActive {
+  color: rgb(205, 150, 129);
+}
+
+@media screen and (max-width: 382px) {
+  .margin-styled {
+    margin-bottom: 10vh;
+  }
+  .footer {
+    height: 12vh;
+  }
+  .bottom-nav {
+    gap: 8px;
+  }
+  .btn-bottom-nav {
+    min-height: 80%;
+  }
 }
 .icon-course{
-  margin-left: 20px;
-}
-ion-menu-button{
-  height: 20px;
-}
-.btn-menu-bottom{
-  margin-right: 10px;
+  color: rgb(66, 126, 154)
 }
 
 
-.custom {
-  min-height: 67px;
-}
-
-span {
-  font-size: 14px;
-}
 
 
-ion-item {
-  cursor: pointer;
-}
 
-ion-item:active {
-  color: #3a7be0;
 
-}
 
-ion-item:hover {
-  color: #7d7d7d;
 
-}
+
+
 
 .logout-btn {
   width: 90%;
@@ -238,23 +290,8 @@ ion-item:hover {
 }
 
 
-.bottom-nav {
-  display: flex;
-  justify-content: center;
-}
 
-.btn-bottom-nav {
-  color: #000;
-}
-.btn-bottom-nav span{
-  padding-top: 5px;
-  font-weight: 900;
-}
-.btn-course-bottom span{
-  margin-left: 20px;
-}
-.icon-course{
-  margin-left: 20px;
-}
+
+
 
 </style>

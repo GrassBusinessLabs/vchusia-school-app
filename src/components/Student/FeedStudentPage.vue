@@ -11,12 +11,15 @@ import {auth} from "@/stores/auth";
 import {message} from "@/stores/message";
 import router from "@/router";
 import {computed} from "vue";
+import {comment} from "@/stores/comment";
+import AvatarDev from "@/components/icons/avatar-dev.vue";
 
 const readPost = ref(false)
 const PostStore = post()
 const SolutionStore = solution()
 const MessagesStore = message()
 const attachImage = ref(false)
+const CommentStore = comment()
 const pagination = {
   page: 1,
   count: 10
@@ -187,28 +190,73 @@ const randomColor = (authorName: any) => {
 
 <!--      </div>-->
 
-      <v-card v-if="MessagesStore.allMessages.length > 0">
-        <v-card-text>
-          <div>
-            <v-list>
-              <template v-for="(messages, date) in groupedMessages" :key="date">
-                <p>{{ date }}</p>
+<!--      <v-card v-if="MessagesStore.allMessages.length > 0">-->
+<!--        <v-card-text>-->
+<!--          <div>-->
+<!--            <v-list>-->
+<!--              <template v-for="(messages, date) in groupedMessages" :key="date">-->
+<!--                <p>{{ date }}</p>-->
 
-                <v-list-item
-                    v-for="message in messages"
-                    :key="message.id"
-                    class="item-feed"
-                    @click="selectMessage(message)"
-                >
-                  <v-list-item-title>{{ message.text }}</v-list-item-title>
-                </v-list-item>
-              </template>
-            </v-list>
+<!--                <v-list-item-->
+<!--                    v-for="message in messages"-->
+<!--                    :key="message.id"-->
+<!--                    class="item-feed"-->
+<!--                    @click="selectMessage(message)"-->
+<!--                >-->
+<!--                  <v-list-item-title>{{ message.text }}</v-list-item-title>-->
+<!--                </v-list-item>-->
+<!--              </template>-->
+<!--            </v-list>-->
+<!--          </div>-->
+<!--        </v-card-text>-->
+<!--      </v-card>-->
+
+      <div class="feed-card" v-for="i of MessagesStore.allMessages" @click="selectMessage(i)">
+        <div class="user-info">
+          <div class="avatar-card">
+<!--            <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">-->
+<!--              <v-img :src="imgURL+i.userAvatar"></v-img>-->
+<!--            </v-avatar>-->
+            <v-avatar class="user-avatar"><span class="initials">YU</span></v-avatar>
+
+            <div class="comment-info">
+              <p class="name-user-comment">Username</p>
+              <div class="d-flex">
+                <p class="data-send-comment">21.05.2024</p>
+              </div>
+            </div>
+
           </div>
-        </v-card-text>
-      </v-card>
 
-      <p v-else class="mt-4 text-center">Завдань немає</p>
+        </div>
+
+        <div class="comment-text-card">
+          <p>{{i.text}}</p>
+        </div>
+
+        <div class="comment-text-card">
+          <div class="users-solution-card">
+            <div class="deadline">
+              <span class="deadline-title">Термін здачі завдання</span>
+              <span class="deadline-date">{{ formatDate(i.createdDate) }}</span>
+            </div>
+
+            <div class="users">
+              <div class="avatars">
+                <avatar-dev class="avatar" v-for="i in 7"/>
+              </div>
+
+              <div class="counter">
+                <span>7/18</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+<!--      <p v-else class="mt-4 text-center">Завдань немає</p>-->
 
 
 
@@ -288,6 +336,140 @@ const randomColor = (authorName: any) => {
   justify-content: space-between;
   overflow: hidden;
 }
+
+
+ion-content::part(background) {
+  background: rgb(243, 233, 224);
+}
+
+.feed-card{
+  margin: 16px;
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(255, 248, 237);
+
+  .user-info {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .avatar-card {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+
+      .comment-info {
+        display: flex;
+        margin-left: 8px;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+.name-user-comment {
+  color: rgb(66, 126, 154);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 125%;
+  text-align: left;
+}
+
+.data-send-comment {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 125%;
+  text-align: left;
+  color: rgb(58, 77, 83);
+  margin-top: 4px;
+
+}
+
+
+.user-info:after {
+  content: '';
+  width: 100%;
+  display: block;
+  height: 2px;
+  box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+  background: rgb(255, 248, 237);
+}
+.comment-text-card:after {
+  content: '';
+  width: 100%;
+  display: block;
+  height: 2px;
+  box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
+  background: rgb(255, 248, 237);
+}
+.comment-text-card {
+  & p{
+    padding: 8px 16px;
+  }
+  & .users-solution-card{
+    padding: 8px 16px;
+  }
+}
+.users-solution-card {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 16px;
+
+
+  .deadline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .deadline-title {
+      color: rgb(66, 126, 154);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 125%;
+      text-align: left;
+    }
+
+    .deadline-date {
+      color: rgb(58, 77, 83);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 125%;
+      text-align: left;
+    }
+  }
+
+  .users {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .avatars {
+      margin-left: 8px;
+
+      .avatar {
+        margin: 0px -8px;
+      }
+    }
+  }
+}
+
+.user-avatar{
+  border-radius: 34px;
+  width: 48px;
+  height: 48px;
+  background: url(),rgb(182, 118, 118);
+  .initials{
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+  }
+}
+
 
 </style>
 
