@@ -2,27 +2,15 @@
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <ion-menu content-id="main-content" class="menu" side="end" ref="menu">
-      <ion-header class="ion-no-border">
-        <v-toolbar
-            dark
-            prominent
-            mode="ios"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
-        >
-
-          <v-toolbar-title>Меню</v-toolbar-title>
-
-        </v-toolbar>
-      </ion-header>
-      <v-card>
+      <v-card >
         <v-layout>
           <v-navigation-drawer
-              class="nav-menu w-100"
+              class="nav-menu card-menu w-100"
               permanent
           >
             <v-divider></v-divider>
 
-            <v-list nav class="list-menu">
+            <v-list nav class="list-menu ">
               <v-list-item title="Обліковий запис" value="account"
                            @click="replaceAccount(), this.value = 'default';this.authStore.activePage='Обліковий запис';"
                            prepend-icon="mdi-account-circle-outline"></v-list-item>
@@ -36,10 +24,11 @@
                            prepend-icon="mdi-account-group-outline"></v-list-item>
 
             </v-list>
-            <v-footer class="footerMenu">
-              <v-btn variant="outlined" color="light-blue-lighten-1" @click="authStore.logout()" class="logout-btn">
-                Вийти
-              </v-btn>
+            <v-footer class="footerMenu card-menu">
+<!--              <v-btn variant="outlined"  @click="authStore.logout()" class="logout-btn">-->
+<!--                Вийти-->
+              <app-button @click="authStore.logout()">Вийти</app-button>
+<!--              </v-btn>-->
             </v-footer>
 
           </v-navigation-drawer>
@@ -181,11 +170,13 @@ import Course from "@/components/icons/course.vue";
 import Group from "@/components/icons/group.vue";
 import Menu from "@/components/icons/menuIcon.vue";
 import MenuIcon from "@/components/icons/menuIcon.vue";
+import AppButton from "@/components/app-components/app-button.vue";
 
 
 export default defineComponent({
 
   components: {
+    AppButton,
     MenuIcon,
     Menu,
     Group,
@@ -323,7 +314,8 @@ export default defineComponent({
     align-items: center;
     justify-content: flex-start;
 
-    & span {
+    & span{
+      font-family: Inter, sans-serif;
       font-size: 10px;
       font-weight: 400;
       line-height: 12px;
@@ -365,8 +357,12 @@ export default defineComponent({
 .footerMenu {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  width: 90%;
+  transform:translate(-50%, -50%);
+
 
 }
 
@@ -385,13 +381,37 @@ ion-item:hover {
 }
 
 .logout-btn {
-  width: 90%;
-  border-radius: 15px;
+  color: rgb(255, 248, 237);
+  text-transform: none;
+  font-size: 16px;
+  width: 100%;
+  font-weight: 400;
+  line-height: 19px;
+  text-align: center;
+  border-radius: 43px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 34px 10px 34px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(66, 126, 154);
 }
 
 .list-menu {
-  margin-top: 20%;
+  margin: 16px;
+  
+  & .v-list-item{
+    border-radius: 16px;
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    background: rgb(255, 248, 237);
+    padding: 5px 10px;
+    margin: 10px 0;
+    color: rgb(66, 126, 154);
+  }
 }
-
+.card-menu{
+  background: rgb(243, 233, 224);
+}
 
 </style>

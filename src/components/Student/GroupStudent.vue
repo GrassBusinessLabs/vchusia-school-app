@@ -137,6 +137,16 @@ onMounted(() => {myGroupsList()})
 </template>
 
 <style scoped>
+ion-content::part(background) {
+  background: rgb(243, 233, 224);
+}
+
+
+
+
+
+
+
 .btn-join-group{
   min-width: 30px;
   border-radius: 50px;

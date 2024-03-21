@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-column justify-center align-center fill-height w-100">
+    <div class="d-flex flex-column justify-center align-center fill-height">
 
 
       <input
@@ -9,7 +9,7 @@
         hidden
       />
 
-      <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">
+<!--      <div class="content_image" style="width: 80%; overflow-x: scroll; white-space: nowrap;">-->
 
 
 <!--        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" v-for="i of SolutionStore.nowSolution.images">-->
@@ -30,19 +30,19 @@
 
 
 
-        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" :class="{'has-dot' : i.cover.id !== 0}" v-for="i of SolutionStore.nowSolution.images" @click="imageFromTeacher = true">
-<!--          <img width="128" class="cover" :src="urlData+i.cover.name" v-if='i.cover.id !== 0' >-->
-          <v-btn class="position-absolute image-btn-del" size="x-small" color="red" elevation="0" @click.stop icon="mdi-delete" @click="delImageSolution = true; SolutionStore.slImgId = i.id"></v-btn>
-          <v-img width="100%" :src="urlData+i.name" @click="ImageStore.nowImageFromTeacher = i"></v-img>
-        </v-avatar>
+<!--        <v-avatar rounded="0" size="100px" class="mt-5 mx-1 image_added" :class="{'has-dot' : i.cover.id !== 0}" v-for="i of SolutionStore.nowSolution.images" @click="imageFromTeacher = true">-->
+<!--&lt;!&ndash;          <img width="128" class="cover" :src="urlData+i.cover.name" v-if='i.cover.id !== 0' >&ndash;&gt;-->
+<!--          <v-btn class="position-absolute image-btn-del" size="x-small" color="red" elevation="0" @click.stop icon="mdi-delete" @click="delImageSolution = true; SolutionStore.slImgId = i.id"></v-btn>-->
+<!--          <v-img width="100%" :src="urlData+i.name" @click="ImageStore.nowImageFromTeacher = i"></v-img>-->
+<!--        </v-avatar>-->
 
 
-      </div>
+<!--      </div>-->
 
 
-      <v-btn icon="mdi-paperclip" class="mt-5 btn-upload" color="blue"
-        @click="$refs.filePickerField.click()"
-      >  </v-btn>
+<!--      <v-btn icon="mdi-paperclip" class="mt-5 btn-upload" color="blue"-->
+<!--        @click="$refs.filePickerField.click()"-->
+<!--      >  </v-btn>-->
 
       <image-cropper-dialog
         ref="cropperDialog"
@@ -52,21 +52,23 @@
           gallery.push(croppedImage);
         }"
       />
+      <add-img @click="$refs.filePickerField.click()"/>
+
     </div>
 
-  <v-bottom-sheet v-model="imageFromTeacher" fullscreen>
-    <v-card >
-      <v-btn icon="mdi-arrow-left" class="position-absolute btn-back" size="x-large" elevation="0"  @click="imageFromTeacher = false"></v-btn>
+<!--  <v-bottom-sheet v-model="imageFromTeacher" fullscreen>-->
+<!--    <v-card >-->
+<!--      <v-btn icon="mdi-arrow-left" class="position-absolute btn-back" size="x-large" elevation="0"  @click="imageFromTeacher = false"></v-btn>-->
 
-        <img :src="urlData+ImageStore.nowImageFromTeacher.cover.name" v-if="ImageStore.nowImageFromTeacher.cover.id !== 0" class="cover-img-card">
-
-
-        <img :src="urlData+ImageStore.nowImageFromTeacher.name" class="main-img-card">
+<!--        <img :src="urlData+ImageStore.nowImageFromTeacher.cover.name" v-if="ImageStore.nowImageFromTeacher.cover.id !== 0" class="cover-img-card">-->
 
 
+<!--        <img :src="urlData+ImageStore.nowImageFromTeacher.name" class="main-img-card">-->
 
-    </v-card>
-  </v-bottom-sheet>
+
+
+<!--    </v-card>-->
+<!--  </v-bottom-sheet>-->
 
   <v-bottom-sheet v-model="delImageSolution">
     <v-card title="Ви точно хочете видалити зображення?">
@@ -82,10 +84,12 @@ import {solution} from "@/stores/solution.ts";
 import {VBottomSheet} from "vuetify/labs/VBottomSheet";
 import {ref} from "vue";
 import {image} from "@/stores/image.ts";
+import AddImg from "@/components/icons/add-img.vue";
 
 export default {
   name: 'CropperComponent',
   components: {
+    AddImg,
     ImageCropperDialog,
     VBottomSheet
   },

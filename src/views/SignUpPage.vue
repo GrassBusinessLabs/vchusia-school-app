@@ -130,7 +130,7 @@
 
 
         <div class="signup-card">
-          <v-btn @click="regSend" class="btn-register">Створити обілковий запис</v-btn>
+          <app-button @click="regSend" >Створити обілковий запис</app-button>
           <button @click="$router.replace('/auth/login')" class="btn-login">Вхід</button>
         </div>
       </div>
@@ -160,10 +160,12 @@ import {
 import {defineComponent, ref} from 'vue';
 import {auth} from "../stores/auth";
 import Logo from "/src/components/icons/logo.vue";
+import AppButton from "@/components/app-components/app-button.vue";
 // import router from "../router/index.js";
 
 export default defineComponent({
   components: {
+    AppButton,
     Logo,
     IonPage,
     IonRadio,
@@ -369,7 +371,6 @@ export default defineComponent({
 .signup-card{
   display: flex;
   flex-direction: column;
-  gap: 32px;
   .btn-register{
     color: rgb(255, 248, 237);
     text-transform: none;

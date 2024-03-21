@@ -3,43 +3,41 @@
 </script>
 
 <template>
-  <svg width="38.000000" height="48.000000" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <desc>
-      Created with Pixso.
-    </desc>
+  <svg width="38" height="47" viewBox="0 0 38 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_ddii_202_352)">
+      <path d="M28.7227 20.4818L11.5352 10.3207C10.1387 9.49551 8 10.2963 8 12.3373V32.6547C8 34.4857 9.9873 35.5893 11.5352 34.6713L28.7227 24.515C30.2559 23.6117 30.2607 21.3852 28.7227 20.4818Z" fill="#427E9A"/>
+    </g>
     <defs>
-      <filter id="filter_161_267_dd" x="0.000000" y="0.000000" width="37.874390" height="47.001007" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <filter id="filter0_ddii_202_352" x="0" y="0" width="37.8743" height="47.001" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
         <feFlood flood-opacity="0" result="BackgroundImageFix"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dx="0" dy="4"/>
-        <feGaussianBlur stdDeviation="2.66667"/>
-        <feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0.66275 0 0 0 0 0.63922 0 0 0 0 0.61569 0 0 0 0.25 0"/>
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+        <feOffset dy="4"/>
+        <feGaussianBlur stdDeviation="4"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.661816 0 0 0 0 0.637608 0 0 0 0 0.615821 0 0 0 0.25 0"/>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_202_352"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dx="0" dy="-2"/>
-        <feGaussianBlur stdDeviation="2.66667"/>
-        <feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
-        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.039 0"/>
-        <feBlend mode="normal" in2="effect_dropShadow_1" result="effect_dropShadow_2"/>
-        <feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_2" result="shape"/>
+        <feOffset dy="-2"/>
+        <feGaussianBlur stdDeviation="4"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0"/>
+        <feBlend mode="normal" in2="effect1_dropShadow_202_352" result="effect2_dropShadow_202_352"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_202_352" result="shape"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dx="0" dy="1"/>
-        <feGaussianBlur stdDeviation="0.333333"/>
+        <feMorphology radius="1" operator="erode" in="SourceAlpha" result="effect3_innerShadow_202_352"/>
+        <feOffset dy="1"/>
+        <feGaussianBlur stdDeviation="0.5"/>
         <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
         <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
-        <feBlend mode="normal" in2="shape" result="effect_innerShadow_3"/>
+        <feBlend mode="normal" in2="shape" result="effect3_innerShadow_202_352"/>
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-        <feOffset dx="0" dy="-2"/>
-        <feGaussianBlur stdDeviation="0.333333"/>
+        <feOffset dy="-2"/>
+        <feGaussianBlur stdDeviation="0.5"/>
         <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
         <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-        <feBlend mode="normal" in2="effect_innerShadow_3" result="effect_innerShadow_4"/>
+        <feBlend mode="normal" in2="effect3_innerShadow_202_352" result="effect4_innerShadow_202_352"/>
       </filter>
     </defs>
-    <g filter="url(#filter_161_267_dd)">
-      <path id="Vector" d="M28.72 20.48L11.53 10.32C10.13 9.49 8 10.29 8 12.33L8 32.65C8 34.48 9.98 35.58 11.53 34.67L28.72 24.51C30.25 23.61 30.26 21.38 28.72 20.48Z" fill="#427E9A" fill-opacity="1.000000" fill-rule="nonzero"/>
-    </g>
   </svg>
 
 </template>

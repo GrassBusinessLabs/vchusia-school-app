@@ -93,8 +93,9 @@
                  placeholder="Введіть свій пароль"/>
         </div>
 
+        <app-button @click="login">Увійти</app-button>
         <div class="login-card">
-          <v-btn @click="login" class="btn-login">Увійти</v-btn>
+          <!--          <v-btn @click="login" class="btn-login">Увійти</v-btn>-->
           <button @click="$router.replace('/auth/signup')" class="btn-register">Реєстрація</button>
         </div>
       </div>
@@ -120,10 +121,12 @@ import {
 } from "@ionic/vue";
 import {course} from "../stores/course.ts"
 import Logo from "@/components/icons/logo.vue";
+import AppButton from "@/components/app-components/app-button.vue";
 
 export default {
   name: "LoginPage",
   components: {
+    AppButton,
     Logo,
     IonPage,
     IonInput,
