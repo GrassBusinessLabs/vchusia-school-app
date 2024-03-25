@@ -16,7 +16,8 @@ import ContentTaskDev from "@/components/icons/content-task-dev.vue";
 import AddImg from "@/components/icons/add-img.vue";
 import AppButton from "@/components/app-components/app-button.vue";
 
-
+const sendPrivateComment = ref(false)
+const sendComment = ref(false)
 const sendSolution = ref(false)
 const updateCommentConst = ref(false)
 const PostStore = post()
@@ -201,8 +202,8 @@ const randomColor = () => {
   return '#' + Math.floor(Math.random() * 16777215).toString(16)
 }
 
-const userInitials = () => {
-  const nameParts = auth().user.name.split(' ');
+const userInitials = (name: string) => {
+  const nameParts = name.split(' ');
   const initials = nameParts.map(part => part.charAt(0)).join('').toUpperCase();
   return initials
 }
@@ -496,19 +497,17 @@ const userInitials = () => {
             <div class="logo">
               <player-active/>
             </div>
+            <div class="description-task-card">
+              <p class="number-task">Завдання № 555-11</p>
+            </div>
           </div>
 
-          <div class="description-task-card">
-            <p class="number-task">Завдання № 555-11</p>
-          </div>
+
         </div>
 
 
-
-
-
         <div class="content-task">
-          <content-task-dev/>
+          <img src="https://platinumlist.net/guide/wp-content/uploads/2023/03/8359_img_worlds_of_adventure-big1613913137.jpg-1024x683.webp" >
         </div>
 
         <div class="description-task">
@@ -527,7 +526,9 @@ const userInitials = () => {
 
           <div class="users">
             <div class="avatars">
-              <avatar-dev class="avatar" v-for="i in 7"/>
+              <v-avatar class="avatar" v-for="(i, index) in 7" :key="index" :style="{ zIndex: 7 - index }">
+                <img src="https://kartinki.pics/pics/uploads/posts/2022-09/1662642152_1-kartinkin-net-p-risunok-na-avatarku-dlya-muzhchin-instagra-1.jpg">
+              </v-avatar>
             </div>
 
             <div class="counter">
@@ -537,12 +538,7 @@ const userInitials = () => {
 
         </div>
 
-<!--        <div class="send-solution">-->
-<!--&lt;!&ndash;          <v-btn class="send-solution-btn" @click="sendSolution = !sendSolution">Надіслати відповідь</v-btn>&ndash;&gt;-->
-<!--        </div>-->
-
-
-        <app-button @click="sendSolution = !sendSolution">Надіслати відповідь</app-button>
+        <app-button @click="sendSolution = !sendSolution" >Надіслати відповідь</app-button>
 
 
         <div class="speaking-with-teacher">
@@ -551,11 +547,10 @@ const userInitials = () => {
           <div class="comment-card" v-for="i of CommentStore.commentsSolution">
             <div class="user-info">
               <div class="avatar-comment">
-<!--                <avatar-dev/>-->
                 <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">
                   <v-img :src="imgURL+i.userAvatar"></v-img>
                 </v-avatar>
-                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials() }}</span></v-avatar>
+                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span></v-avatar>
                 <div class="comment-info">
                   <p class="name-user-comment">{{ i.userName }}</p>
                   <div class="d-flex">
@@ -563,7 +558,10 @@ const userInitials = () => {
                   </div>
                 </div>
 
+
+
               </div>
+
 
             </div>
 
@@ -572,18 +570,20 @@ const userInitials = () => {
               <p>{{ i.text }}</p>
             </div>
           </div>
+
+          <app-button @click="sendPrivateComment = !sendPrivateComment">Написати приватний коментар</app-button>
         </div>
 
         <div class="speaking">
           <h3>Обговорення</h3>
 
-          <div class="comment-card" v-for="i of CommentStore.commentsSolution">
+          <div class="comment-card" v-for="i of CommentStore.commentsMessage">
             <div class="user-info">
               <div class="avatar-comment">
                 <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">
                   <v-img :src="imgURL+i.userAvatar"></v-img>
                 </v-avatar>
-                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials() }}</span></v-avatar>
+                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span></v-avatar>
 
                 <div class="comment-info">
                   <p class="name-user-comment">{{ i.userName }}</p>
@@ -602,31 +602,13 @@ const userInitials = () => {
             </div>
           </div>
         </div>
+        <app-button @click="sendComment = !sendComment">Написати коментар</app-button>
+
       </div>
 
 
-      <v-bottom-sheet v-model="sendSolution" style="background: transparent">
+      <v-bottom-sheet v-model="sendSolution"  :scrim="false">
         <v-card class="solution-card" style="border-radius: 16px;">
-<!--          <div class="text-center">-->
-
-<!--            <div class="d-flex align-center container_comment_solution">-->
-<!--              <v-text-field class="description_text" @input="updateSolution" variant="outlined" label="Коментар"-->
-<!--                            v-model="descriptionSolution.description"></v-text-field>-->
-<!--            </div>-->
-
-
-<!--            <div class="pin_image">-->
-<!--              <CropperComponent/>-->
-<!--            </div>-->
-
-<!--            <div class="accept_task">-->
-<!--              <v-btn class="btnAcceptTask" @click="updateStatus(), displayFooter = !displayFooter">-->
-<!--                Відправити на перевірку-->
-<!--              </v-btn>-->
-<!--            </div>-->
-
-<!--          </div>-->
-
           <v-card-title class="title-card">
             Відповідь до завдання
           </v-card-title>
@@ -639,31 +621,65 @@ const userInitials = () => {
 
           <div class="images-card">
             <h3>Зображення</h3>
-            <div class="gallerry">
-              <cropper-component />
 
-<!--              <img src="../../../../assets/img.png" v-for="i of SolutionStore.nowSolution.images" class="image">-->
-              <div v-for="i of SolutionStore.nowSolution.images" class="w-100">
 
-                <img :src="imgURL + i.name" class="image">
+
+            <div class="gallery">
+
+                <div>
+                  <cropper-component  class="image"/>
+                </div>
+
+                <div v-for="i of SolutionStore.nowSolution.images" class="image-block">
+                  <img :src="imgURL + i.name" class="image">
+                </div>
               </div>
 
-<!--              <add-img />-->
-            </div>
+            
           </div>
-
-<!--          <div class="send-solution-from-sheet">-->
 
           <v-card-text>
             <app-button @click="updateStatus(); sendSolution = false">Надіслати відповідь</app-button>
           </v-card-text>
 
-<!--            <v-btn class="send-solution-btn-from-sheet" @click="updateStatus(); sendSolution = false">Надіслати відповідь</v-btn>-->
-
-<!--          </div>-->
-
         </v-card>
 
+      </v-bottom-sheet>
+
+      <v-bottom-sheet v-model="sendPrivateComment"  :scrim="false">
+        <v-card class="solution-card" style="border-radius: 16px;">
+          <v-card-title class="title-card">
+            Написати приватний коментар
+          </v-card-title>
+          <div class="solution-text-card">
+            <div class="textarea-solution">
+              <textarea placeholder="Написати коментар..." v-model="addCommentTextSolution.text"></textarea>
+            </div>
+          </div>
+
+          <v-card-text>
+            <app-button @click="sendPrivateComment = false; addCommentSolution()">Відправити коментар</app-button>
+          </v-card-text>
+
+        </v-card>
+      </v-bottom-sheet>
+
+      <v-bottom-sheet v-model="sendComment"  :scrim="false">
+        <v-card class="solution-card" style="border-radius: 16px;">
+          <v-card-title class="title-card">
+            Написати коментар
+          </v-card-title>
+          <div class="solution-text-card">
+            <div class="textarea-solution">
+              <textarea placeholder="Написати коментар..." v-model="addCommentTextMessage.text"></textarea>
+            </div>
+          </div>
+
+          <v-card-text>
+            <app-button @click="sendComment = false; addCommentMessage()">Відправити коментар</app-button>
+          </v-card-text>
+
+        </v-card>
       </v-bottom-sheet>
 
     </ion-content>
@@ -679,32 +695,46 @@ ion-content::part(background) {
 .container {
   margin: 24px 16px 0 16px;
 
+
   .task-card {
+    height: 112px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border-radius: 16px;
-    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
     background: rgb(254, 245, 235);
 
+    .type-task-logo{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+      margin: 21px 16px;
+
+
+    }
     .logo {
       width: 75px;
+      height: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 31px 16px;
       border-radius: 16px;
-      box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+      box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
       background: rgb(254, 245, 235);
     }
   }
 }
 
 .description-task-card {
-  margin: 16px 16px 16px 0;
+  margin: 0 16px 16px 16px;
+  display: flex;
+  align-items: flex-start;
+  width: 65%;
 
   & p {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     line-height: 125%;
     text-align: left;
@@ -756,12 +786,29 @@ ion-content::part(background) {
     justify-content: space-between;
     align-items: center;
 
+
     .avatars {
-      margin-left: 8px;
+      display: flex;
+      padding: 10px;
 
       .avatar {
-        margin: 0px -8px;
+        width: 42px;
+        height: 42px;
+        margin: 0px -6px;
+        position: static;
+        box-sizing: border-box;
+        outline: 2px solid rgb(98, 145, 161);
+        background: url(),rgb(254, 245, 235);
+        border-radius: 50%;
+
       }
+    }
+    
+    .avatar:first-child{
+      box-sizing: border-box;
+      outline: 2px solid rgb(255, 204, 77) !important;
+      background: url(),rgb(254, 245, 235);
+      border-radius: 50%;
     }
   }
 }
@@ -771,10 +818,17 @@ ion-content::part(background) {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  & img{
+    border-radius: 16px;
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.5),url();
+  }
 }
 
 .description-task {
-  margin: 16px;
+  margin-top: 16px;
+  margin-bottom: 32px;
 }
 
 .send-solution {
@@ -877,14 +931,17 @@ ion-content::part(background) {
   background: rgb(255, 248, 237);
 }
 
+
+
+
 .comment-text-card {
   padding: 16px;
+
 }
 
 
 .speaking {
   margin-top: 32px;
-  padding-bottom: 20px;
 
   & h3 {
     color: rgb(66, 126, 154);
@@ -901,7 +958,6 @@ ion-content::part(background) {
     background: rgb(255, 248, 237);
 
     .user-info {
-
       display: flex;
       align-items: flex-start;
       flex-direction: column;
@@ -925,6 +981,9 @@ ion-content::part(background) {
 .solution-card{
   background: rgb(254, 245, 235);
   border-radius: 16px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 
   .title-card{
     text-align: center;
@@ -985,24 +1044,41 @@ ion-content::part(background) {
 }
 
 .images-card{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   & h3{
     color: rgb(66, 126, 154);
     font-size: 18px;
     font-weight: 700;
     line-height: 22px;
     text-align: center;
+    margin-bottom: 16px;
   }
 }
 
-.gallerry{
+.gallery{
   display: flex;
   justify-content: flex-start;
   align-items: center;
   overflow-x: auto;
-  gap: 16px;
+  gap: 12px;
+  width: 100%;
+  padding: 0 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
+.gallery::-webkit-scrollbar {
+  display: none;
+}
+.image-block {
+  min-width: 75px;
+  min-height: 75px;
+
+}
 .image{
+  padding: 4px;
   width: 75px;
   height: 75px;
   border-radius: 16px;

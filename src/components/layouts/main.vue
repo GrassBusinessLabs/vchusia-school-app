@@ -1,27 +1,45 @@
 <template>
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <ion-menu content-id="main-content" class="menu" side="end" ref="menu">
+    <ion-menu  content-id="main-content"  class="menu" side="end" ref="menu">
       <v-card >
-        <v-layout>
+        <v-layout >
           <v-navigation-drawer
-              class="nav-menu card-menu w-100"
               permanent
+              rail
+
+              class="nav-menu card-menu w-100"
+              
           >
-            <v-divider></v-divider>
+            <v-divider ></v-divider>
 
             <v-list nav class="list-menu ">
               <v-list-item title="Обліковий запис" value="account"
-                           @click="replaceAccount(), this.value = 'default';this.authStore.activePage='Обліковий запис';"
-                           prepend-icon="mdi-account-circle-outline"></v-list-item>
+                           @click="replaceAccount(), this.value = 'default';this.authStore.activePage='Обліковий запис';">
+                <template v-slot:prepend>
+                  <read-book-active/>
+                </template>
+              </v-list-item>
               <v-list-item v-if="this.user.role !== 'STUDENT'" title="Курси" value="course"
-                           @click="replaceCourse(), this.value = 2; this.authStore.activePage='Курси'"
-                           prepend-icon="mdi-bookshelf"></v-list-item>
-              <v-list-item title="Стрічка" @click="replaceFeed(), this.authStore.activePage='Стрічка'; this.value = 0;"
-                           prepend-icon="mdi-calendar-check-outline"></v-list-item>
+                           @click="replaceCourse(), this.value = 2; this.authStore.activePage='Курси'">
+                <template v-slot:prepend>
+                  <course/>
+                </template>
+              </v-list-item>
+
+              <v-list-item class="list-item" title="Стрічка" @click="replaceFeed(), this.authStore.activePage='Стрічка'; this.value = 0;">
+
+                <template v-slot:prepend>
+                  <feed/>
+                </template>
+              </v-list-item>
               <v-list-item title="Групи" value="groups"
                            @click="replaceGroup(), this.authStore.activePage='Групи'; this.value = 1;"
-                           prepend-icon="mdi-account-group-outline"></v-list-item>
+                           >
+                <template v-slot:prepend>
+                  <group/>
+                </template>
+              </v-list-item>
 
             </v-list>
             <v-footer class="footerMenu card-menu">
@@ -171,11 +189,15 @@ import Group from "@/components/icons/group.vue";
 import Menu from "@/components/icons/menuIcon.vue";
 import MenuIcon from "@/components/icons/menuIcon.vue";
 import AppButton from "@/components/app-components/app-button.vue";
+import AvatarDev from "@/components/icons/avatar-dev.vue";
+import ReadBookActive from "@/components/icons/read-book-active.vue";
 
 
 export default defineComponent({
 
   components: {
+    ReadBookActive,
+    AvatarDev,
     AppButton,
     MenuIcon,
     Menu,
@@ -412,6 +434,20 @@ ion-item:hover {
 }
 .card-menu{
   background: rgb(243, 233, 224);
+
+}
+.nav-menu{
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+
+}
+
+ion-menu::part(backdrop) {
+  background-color: transparent;
+}
+ion-menu::part(container) {
+  background-color: transparent;
+
 }
 
 </style>

@@ -15,6 +15,8 @@ import Feed from "@/components/icons/feed.vue";
 import Course from "@/components/icons/course.vue";
 import Group from "@/components/icons/group.vue";
 import MenuIcon from "@/components/icons/menuIcon.vue";
+import ReadBookActive from "@/components/icons/read-book-active.vue";
+import AppButton from "@/components/app-components/app-button.vue";
 const activePage = ref("Стрічка")
 const title = ref('Стрічка')
 const value = ref(1)
@@ -66,35 +68,42 @@ function replaceFeed(){
   <ion-page>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <ion-menu content-id="main-content" class="menu" side="end">
-      <ion-header class="ion-no-border">
-        <v-toolbar
-            dark
-            prominent
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sH6GCGsggznPZO2w47ZcJCqZoujYffx6r-7eRwoxhC-nSviTTIDImt0kKVWf-gPZ1p4&usqp=CAU"
-        >
 
-          <v-toolbar-title>Меню</v-toolbar-title>
-
-        </v-toolbar>
-      </ion-header>
       <v-card>
         <v-layout>
           <v-navigation-drawer
               class="nav-menu w-100"
               permanent
+              rail
           >
             <v-divider></v-divider>
 
-            <v-list nav class="list-menu">
-              <v-list-item title="Обліковий запис" value="account" @click="replaceAccount(), activePage='Обліковий запис'" prepend-icon="mdi-account-circle-outline"></v-list-item>
-              <v-list-item title="Стрічка" @click="replaceFeed(), activePage='Стрічка'" prepend-icon="mdi-calendar-check-outline"></v-list-item>
-              <v-list-item title="Групи" value="groups" @click="replaceGroup(), activePage='Групи'" prepend-icon="mdi-account-group-outline" ></v-list-item>
+            <v-list nav class="list-menu card-menu">
+              <v-list-item title="Обліковий запис" value="account"
+                           @click="replaceAccount(); activePage='Обліковий запис';">
+                <template v-slot:prepend>
+                  <read-book-active/>
+                </template>
+              </v-list-item>
+
+              <v-list-item class="list-item" title="Стрічка" @click="replaceFeed(); activePage='Стрічка'">
+
+                <template v-slot:prepend>
+                  <feed/>
+                </template>
+              </v-list-item>
+
+              <v-list-item title="Групи" value="groups"
+                           @click="replaceGroup(); activePage='Групи'"
+              >
+                <template v-slot:prepend>
+                  <group/>
+                </template>
+              </v-list-item>
 
             </v-list>
-            <v-footer class="footerMenu">
-              <v-btn variant="outlined" color="light-blue-lighten-1" @click="authStore.logout()" class="logout-btn">
-                Вийти
-              </v-btn>
+            <v-footer class="footerMenu card-menu">
+              <app-button @click="authStore.logout()">Вийти</app-button>
             </v-footer>
 
           </v-navigation-drawer>
@@ -189,6 +198,36 @@ function replaceFeed(){
 </template>
 
 <style scoped>
+.nav-menu{
+  background: rgb(243, 233, 224);
+
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+}
+ion-menu::part(backdrop) {
+  background-color: transparent;
+}
+ion-menu::part(container) {
+  background-color: transparent;
+
+}
+.list-menu {
+  margin: 16px;
+
+  & .v-list-item{
+    border-radius: 16px;
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    background: rgb(255, 248, 237);
+    padding: 5px 10px;
+    margin: 10px 0;
+    color: rgb(66, 126, 154);
+  }
+}
+.card-menu{
+  background: rgb(243, 233, 224);
+}
+
+
 .margin-styled {
   margin-bottom: 9vh;
 }
@@ -270,24 +309,24 @@ function replaceFeed(){
   color: rgb(66, 126, 154)
 }
 
-
-
-
-
-
-
-
-
-
-
-.logout-btn {
+.footerMenu {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
   width: 90%;
-  border-radius: 15px;
+  transform:translate(-50%, -50%);
 }
 
-.list-menu {
-  margin-top: 30%;
-}
+
+
+
+
+
+
+
+
 
 
 
