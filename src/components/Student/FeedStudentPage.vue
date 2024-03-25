@@ -214,9 +214,6 @@ const randomColor = (authorName: any) => {
       <div class="feed-card" v-for="i of MessagesStore.allMessages" @click="selectMessage(i)">
         <div class="user-info">
           <div class="avatar-card">
-<!--            <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">-->
-<!--              <v-img :src="imgURL+i.userAvatar"></v-img>-->
-<!--            </v-avatar>-->
             <v-avatar class="user-avatar"><span class="initials">YI</span></v-avatar>
 
             <div class="comment-info">

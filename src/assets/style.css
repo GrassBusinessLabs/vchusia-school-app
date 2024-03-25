@@ -16,5 +16,7 @@
     font-family: "Inter Regular", sans-serif;
     letter-spacing: 0;
 }
-
+ion-content::part(background) {
+    background: rgb(243, 233, 224);
+}
 

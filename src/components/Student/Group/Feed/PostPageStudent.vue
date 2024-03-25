@@ -15,10 +15,14 @@ import AvatarDev from "@/components/icons/avatar-dev.vue";
 import ContentTaskDev from "@/components/icons/content-task-dev.vue";
 import AddImg from "@/components/icons/add-img.vue";
 import AppButton from "@/components/app-components/app-button.vue";
+import AppBottomSheetSolutions from "@/components/app-components/app-bottom-sheet-solutions.vue";
 
 const sendPrivateComment = ref(false)
 const sendComment = ref(false)
 const sendSolution = ref(false)
+const changeComment = ref(false)
+
+
 const updateCommentConst = ref(false)
 const PostStore = post()
 const MessageStore = message()
@@ -132,9 +136,6 @@ const updateComment = async () => {
   updateCommentSheet.value = false
   await getCommentsMessages()
   await getCommentSolution()
-  showPrivateCommentField.value = false
-  showCommentField.value = false
-  showEditCommentField.value = false
 }
 
 const deleteComment = async () => {
@@ -184,9 +185,7 @@ const toggleCommentField = () => {
 }
 
 const toggleEditCommentField = () => {
-  showPrivateCommentField.value = false
-  showCommentField.value = false
-  showEditCommentField.value = true
+  changeComment.value = true
   textCommentUpdate.text = CommentStore.nowComment.text
 }
 const eventClickMenuComment = (item: any) => {
@@ -507,7 +506,8 @@ const userInitials = (name: string) => {
 
 
         <div class="content-task">
-          <img src="https://platinumlist.net/guide/wp-content/uploads/2023/03/8359_img_worlds_of_adventure-big1613913137.jpg-1024x683.webp" >
+          <img
+              src="https://platinumlist.net/guide/wp-content/uploads/2023/03/8359_img_worlds_of_adventure-big1613913137.jpg-1024x683.webp">
         </div>
 
         <div class="description-task">
@@ -527,7 +527,8 @@ const userInitials = (name: string) => {
           <div class="users">
             <div class="avatars">
               <v-avatar class="avatar" v-for="(i, index) in 7" :key="index" :style="{ zIndex: 7 - index }">
-                <img src="https://kartinki.pics/pics/uploads/posts/2022-09/1662642152_1-kartinkin-net-p-risunok-na-avatarku-dlya-muzhchin-instagra-1.jpg">
+                <img
+                    src="https://kartinki.pics/pics/uploads/posts/2022-09/1662642152_1-kartinkin-net-p-risunok-na-avatarku-dlya-muzhchin-instagra-1.jpg">
               </v-avatar>
             </div>
 
@@ -538,7 +539,7 @@ const userInitials = (name: string) => {
 
         </div>
 
-        <app-button @click="sendSolution = !sendSolution" >Надіслати відповідь</app-button>
+        <app-button @click="sendSolution = !sendSolution">Надіслати відповідь</app-button>
 
 
         <div class="speaking-with-teacher">
@@ -546,18 +547,42 @@ const userInitials = (name: string) => {
 
           <div class="comment-card" v-for="i of CommentStore.commentsSolution">
             <div class="user-info">
+              <div class="menu-comment">
+                <v-menu >
+                  <template v-slot:activator="{ props }" >
+                    <v-icon
+                        color="grey"
+                        v-bind="props"
+                        @click="CommentStore.commentId = i.id; CommentStore.nowComment = i"
+                    >
+                      mdi-dots-horizontal-circle-outline
+                    </v-icon>
+                  </template>
+
+                  <v-list class="list-menu-comment" style="border-radius: 16px; box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);background: rgb(243, 233, 224);">
+                    <v-list-item
+                        class="list-item-menu-comment"
+                        v-for="(item, index) in menuComment"
+                        :key="index"
+                        @click="eventClickMenuComment(item)"
+                    >
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
               <div class="avatar-comment">
-                <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">
+                <v-avatar class="user-avatar" v-if="i.userAvatar !== ''">
                   <v-img :src="imgURL+i.userAvatar"></v-img>
                 </v-avatar>
-                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span></v-avatar>
+                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span>
+                </v-avatar>
                 <div class="comment-info">
                   <p class="name-user-comment">{{ i.userName }}</p>
                   <div class="d-flex">
                     <p class="data-send-comment">{{ formatDate(i.createdDate) }}</p> <span class="role-user">(студент курсу)</span>
                   </div>
                 </div>
-
 
 
               </div>
@@ -578,12 +603,38 @@ const userInitials = (name: string) => {
           <h3>Обговорення</h3>
 
           <div class="comment-card" v-for="i of CommentStore.commentsMessage">
-            <div class="user-info">
+
+            <div class="user-info position-relative">
+              <div class="menu-comment">
+                <v-menu >
+                  <template v-slot:activator="{ props }" >
+                    <v-icon
+                        color="grey"
+                        v-bind="props"
+                        @click="CommentStore.commentId = i.id; CommentStore.nowComment = i"
+                    >
+                      mdi-dots-horizontal-circle-outline
+                    </v-icon>
+                  </template>
+
+                  <v-list class="list-menu-comment" style="border-radius: 16px; box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);background: rgb(243, 233, 224);">
+                    <v-list-item
+                        class="list-item-menu-comment"
+                        v-for="(item, index) in menuComment"
+                        :key="index"
+                        @click="eventClickMenuComment(item)"
+                    >
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
               <div class="avatar-comment">
-                <v-avatar  class="user-avatar" v-if="i.userAvatar !== ''">
+                <v-avatar class="user-avatar" v-if="i.userAvatar !== ''">
                   <v-img :src="imgURL+i.userAvatar"></v-img>
                 </v-avatar>
-                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span></v-avatar>
+                <v-avatar class="user-avatar" v-else><span class="initials">{{ userInitials(i.userName) }}</span>
+                </v-avatar>
 
                 <div class="comment-info">
                   <p class="name-user-comment">{{ i.userName }}</p>
@@ -598,7 +649,7 @@ const userInitials = (name: string) => {
 
 
             <div class="comment-text-card">
-              <p>{{i.text}}</p>
+              <p>{{ i.text }}</p>
             </div>
           </div>
         </div>
@@ -606,8 +657,8 @@ const userInitials = (name: string) => {
 
       </div>
 
-
-      <v-bottom-sheet v-model="sendSolution"  :scrim="false">
+      <!--   BOTTOM SHEET FOR SEND SOLUTION   -->
+      <v-bottom-sheet v-model="sendSolution" :scrim="false">
         <v-card class="solution-card" style="border-radius: 16px;">
           <v-card-title class="title-card">
             Відповідь до завдання
@@ -623,19 +674,18 @@ const userInitials = (name: string) => {
             <h3>Зображення</h3>
 
 
-
             <div class="gallery">
 
-                <div>
-                  <cropper-component  class="image"/>
-                </div>
-
-                <div v-for="i of SolutionStore.nowSolution.images" class="image-block">
-                  <img :src="imgURL + i.name" class="image">
-                </div>
+              <div>
+                <cropper-component class="image"/>
               </div>
 
-            
+              <div v-for="i of SolutionStore.nowSolution.images" class="image-block">
+                <img :src="imgURL + i.name" class="image">
+              </div>
+            </div>
+
+
           </div>
 
           <v-card-text>
@@ -646,7 +696,9 @@ const userInitials = (name: string) => {
 
       </v-bottom-sheet>
 
-      <v-bottom-sheet v-model="sendPrivateComment"  :scrim="false">
+
+<!--   BOTTOM SHEET FOR WRITE PRIVATE COMMENT   -->
+      <v-bottom-sheet v-model="sendPrivateComment" :scrim="false">
         <v-card class="solution-card" style="border-radius: 16px;">
           <v-card-title class="title-card">
             Написати приватний коментар
@@ -664,7 +716,8 @@ const userInitials = (name: string) => {
         </v-card>
       </v-bottom-sheet>
 
-      <v-bottom-sheet v-model="sendComment"  :scrim="false">
+      <!--   BOTTOM SHEET FOR WRITE PUBLIC COMMENT   -->
+      <v-bottom-sheet v-model="sendComment" :scrim="false">
         <v-card class="solution-card" style="border-radius: 16px;">
           <v-card-title class="title-card">
             Написати коментар
@@ -679,6 +732,41 @@ const userInitials = (name: string) => {
             <app-button @click="sendComment = false; addCommentMessage()">Відправити коментар</app-button>
           </v-card-text>
 
+        </v-card>
+      </v-bottom-sheet>
+
+<!--   BOTTOM SHEET FOR CHANGE COMMENT   -->
+      <v-bottom-sheet v-model="changeComment" :scrim="false">
+        <v-card class="solution-card" style="border-radius: 16px;">
+          <v-card-title class="title-card">
+            Редагувати коментар
+          </v-card-title>
+
+          <div class="solution-text-card">
+            <div class="textarea-solution">
+              <textarea placeholder="Редагувати коментар ..." v-model="textCommentUpdate.text"></textarea>
+            </div>
+          </div>
+
+          <v-card-text>
+            <app-button @click="changeComment = false; updateComment()">Зберегти</app-button>
+          </v-card-text>
+        </v-card>
+      </v-bottom-sheet>
+
+
+<!--  BOTTOM SHEET FOR DELETE COMMENT    -->
+
+      <v-bottom-sheet v-model="deleteCommentSheet" :scrim="false">
+        <v-card class="solution-card" style="border-radius: 16px;">
+          <v-card-title class="title-card">
+            Видалити коментар?
+          </v-card-title>
+
+          <v-card-text >
+            <app-button class="ma-0" @click="deleteCommentSheet = false; deleteComment()">Так</app-button>
+            <app-button class="mt-2" @click="deleteCommentSheet = false">Ні</app-button>
+          </v-card-text>
         </v-card>
       </v-bottom-sheet>
 
@@ -702,10 +790,10 @@ ion-content::part(background) {
     justify-content: flex-start;
     align-items: center;
     border-radius: 16px;
-    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
     background: rgb(254, 245, 235);
 
-    .type-task-logo{
+    .type-task-logo {
       display: flex;
       justify-content: flex-start;
       align-items: center;
@@ -714,6 +802,7 @@ ion-content::part(background) {
 
 
     }
+
     .logo {
       width: 75px;
       height: 50px;
@@ -721,16 +810,16 @@ ion-content::part(background) {
       justify-content: center;
       align-items: center;
       border-radius: 16px;
-      box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+      box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
       background: rgb(254, 245, 235);
     }
   }
 }
 
 .description-task-card {
-  margin: 0 16px 16px 16px;
+  margin: 0 16px 0 16px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   width: 65%;
 
   & p {
@@ -798,16 +887,16 @@ ion-content::part(background) {
         position: static;
         box-sizing: border-box;
         outline: 2px solid rgb(98, 145, 161);
-        background: url(),rgb(254, 245, 235);
+        background: url(), rgb(254, 245, 235);
         border-radius: 50%;
 
       }
     }
-    
-    .avatar:first-child{
+
+    .avatar:first-child {
       box-sizing: border-box;
       outline: 2px solid rgb(255, 204, 77) !important;
-      background: url(),rgb(254, 245, 235);
+      background: url(), rgb(254, 245, 235);
       border-radius: 50%;
     }
   }
@@ -819,10 +908,10 @@ ion-content::part(background) {
   justify-content: center;
   align-items: center;
 
-  & img{
+  & img {
     border-radius: 16px;
-    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
-    background: rgba(0, 0, 0, 0.5),url();
+    box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.5), url();
   }
 }
 
@@ -873,11 +962,11 @@ ion-content::part(background) {
     background: rgb(255, 248, 237);
 
     .user-info {
-
       display: flex;
       align-items: flex-start;
       flex-direction: column;
       justify-content: flex-start;
+      position: relative;
 
       .avatar-comment {
         padding: 16px;
@@ -892,6 +981,13 @@ ion-content::part(background) {
       }
     }
   }
+}
+
+.menu-comment {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
 }
 
 .name-user-comment {
@@ -930,8 +1026,6 @@ ion-content::part(background) {
   box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, 0.15);
   background: rgb(255, 248, 237);
 }
-
-
 
 
 .comment-text-card {
@@ -978,14 +1072,14 @@ ion-content::part(background) {
   }
 }
 
-.solution-card{
+.solution-card {
   background: rgb(254, 245, 235);
   border-radius: 16px;
   position: absolute;
   width: 100%;
   bottom: 0;
 
-  .title-card{
+  .title-card {
     text-align: center;
     margin: 24px 0;
     color: rgb(205, 150, 129);
@@ -994,7 +1088,7 @@ ion-content::part(background) {
     line-height: 27px;
   }
 
-  .title-card:after{
+  .title-card:after {
     content: '';
     margin-top: 24px;
     width: 100%;
@@ -1005,25 +1099,26 @@ ion-content::part(background) {
   }
 }
 
-.solution-text-card{
+.solution-text-card {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 16px;
 
-  .textarea-solution{
+  .textarea-solution {
     box-sizing: border-box;
     border: 1px solid rgb(254, 245, 235);
     border-radius: 16px;
     margin: 8px 0px;
-    box-shadow: inset 0px 4px 2px 0px rgba(0, 0, 0, 0.05),inset 0px -2px 1px 0px rgb(255, 255, 255);
-    background: linear-gradient(180.00deg, rgb(255, 248, 237),rgb(255, 254, 253) 199.02%);
+    box-shadow: inset 0px 4px 2px 0px rgba(0, 0, 0, 0.05), inset 0px -2px 1px 0px rgb(255, 255, 255);
+    background: linear-gradient(180.00deg, rgb(255, 248, 237), rgb(255, 254, 253) 199.02%);
 
-    & textarea::placeholder{
+    & textarea::placeholder {
       color: rgb(164, 202, 224);
 
     }
-    & textarea{
+
+    & textarea {
       width: 100%;
       outline: none;
       padding: 16px;
@@ -1035,7 +1130,7 @@ ion-content::part(background) {
     }
   }
 
-  & h3{
+  & h3 {
     color: rgb(66, 126, 154);
     font-size: 18px;
     font-weight: 700;
@@ -1043,11 +1138,12 @@ ion-content::part(background) {
   }
 }
 
-.images-card{
+.images-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  & h3{
+
+  & h3 {
     color: rgb(66, 126, 154);
     font-size: 18px;
     font-weight: 700;
@@ -1057,7 +1153,7 @@ ion-content::part(background) {
   }
 }
 
-.gallery{
+.gallery {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -1072,28 +1168,31 @@ ion-content::part(background) {
 .gallery::-webkit-scrollbar {
   display: none;
 }
+
 .image-block {
   min-width: 75px;
   min-height: 75px;
 
 }
-.image{
+
+.image {
   padding: 4px;
   width: 75px;
   height: 75px;
   border-radius: 16px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
-  background: url(),rgb(254, 245, 235);
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: url(), rgb(254, 245, 235);
 
 }
 
-.send-solution-from-sheet{
+.send-solution-from-sheet {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 32px 0;
 }
-.send-solution-btn-from-sheet{
+
+.send-solution-btn-from-sheet {
   color: rgb(255, 248, 237);
   width: 95%;
   text-transform: none;
@@ -1107,23 +1206,35 @@ ion-content::part(background) {
   justify-content: center;
   align-items: center;
   padding: 16px 34px 16px 34px;
-  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
   background: rgb(66, 126, 154);
 }
 
-.user-avatar{
+.user-avatar {
   border-radius: 34px;
   width: 48px;
   height: 48px;
-  background: url(),rgb(182, 118, 118);
+  background: url(), rgb(182, 118, 118);
 
-  .initials{
+  .initials {
     color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
   }
+}
+.list-menu-comment{
+  padding: 16px;
+}
+.list-item-menu-comment{
+  text-align: center;
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5), inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25), 0px 4px 8px 0px rgba(169, 163, 157, 0.25), 0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(255, 248, 237);
+  padding: 5px 10px;
+  margin: 10px 0;
+  color: rgb(66, 126, 154);
 }
 
 </style>

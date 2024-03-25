@@ -282,7 +282,6 @@ ion-menu::part(container) {
 
   }
 }
-
 .text-set {
   color: rgb(66, 126, 154);
 }

@@ -296,6 +296,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 .margin-styled {
   margin-bottom: 9vh;
 }
@@ -337,7 +338,7 @@ export default defineComponent({
     justify-content: flex-start;
 
     & span{
-      font-family: Inter, sans-serif;
+      letter-spacing: 0;
       font-size: 10px;
       font-weight: 400;
       line-height: 12px;
