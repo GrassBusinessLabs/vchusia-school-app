@@ -36,64 +36,64 @@
 
 
     <ion-footer class="ion-no-border">
-      <div class="text-center">
-<!--        <v-btn class="btn-add-group mb-6" size="large" @click="sheet = !sheet">-->
-<!--          <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
-<!--        </v-btn>-->
-
-
-
-        <v-bottom-sheet v-model="sheet">
+        <v-bottom-sheet v-model="sheet" :scrim="false">
           <v-card
-              class="text-center"
+              style="border-radius: 16px;"
+              class="add-group-sheet"
               height="300"
 
           >
-            <v-card-text>
+            <v-card-title class="title-card">
+              Створити групу
+            </v-card-title>
 
-              <br>
-              <br>
+            <div class="ml-4">
 
-              <div>
-
-                <v-text-field
-                    color="primary"
-                    label="Назва групи"
-                    variant="outlined"
-                    v-model="nameGroup.name"
-                >
-
-                </v-text-field>
-
-
-                <v-btn prepend-icon="mdi-plus-circle" class="btnAddGroup" variant="tonal" color="indigo"
-                       @click="sheet = !sheet, createGroup()">
-                  Додати групу
-                </v-btn>
-
+              <div class="textarea-solution">
+                <input
+                    class="input-course"
+                    placeholder="Назва групи"
+                    type="text"
+                    v-model="nameGroup.name" />
               </div>
-            </v-card-text>
-          </v-card>
-        </v-bottom-sheet>
-      </div>
-
-      <div class="text-center">
-
-        <v-bottom-sheet v-model="sheet_del_group">
-          <v-card height="100" class="text-center justify-center d-flex align-center" >
 
 
-            <div class="w-75 d-flex justify-center align-center">
-
-              <v-btn :block="true" prepend-icon="mdi-delete-outline" color="red" @click="deleteGroup(GroupStore.idGroup), sheet_del_group = !sheet_del_group">
-                Видалити групу
-              </v-btn>
 
             </div>
 
+            <v-card-text>
+
+              <app-button @click="sheet = !sheet, createGroup()">Створити групу</app-button>
+            </v-card-text>
           </v-card>
         </v-bottom-sheet>
-      </div>
+
+
+
+
+        <v-bottom-sheet :scrim="false" v-model="sheet_del_group">
+          <v-card style="border-radius: 16px;" class="add-group-sheet" >
+
+            <v-card-title class="title-card">
+              Видалити групу?
+            </v-card-title>
+
+            <v-card-text>
+              <app-button @click="deleteGroup(GroupStore.idGroup), sheet_del_group = !sheet_del_group">
+                Видалити групу
+              </app-button>
+            </v-card-text>
+<!--            <div class="w-75 d-flex justify-center align-center">-->
+
+<!--              <v-btn :block="true" prepend-icon="mdi-delete-outline" color="red">-->
+
+<!--              </v-btn>-->
+
+<!--            </div>-->
+
+          </v-card>
+        </v-bottom-sheet>
+
     </ion-footer>
 
 
@@ -111,6 +111,7 @@ import router from "@/router";
 import { useToast } from 'vue-toastification';
 import {course} from "@/stores/course";
 import {useInfiniteScroll, useVirtualList} from "@vueuse/core/index";
+import AppButton from "@/components/app-components/app-button.vue";
 const toast = useToast();
 const CourseStore = course()
 let sheet = ref(false)
@@ -225,13 +226,66 @@ localStorage.setItem('allGroups', JSON.stringify([GroupStore.allGroups]))
 }
 
 .btn-add-course {
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(66, 126, 154);
   min-height: 100%;
-  border-radius: 100%;
   min-width: 60%;
   margin: 0 auto;
-  background: grey;
-  color: #fff;
-  font-size: 25px;
+  color: rgb(255, 248, 237);
 }
 
+.add-group-sheet{
+  background: rgb(254, 245, 235);
+  border-radius: 16px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  text-align: center;
+}
+.textarea-solution{
+  box-sizing: border-box;
+  border: 1px solid rgb(254, 245, 235);
+  border-radius: 16px;
+  margin: 8px 0px;
+  box-shadow: inset 0px 4px 2px 0px rgba(0, 0, 0, 0.05), inset 0px -2px 1px 0px rgb(255, 255, 255);
+  background: linear-gradient(180.00deg, rgb(255, 248, 237), rgb(255, 254, 253) 199.02%);
+
+  & input::placeholder{
+    color: rgb(164, 202, 224);
+
+  }
+
+  & input{
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+  & textarea::placeholder {
+    color: rgb(164, 202, 224);
+
+  }
+
+  & textarea {
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+}
+.title-card {
+  text-align: center;
+  margin: 24px 0;
+  color: rgb(205, 150, 129);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 27px;
+}
 </style>

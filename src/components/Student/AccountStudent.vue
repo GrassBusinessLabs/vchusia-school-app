@@ -18,7 +18,7 @@
         </ion-buttons>
 
         <v-layout class="d-flex ma-2  justify-center">
-          <v-card class="w-100 mx-2">
+          <v-card class="w-100 mx-2 info-user">
             <ion-item slot="header" color="light">
               <ion-label>Мої дані</ion-label>
             </ion-item>
@@ -248,6 +248,9 @@ const randomColor = () => {
 </script>
 
 <style scoped>
+ion-list, .info-user{
+  background: rgb(243, 233, 224);
+}
 ion-header {
   padding: 50px 10px 0 0;
 }

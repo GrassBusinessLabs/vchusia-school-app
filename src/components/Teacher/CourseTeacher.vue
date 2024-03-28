@@ -48,84 +48,71 @@
     <ion-footer class="footer_course_teacher">
 
 
-      <div class="text-center">
 
+        <v-bottom-sheet v-model="sheet" :scrim="false">
+          <v-card style="border-radius: 16px;" class="add-course-sheet">
 
-        <v-bottom-sheet v-model="sheet">
-          <v-card
-              class="text-center"
-              height="700"
+            <v-card-title class="title-card">
+              Створити курс
+            </v-card-title>
 
-          >
-            <v-card-text>
+            <div class="ma-4">
 
-              <br>
-              <br>
-
-              <div>
-
-                <v-text-field
+              <div class="textarea-solution">
+                <input
                     class="input-course"
-                    color="primary"
-                    label="Назва курсу"
-                    variant="outlined"
-                    prepend-icon="mdi-book-outline"
-                    v-model="course$.name">
-                </v-text-field>
+                    placeholder="Назва курсу"
+                    v-model="course$.name" />
+              </div>
 
-                <v-text-field
+              <div class="textarea-solution">
+                <input
                     class="input-course"
-                    v-model="course$.discipline"
-                    color="primary"
-                    label="Назва дисципліни"
-                    prepend-icon="mdi-information-outline"
+                    placeholder="Назва дисципліни"
 
-                    variant="outlined">
-
-                </v-text-field>
-
-                <v-text-field
-                    class="input-course"
-                    v-model="course$.grade"
-                    color="primary"
-                    label="Клас"
-                    prepend-icon="mdi-google-classroom"
-                    variant="outlined">
-
-                </v-text-field>
-
-                <v-text-field
-                    class="input-course"
-                    v-model="course$.yearsFrom"
-                    color="primary"
-                    label="Вік від"
-                    prepend-icon="mdi-account-child-outline"
-                    variant="outlined">
-
-
-                </v-text-field>
-
-                <v-text-field
-                    class="input-course"
-                    v-model="course$.yearsTo"
-                    color="primary"
-                    prepend-icon="mdi-human-child"
-                    label="Вік до"
-                    variant="outlined"
-                >
-                </v-text-field>
-
-
-                <v-btn prepend-icon="mdi-plus-circle" class="btnAddCourse" variant="tonal" color="indigo"
-                       @click="confirm(), sheet = !sheet">
-                  Додати курс
-                </v-btn>
+                    v-model="course$.discipline" />
 
               </div>
+
+              <div class="textarea-solution">
+                <input
+                    class="input-course"
+                    placeholder="Клас"
+                    type="number"
+                    v-model="course$.grade" />
+
+              </div>
+
+
+              <div class="textarea-solution">
+                <input
+                    class="input-course"
+                    placeholder="Вік від"
+                    type="number"
+                    v-model="course$.yearsFrom" />
+
+              </div>
+
+
+
+              <div class="textarea-solution">
+                <input
+                    class="input-course"
+                    placeholder="Вік до"
+                    type="number"
+                    v-model="course$.yearsTo" />
+
+              </div>
+
+
+            </div>
+
+            <v-card-text>
+              <app-button @click="confirm(), sheet = !sheet">Створити курс</app-button>
             </v-card-text>
           </v-card>
         </v-bottom-sheet>
-      </div>
+
     </ion-footer>
 
   </ion-page>
@@ -161,6 +148,7 @@ import {post} from "@/stores/post";
 
 
 import router from "@/router";
+import AppButton from "@/components/app-components/app-button.vue";
 
 const CourseStore = course()
 let sheet = ref(false);
@@ -362,13 +350,13 @@ ion-content {
 //}
 //
 .btn-add-course {
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(66, 126, 154);
   min-height: 100%;
-  border-radius: 100%;
   min-width: 60%;
   margin: 0 auto;
-  background: grey;
-  color: #fff;
-  font-size: 25px;
+  color: rgb(255, 248, 237);
 }
 
 .btnAddCourse {
@@ -383,5 +371,57 @@ ion-content {
 
 }
 
+.add-course-sheet{
+  background: rgb(254, 245, 235);
+  border-radius: 16px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  text-align: center;
+}
+.textarea-solution{
+  box-sizing: border-box;
+  border: 1px solid rgb(254, 245, 235);
+  border-radius: 16px;
+  margin: 8px 0px;
+  box-shadow: inset 0px 4px 2px 0px rgba(0, 0, 0, 0.05), inset 0px -2px 1px 0px rgb(255, 255, 255);
+  background: linear-gradient(180.00deg, rgb(255, 248, 237), rgb(255, 254, 253) 199.02%);
 
+  & input::placeholder{
+    color: rgb(164, 202, 224);
+
+  }
+
+  & input{
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+  & textarea::placeholder {
+    color: rgb(164, 202, 224);
+
+  }
+
+  & textarea {
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+}
+.title-card {
+  text-align: center;
+  margin: 24px 0;
+  color: rgb(205, 150, 129);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 27px;
+}
 </style>

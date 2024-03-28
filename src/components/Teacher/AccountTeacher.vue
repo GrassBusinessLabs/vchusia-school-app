@@ -17,10 +17,10 @@
           <ion-button @click="deleteAvatar()" color="danger">Видалити аватар</ion-button>
         </ion-buttons>
 
-        <v-layout class="d-flex ma-2  justify-center">
-          <v-card class="w-100 mx-2">
-            <ion-item slot="header" color="light">
-              <ion-label>Мої дані</ion-label>
+        <v-layout class="d-flex ma-2 justify-center info-user">
+          <v-card class="w-100 mx-2 info-user">
+            <ion-item slot="header" >
+              <ion-label >Мої дані</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">Ім'я: {{ user?.name }}</div>
             <div class="ion-padding" slot="content">Email: {{ user?.email }}</div>
@@ -234,6 +234,9 @@ const randomColor = () => {
 </script>
 
 <style scoped>
+ion-list, .info-user{
+  background: rgb(243, 233, 224);
+}
 ion-header {
   padding: 50px 10px 0 0;
 }
