@@ -501,7 +501,6 @@ const userInitials = (name: string) => {
             </div>
           </div>
 
-
         </div>
 
 
