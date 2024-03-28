@@ -6,6 +6,7 @@ import {add} from "ionicons/icons";
 import {JoinGroup} from "@/models/Group";
 import {group} from "@/stores/group";
 import router from "@/router";
+import AppButton from "@/components/app-components/app-button.vue";
 let sheet = ref(false);
 const sheet_leave_group = ref(false)
 let GroupStore = group()
@@ -79,64 +80,66 @@ onMounted(() => {myGroupsList()})
   </ion-content>
 
   <ion-footer class="ion-no-border">
-    <div class="text-center">
 
-<!--      <v-btn class="btn-join-group mb-6" size="large" @click="sheet = !sheet">-->
-<!--        <ion-icon :icon="add" color="danger" id="open-modal"></ion-icon>-->
-<!--      </v-btn>-->
+      <v-bottom-sheet v-model="sheet" :scrim="false">
+        <v-card class="join-group-sheet" style="border-radius: 16px;">
+          <v-card-title class="title-card">
+            Приєднатися до групи
+          </v-card-title>
 
-      <v-bottom-sheet v-model="sheet">
-        <v-card class="text-center" height="300">
-          <v-card-text>
-            <br>
-            <br>
-
-            <div>
-              <v-text-field
-                  color="primary"
-                  label="Ідентифікатор групи"
-                  variant="outlined"
+          <div class="ma-4">
+            <div class="textarea-solution">
+              <input
+                  placeholder="Ідентифікатор групи"
                   v-model="identify.id"
-              >
-
-              </v-text-field>
-
-
-              <v-btn prepend-icon="mdi-plus-circle" class="btnJoinGroup" variant="tonal" color="indigo"
-                     @click="sheet = !sheet, joinGroup()">
-                Приєднатися
-              </v-btn>
+              />
             </div>
-          </v-card-text>
-        </v-card>
-      </v-bottom-sheet>
-    </div>
 
-    <div class="text-center">
-      <v-bottom-sheet v-model="sheet_leave_group">
-        <v-card height="250">
+
+
+          </div>
+
           <v-card-text>
-            <h3 class="text-center">Ви точно хочете покинути групу?</h3>
+            <app-button @click="sheet = !sheet; joinGroup()">Приєднатися</app-button>
+          </v-card-text>
+        </v-card>
+      </v-bottom-sheet>
 
-            <div class="leave_group">
-              <v-btn class="btn_leave_group" color="red" @click="leaveGroup(idGroup), sheet_leave_group = !sheet_leave_group">
-                Покинути групу
-              </v-btn>
 
-              <v-btn @click="sheet_leave_group = !sheet_leave_group">
+      <v-bottom-sheet v-model="sheet_leave_group" :scrim="false">
+        <v-card style="border-radius: 16px;" class="join-group-sheet">
+          <v-card-title class="title-card">
+            Покинути групу?
+          </v-card-title>
+
+          <v-card-text>
+            <app-button @click="leaveGroup(idGroup), sheet_leave_group = !sheet_leave_group">
+              Покинути групу
+            </app-button>
+            <app-button @click="sheet_leave_group = !sheet_leave_group">
               Відмінити
-              </v-btn>
-            </div>
+            </app-button>
+
           </v-card-text>
 
         </v-card>
       </v-bottom-sheet>
-    </div>
+
   </ion-footer>
 </ion-page>
 </template>
 
 <style scoped>
+ion-content::part(background) {
+  background: rgb(243, 233, 224);
+}
+
+
+
+
+
+
+
 .btn-join-group{
   min-width: 30px;
   border-radius: 50px;
@@ -172,12 +175,64 @@ onMounted(() => {myGroupsList()})
 }
 
 .btn-add-course {
+  border-radius: 16px;
+  box-shadow: inset 0px 1px 1px 1px rgba(255, 255, 255, 0.5),inset 0px -2px 1px 0px rgba(0, 0, 0, 0.25),0px 4px 8px 0px rgba(169, 163, 157, 0.25),0px -2px 8px 0px rgba(0, 0, 0, 0.04);
+  background: rgb(66, 126, 154);
   min-height: 100%;
-  border-radius: 100%;
   min-width: 60%;
   margin: 0 auto;
-  background: grey;
-  color: #fff;
-  font-size: 25px;
+  color: rgb(255, 248, 237);
+}
+.textarea-solution{
+  box-sizing: border-box;
+  border: 1px solid rgb(254, 245, 235);
+  border-radius: 16px;
+  box-shadow: inset 0px 4px 2px 0px rgba(0, 0, 0, 0.05), inset 0px -2px 1px 0px rgb(255, 255, 255);
+  background: linear-gradient(180.00deg, rgb(255, 248, 237), rgb(255, 254, 253) 199.02%);
+
+  & input::placeholder{
+    color: rgb(164, 202, 224);
+
+  }
+
+  & input{
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+  & textarea::placeholder {
+    color: rgb(164, 202, 224);
+
+  }
+
+  & textarea {
+    width: 100%;
+    outline: none;
+    padding: 16px;
+    color: rgb(66, 126, 154);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19px;
+  }
+}
+.title-card {
+  text-align: center;
+  margin: 24px 0;
+  color: rgb(205, 150, 129);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 27px;
+}
+.join-group-sheet{
+  background: rgb(254, 245, 235);
+  border-radius: 16px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  text-align: center;
 }
 </style>

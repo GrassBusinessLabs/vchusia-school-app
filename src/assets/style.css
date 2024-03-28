@@ -1,7 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Outfit&family=Roboto:wght@400;700&family=Single+Day&family=Ubuntu:wght@400;700&display=swap');
 
-*{
-    font-family: 'Outfit', sans-serif;
+@font-face {
+    font-family: "Inter Regular";
+    src: url("fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter Bold";
+    src: url("fonts/Inter-Bold.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter Semi Bold";
+    src: url("fonts/Inter-SemiBold.woff2") format("woff2");
 }
 
+*{
+    font-family: "Inter Regular", sans-serif;
+    letter-spacing: 0;
+}
+ion-content::part(background) {
+    background: rgb(243, 233, 224);
+}
 

@@ -6,7 +6,8 @@ export interface Auth{
 export interface Signup{
     email: string,
     password: string,
-    name: string
+    name: string,
+    role: string
 }
 
 export interface changePassword {
